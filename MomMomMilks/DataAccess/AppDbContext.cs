@@ -43,23 +43,19 @@ namespace DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var connectionString = GetConnectionString();
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+            optionsBuilder.UseSqlServer(GetConnectionString());
         }
 
         private string GetConnectionString()
         {
-            var configurationBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            IConfiguration config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
+                 .AddJsonFile("MomMomMilks/appsettings.json", true, true)
+                 .Build();
+            var strConn = config["ConnectionStrings:DefaultConnectionString"];
 
-            IConfiguration configuration = configurationBuilder.Build();
-            return configuration.GetConnectionString("DefaultConnectionString");
+            return strConn;
         }
-
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
