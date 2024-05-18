@@ -65,7 +65,8 @@ namespace DataAccess
             builder.Entity<Address>()
                 .HasOne(a => a.User)
                 .WithMany(u => u.Addresses)
-                .HasForeignKey(a => a.UserId);
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<AppUser>()
@@ -103,7 +104,8 @@ namespace DataAccess
             builder.Entity<CouponUsageHistory>()
                 .HasOne(cuh => cuh.Order)
                 .WithMany(o => o.CouponUsageHistories)
-                .HasForeignKey(cuh => cuh.OrderId);
+                .HasForeignKey(cuh => cuh.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Order>()
@@ -111,19 +113,23 @@ namespace DataAccess
             builder.Entity<Order>()
                 .HasOne(or => or.PaymentType)
                 .WithMany(pt => pt.Orders)
-                .HasForeignKey(or => or.PaymentTypeId);
+                .HasForeignKey(or => or.PaymentTypeId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Order>()
                 .HasOne(or => or.Address)
                 .WithMany(a => a.Orders)
-                .HasForeignKey(or => or.AddressId);
+                .HasForeignKey(or => or.AddressId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Order>()
                 .HasOne(or => or.Buyer)
                 .WithMany(b => b.Orders)
-                .HasForeignKey(or => or.BuyerId);
+                .HasForeignKey(or => or.BuyerId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Order>()
                 .HasOne(or => or.Transaction)
                 .WithOne(ts => ts.Order)
-                .HasForeignKey<Order>(or => or.TransactionId);
+                .HasForeignKey<Order>(or => or.TransactionId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Report>()
@@ -131,11 +137,13 @@ namespace DataAccess
             builder.Entity<Report>()
                 .HasOne(r => r.Order)
                 .WithMany(or => or.Reports)
-                .HasForeignKey(r => r.OrderId);
+                .HasForeignKey(r => r.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Report>()
                 .HasOne(r => r.Staff)
                 .WithMany(s => s.Reports)
-                .HasForeignKey(r => r.StaffId);
+                .HasForeignKey(r => r.StaffId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<OrderDetail>()
@@ -143,11 +151,13 @@ namespace DataAccess
             builder.Entity<OrderDetail>()
                 .HasOne(od => od.Order)
                 .WithMany(o => o.OrderDetails)
-                .HasForeignKey(od => od.OrderId);
+                .HasForeignKey(od => od.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<OrderDetail>()
                 .HasOne(od => od.Milk)
                 .WithMany(m => m.OrderDetails)
-                .HasForeignKey(od => od.MilkId);
+                .HasForeignKey(od => od.MilkId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Feedback>()
@@ -155,11 +165,13 @@ namespace DataAccess
             builder.Entity<Feedback>()
                 .HasOne(f => f.Milk)
                 .WithMany(m => m.Feedbacks)
-                .HasForeignKey(f => f.MilkId);
+                .HasForeignKey(f => f.MilkId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Feedback>()
                 .HasOne(f => f.User)
                 .WithMany(u => u.Feedbacks)
-                .HasForeignKey(f => f.UserId);
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Article>()
@@ -167,29 +179,35 @@ namespace DataAccess
             builder.Entity<Article>()
                 .HasOne(a => a.AppUser)
                 .WithMany(u => u.Articles)
-                .HasForeignKey(a => a.UserId);
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Article>()
                 .HasOne(a => a.Milk)
                 .WithMany(m => m.Articles)
-                .HasForeignKey(a => a.MilkId);
+                .HasForeignKey(a => a.MilkId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Milk>()
                 .HasOne(m => m.Brand)
                 .WithMany(b => b.Milks)
-                .HasForeignKey(m => m.BrandId);
+                .HasForeignKey(m => m.BrandId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Milk>()
                 .HasOne(m => m.Category)
                 .WithMany(c => c.Milks)
-                .HasForeignKey(m => m.CategoryId);
+                .HasForeignKey(m => m.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Milk>()
                 .HasOne(m => m.MilkAge)
                 .WithMany(a => a.Milks)
-                .HasForeignKey(m => m.MilkAgeId);
+                .HasForeignKey(m => m.MilkAgeId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Milk>()
                 .HasOne(m => m.Supplier)
                 .WithMany(s => s.Milks)
-                .HasForeignKey(m => m.SupplierId);
+                .HasForeignKey(m => m.SupplierId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<MilkAge>()
@@ -205,11 +223,13 @@ namespace DataAccess
             builder.Entity<Schedule>()
                 .HasOne(s => s.Shipper)
                 .WithMany(sh => sh.Schedules)
-                .HasForeignKey(s => s.ShipperId);
+                .HasForeignKey(s => s.ShipperId)
+                .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Schedule>()
                 .HasOne(s => s.Order)
                 .WithOne(o => o.Schedule)
-                .HasForeignKey<Schedule>(s => s.OrderId);
+                .HasForeignKey<Schedule>(s => s.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Shipper>()
@@ -217,8 +237,9 @@ namespace DataAccess
             builder.Entity<Shipper>()
                 .HasOne(s => s.AppUser)
                 .WithOne(au => au.Shipper)
-                .HasForeignKey<Shipper>(s => s.AppUserId);
-                
+                .HasForeignKey<Shipper>(s => s.AppUserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
 
             builder.Entity<Supplier>()

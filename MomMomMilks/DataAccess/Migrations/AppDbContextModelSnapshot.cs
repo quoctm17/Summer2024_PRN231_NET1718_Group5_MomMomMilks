@@ -634,8 +634,8 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("GrossAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("GrossAmount")
+                        .HasColumnType("float");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -739,7 +739,7 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.AppUser", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -769,13 +769,13 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Milk", "Milk")
                         .WithMany("Articles")
                         .HasForeignKey("MilkId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.AppUser", "AppUser")
                         .WithMany("Articles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -794,7 +794,7 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Order", "Order")
                         .WithMany("CouponUsageHistories")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Coupon");
@@ -807,13 +807,13 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Milk", "Milk")
                         .WithMany("Feedbacks")
                         .HasForeignKey("MilkId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.AppUser", "User")
                         .WithMany("Feedbacks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Milk");
@@ -826,25 +826,25 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Brand", "Brand")
                         .WithMany("Milks")
                         .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.Category", "Category")
                         .WithMany("Milks")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.MilkAge", "MilkAge")
                         .WithMany("Milks")
                         .HasForeignKey("MilkAgeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.Supplier", "Supplier")
                         .WithMany("Milks")
                         .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Brand");
@@ -861,25 +861,25 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Address", "Address")
                         .WithMany("Orders")
                         .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.AppUser", "Buyer")
                         .WithMany("Orders")
                         .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.PaymentType", "PaymentType")
                         .WithMany("Orders")
                         .HasForeignKey("PaymentTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.Transaction", "Transaction")
                         .WithOne("Order")
                         .HasForeignKey("BusinessObject.Entities.Order", "TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -896,13 +896,13 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Milk", "Milk")
                         .WithMany("OrderDetails")
                         .HasForeignKey("MilkId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Milk");
@@ -915,13 +915,13 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Order", "Order")
                         .WithMany("Reports")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.AppUser", "Staff")
                         .WithMany("Reports")
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -934,13 +934,13 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Order", "Order")
                         .WithOne("Schedule")
                         .HasForeignKey("BusinessObject.Entities.Schedule", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Entities.Shipper", "Shipper")
                         .WithMany("Schedules")
                         .HasForeignKey("ShipperId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -953,7 +953,7 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.AppUser", "AppUser")
                         .WithOne("Shipper")
                         .HasForeignKey("BusinessObject.Entities.Shipper", "AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUser");
