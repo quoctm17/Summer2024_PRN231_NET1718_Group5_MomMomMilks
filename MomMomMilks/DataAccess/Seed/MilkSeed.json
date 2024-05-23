@@ -1,1 +1,15 @@
-"Chí ngo"
+[
+  {
+    "Name": "Thực phẩm dinh dưỡng y học Abbott Pediasure hương Vani 1,6kg",
+    "Description": "Thực phẩm dinh dưỡng y học Abbott Pediasure hương Vani 1,6kg dành cho các bé từ 1 - 10 tuổi",
+    "Quantity": 50,
+    "Price": 1085000,
+    "UserManual": "Để có 225 ml PediaSure BA pha chuẩn, cho 190ml nước chín để nguội (≤ 37 độ C) vào ly. Vừa cho từ từ 5 muỗng gạt ngang bột PediaSure BA (muỗng có sẵn trong hộp) vừa khuấy cho tan đều. Khi pha đúng theo hướng dẫn, 1ml PediaSure BA cung cấp 1 kcal hoặc 4.18 KJ. Sữa vừa pha dùng ngay hay đậy kín, cho vào tủ lạnh và dùng trong vòng 24 giờ. Để bổ sung dinh dưỡng: 2 ly/ngày (trẻ 1 - 8 tuổi), 2-3 ly/ngày (trẻ 9 - 10 tuổi) hoặc theo hướng dẫn của chuyên viên dinh dưỡng. Không dùng lò vi sóng để hâm nóng sữa.",
+    "Warning": "Không chứa Gluten. Rất ít Lactose, phù hợp cho người bất dung nạp Lactose. Sản phẩm không dùng cho trẻ bị bệnh Galactosemia. Sản phẩm không dành cho trẻ dưới 1 tuổi, trừ khi được Bác sĩ chỉ định. Tham khảo Bác sĩ/ chuyên viên dinh dưỡng về nhu cầu dinh dưỡng cụ thể của bé. Không dùng nuôi ăn qua đường tĩnh mạch. Người bệnh khi sử dụng sản phẩm cần có sự giám sát của nhân viên y tế. Tham khảo Bác sĩ/ chuyên viên dinh dưỡng về nhu cầu dinh dưỡng cụ thể của con bạn.",
+    "PreserveInstructions": "Bảo quản hộp chưa mở ở nhiệt độ phòng. Hộp đã mở phải được đậy kín và bảo quản ở nơi khô mát (nhưng không cho vào tủ lạnh) và sử dụng trong vòng 3 tuần",
+    "BrandId": 3,
+    "CategoryId": 2,
+    "MilkAgeId": 2,
+    "SupplierId": 2
+  }
+]
