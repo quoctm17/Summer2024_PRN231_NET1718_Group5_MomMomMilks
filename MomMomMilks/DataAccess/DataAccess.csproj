@@ -24,10 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessObject\BusinessObject.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AutoMapperProfile\" />
+    <ProjectReference Include="..\DataTransfer\DataTransfer.csproj" />
   </ItemGroup>
 
 </Project>
