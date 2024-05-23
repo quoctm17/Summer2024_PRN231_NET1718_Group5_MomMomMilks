@@ -1,9 +1,13 @@
 using BusinessObject.Entities;
 using DataAccess;
+using DataAccess.DAO;
+using DataAccess.DAO.Interface;
 using DataAccess.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Repository;
+using Repository.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,10 @@ builder.Services.AddIdentity<AppUser, AppRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IMilkDAO, MilkDAO>();
+builder.Services.AddScoped<IMilkRepository, MilkRepository>();
 
 var app = builder.Build();
 
