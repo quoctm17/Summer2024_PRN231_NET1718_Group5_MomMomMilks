@@ -1,5 +1,6 @@
 using BusinessObject.Entities;
 using DataAccess;
+using DataAccess.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -41,5 +42,25 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<AppDbContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedBranch(context);
+    await Seed.MilkAgeSeed(context);
+    await Seed.SupplierSeed(context);
+    await Seed.CategorySeed(context);
+    await Seed.MilkSeed(context);
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error while seeding data");
+}
 
 app.Run();
