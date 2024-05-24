@@ -1,0 +1,65 @@
+[
+  {
+    "Email": "byrd@gmail.com",
+    "Username": "Byrd",
+    "PhoneNumber": "0355487575",
+    "Status": 0,
+    "Point": 196
+  },
+  {
+    "Email": "gallegos@gmail.com",
+    "Username": "Gallegos",
+    "PhoneNumber": "0125447575",
+    "Status": 1,
+    "Point": 240
+  },
+  {
+    "Email": "hodge@gmail.com",
+    "Username": "Hodge",
+    "PhoneNumber": "0324427515",
+    "Status": 0,
+    "Point": 162
+  },
+  {
+    "Email": "schneider@gmail.com",
+    "Username": "Schneider",
+    "PhoneNumber": "0311181571",
+    "Status": 1,
+    "Point": 312
+  },
+  {
+    "Email": "alston@gmail.com",
+    "Username": "Alston",
+    "PhoneNumber": "0222347575",
+    "Status": 0,
+    "Point": 321
+  },
+  {
+    "Email": "robertson@gmail.com",
+    "Username": "Robertson",
+    "PhoneNumber": "0355455555",
+    "Status": 1,
+    "Point": 498
+  },
+  {
+    "Email": "morton@gmail.com",
+    "Username": "Morton",
+    "PhoneNumber": "0323222312",
+    "Status": 0,
+    "Point": 129
+  },
+  {
+    "Email": "stanton@gmail.com",
+    "Username": "Stanton",
+    "PhoneNumber": "0355437111",
+    "Status": 0,
+    "Point": 466
+  },
+  {
+    "Email": "haynes@gmail.com",
+    "Username": "Haynes",
+    "PhoneNumber": "0311548542",
+    "Status": 0,
+    "Point": 375
+  }
+]

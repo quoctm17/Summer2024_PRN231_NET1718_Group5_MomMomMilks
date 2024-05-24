@@ -1,16 +1,111 @@
 ﻿using BusinessObject.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DataAccess.Seed
 {
     public class Seed
     {
+        public static async Task SeedUser(UserManager<AppUser> _userManager, RoleManager<AppRole> _roleManager)
+        {
+            if (await _userManager.Users.AnyAsync()) return;
+
+            var userData = await File.ReadAllTextAsync("../DataAccess/Seed/UserSeed.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var users = JsonSerializer.Deserialize<List<AppUser>>(userData, jsonOptions);
+
+            var role = new List<AppRole>
+            {
+                new AppRole {Name = "Customer"},
+                new AppRole {Name = "Admin"},
+                new AppRole {Name = "Manager"},
+                new AppRole {Name = "Shipper"}
+            };
+
+            foreach (var roles in role)
+            {
+                await _roleManager.CreateAsync(roles);
+            }
+
+            foreach (var user in users)
+            {
+                user.EmailConfirmed = true;
+                var result = await _userManager.CreateAsync(user, "Pa$$w0rd");
+                await _userManager.AddToRoleAsync(user, "Customer");
+            }
+
+            var admin = new AppUser
+            {
+                UserName = "admin@gmail.com",
+                Email = "admin@gmail.com",
+                EmailConfirmed = true,
+                Status = 1,
+                Point = 0
+            };
+
+            var resultAdmin = await _userManager.CreateAsync(admin, "Pa$$w0rd");
+            await _userManager.AddToRolesAsync(admin, new[] { "Admin" });
+
+            var manager = new AppUser
+            {
+                UserName = "manager@gmail.com",
+                Email = "manager@gmail.com",
+                EmailConfirmed = true,
+                Status = 1,
+                Point = 0
+            };
+
+            await _userManager.CreateAsync(manager, "Pa$$w0rd");
+            await _userManager.AddToRolesAsync(manager, new[] { "Manager" });
+
+            var shipper = new AppUser
+            {
+                UserName = "shipper@gmail.com",
+                Email = "shipper@gmail.com",
+                EmailConfirmed = true,
+                Status = 1,
+                Point = 0,
+                Shipper = new Shipper
+                {
+                    Status = "Available"
+                }
+            };
+
+            await _userManager.CreateAsync(shipper, "Pa$$w0rd");
+            await _userManager.AddToRolesAsync(shipper, new[] { "Shipper" });
+            var shipper2 = new AppUser
+            {
+                UserName = "shipper2@gmail.com",
+                Email = "shipper2@gmail.com",
+                EmailConfirmed = true,
+                Status = 1,
+                Point = 0,
+                Shipper = new Shipper
+                {
+                    Status = "Unavailable"
+                }
+            };
+
+            await _userManager.CreateAsync(shipper2, "Pa$$w0rd");
+            await _userManager.AddToRolesAsync(shipper2, new[] { "Shipper" });
+            var shipper3 = new AppUser
+            {
+                UserName = "shipper3@gmail.com",
+                Email = "shipper3@gmail.com",
+                EmailConfirmed = true,
+                Status = 1,
+                Point = 0,
+                Shipper = new Shipper
+                {
+                    Status = "Shipping"
+                }
+            };
+
+            await _userManager.CreateAsync(shipper3, "Pa$$w0rd");
+            await _userManager.AddToRolesAsync(shipper3, new[] { "Shipper" });
+        }
+
         public static async Task SeedBranch(AppDbContext _context)
         {
             if(await _context.Brands.AnyAsync()) { return; }
