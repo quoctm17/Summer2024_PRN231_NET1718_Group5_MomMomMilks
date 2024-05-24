@@ -27,6 +27,8 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IMilkRepository, MilkRepository>();
             services.AddScoped<IOrderDAO, OrderDAO>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IUserDAO, UserDAO>();
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
     }

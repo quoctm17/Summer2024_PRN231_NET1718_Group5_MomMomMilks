@@ -39,6 +39,7 @@ namespace DataAccess
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Shipper> Shippers{ get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
