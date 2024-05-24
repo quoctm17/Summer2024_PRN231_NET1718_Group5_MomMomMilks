@@ -11,5 +11,57 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 2
+  },
+  {
+    "Name": "Sữa Friso Gold số 4 1400g",
+    "Description": "Sữa Friso Gold số 4 1400g dành cho các bé từ 2 - 6 tuổi",
+    "Quantity": 50,
+    "Price": 735000,
+    "UserManual": "Để có 225 ml Friso Gold pha chuẩn, cho 190ml nước chín để nguội (≤ 37 độ C) vào ly. Vừa cho từ từ 5 muỗng gạt ngang bột Friso Gold (muỗng có sẵn trong hộp) vừa khuấy cho tan đều. Khi pha đúng theo hướng dẫn, 1ml Friso Gold cung cấp 1 kcal hoặc 4.18 KJ. Sữa vừa pha dùng ngay hay đậy kín, cho vào tủ lạnh và dùng trong vòng 24 giờ. Để bổ sung dinh dưỡng: 2 ly/ngày (trẻ 2 - 6 tuổi), 2-3 ly/ngày (trẻ 9 - 10 tuổi) hoặc theo hướng dẫn của chuyên viên dinh dưỡng. Không dùng lò vi sóng để hâm nóng sữa.",
+    "Warning": "Không chứa Gluten. Rất ít Lactose, phù hợp cho người bất dung nạp Lactose. Sản phẩm không dùng cho trẻ bị bệnh Galactosemia. Sản phẩm không dành cho trẻ dưới 1 tuổi, trừ khi được Bác sĩ chỉ định. Tham khảo Bác sĩ/ chuyên viên dinh dưỡng về nhu cầu dinh dưỡng cụ thể của bé. Không dùng nuôi ăn qua đường tĩnh mạch. Người bệnh khi sử dụng sản phẩm cần có sự giám sát của nhân viên y tế. Tham khảo Bác sĩ/ chuyên viên dinh dưỡng về nhu cầu dinh dưỡng cụ thể của con bạn.",
+    "PreserveInstructions": "Bảo quản hộp chưa mở ở nhiệt độ phòng. Hộp đã mở phải được đậy kín và bảo quản ở nơi khô mát (nhưng không cho vào tủ lạnh) và sử dụng trong vòng 3 tuần",
+    "BrandId": 8,
+    "CategoryId": 1,
+    "MilkAgeId": 2,
+    "SupplierId": 4
+  },
+  {
+    "Name": "Sữa Abbott Grow 4 900g",
+    "Description": "Sữa Abbott Grow 4 900g dành cho các bé trên 2 tuổi",
+    "Quantity": 50,
+    "Price": 335000,
+    "UserManual": "Rửa sạch tay trước khi pha. . Cho 175ml nước chín để nguội vào ly (khoảng 37°C), từ từ cho vào ly 3 muỗng gạt ngang (muỗng có sẵn trong hộp), khuấy cho tan đều. Uống ngay sau khi pha. Nếu không uống ngay, nên đậy kín cho vào tủ lạnh ở 2° - 4°C và dùng trong vòng 24 giờ.",
+    "Warning": "Không dùng lò vi sóng để pha hay hâm nóng vì có thể gây bỏng. Dùng nhiều lần lượng pha không đúng cách có thể ảnh hưởng không tốt cho sức khỏe của trẻ.",
+    "PreserveInstructions": "Bảo quản hộp chưa sử dụng ở nhiệt độ phòng. Tránh ánh nắng trực tiếp. Khi đã mở nắp phải được sử dụng trong vòng 3 tuần. Đậy nắp và bảo quản nơi khô mát (không cất trong tủ lạnh).",
+    "BrandId": 3,
+    "CategoryId": 1,
+    "MilkAgeId": 2,
+    "SupplierId": 3
+  },
+  {
+    "Name": "Sản phẩm dinh dưỡng Friso Gold Pro 4",
+    "Description": "Sản phẩm dinh dưỡng Friso Gold Pro 4 dành cho các bé từ 3 - 6 tuổi",
+    "Quantity": 50,
+    "Price": 595000,
+    "UserManual": "Rửa sạch tay trước khi pha. . Cho 175ml nước chín để nguội vào ly (khoảng 37°C), từ từ cho vào ly 3 muỗng gạt ngang (muỗng có sẵn trong hộp), khuấy cho tan đều. Uống ngay sau khi pha. Nếu không uống ngay, nên đậy kín cho vào tủ lạnh ở 2° - 4°C và dùng trong vòng 24 giờ.",
+    "Warning": "Không dùng lò vi sóng để pha hay hâm nóng vì có thể gây bỏng. Dùng nhiều lần lượng pha không đúng cách có thể ảnh hưởng không tốt cho sức khỏe của trẻ.",
+    "PreserveInstructions": "Bảo quản hộp chưa sử dụng ở nhiệt độ phòng. Tránh ánh nắng trực tiếp. Khi đã mở nắp phải được sử dụng trong vòng 3 tuần. Đậy nắp và bảo quản nơi khô mát (không cất trong tủ lạnh).",
+    "BrandId": 8,
+    "CategoryId": 1,
+    "MilkAgeId": 2,
+    "SupplierId": 8
+  },
+  {
+    "Name": "Sữa bầu Friso Mum Gold 900g hương cam",
+    "Description": "Thực phẩm bổ sung cho mẹ mang thai và cho con bú, hương cam nhãn hiệu Frisomum Gold DualCare+TM",
+    "Quantity": 50,
+    "Price": 539000,
+    "UserManual": "Rửa sạch tay trước khi pha. Đun sôi các dụng cụ pha trong vòng ít nhất 3 phút. Đun sôi nước trong vòng 5 phút, sau đó để nguội dần đến 40°C (nước ấm) trước khi pha để đảm bảo các vi khuẩn có ích còn sống. Cho 7 muỗng gạt vào 180ml nước đun sôi để ấm khoảng 40oC và khuấy đều (1 muỗng gạt ngang tương đương 6.4g sản phẩm). Sử dụng phần sản phẩm đã pha trong vòng 1 giờ sau khi pha. Đổ bỏ phần uống còn dư.",
+    "Warning": "Không dùng lò vi sóng để pha hay hâm nóng vì có thể gây bỏng. Dùng nhiều lần lượng pha không đúng cách có thể ảnh hưởng không tốt cho sức khỏe của trẻ.",
+    "PreserveInstructions": "Bảo quản hộp chưa sử dụng ở nhiệt độ phòng. Tránh ánh nắng trực tiếp. Khi đã mở nắp phải được sử dụng trong vòng 3 tuần. Đậy nắp và bảo quản nơi khô mát (không cất trong tủ lạnh).",
+    "BrandId": 8,
+    "CategoryId": 4,
+    "MilkAgeId": 6,
+    "SupplierId": 4
   }
 ]
