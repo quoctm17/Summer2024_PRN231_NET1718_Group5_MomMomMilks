@@ -68,6 +68,7 @@ namespace DataAccess.Seed
                 new Supplier{Name="Nhà máy Meiji Saitama, Nhật Bản"},
                 new Supplier{Name="Nutifood Việt Nam"},
                 new Supplier{Name="Danone, New Zealand"}
+                new Supplier{Name="Hà Lan"}
             };
 
             foreach(var i in list)
