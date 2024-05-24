@@ -162,7 +162,7 @@ namespace DataAccess.Seed
                 new Supplier{Name="Công ty TNHH FrieslandCampina Hà Nam, Việt Nam"},
                 new Supplier{Name="Nhà máy Meiji Saitama, Nhật Bản"},
                 new Supplier{Name="Nutifood Việt Nam"},
-                new Supplier{Name="Danone, New Zealand"}
+                new Supplier{Name="Danone, New Zealand"},
                 new Supplier{Name="Hà Lan"}
             };
 
@@ -202,6 +202,37 @@ namespace DataAccess.Seed
             foreach(var i in m)
             {
                 await _context.Milks.AddAsync(i);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public static async Task PaynmentTypeSeed(AppDbContext _context)
+        {
+            if (await _context.PaymentTypes.AnyAsync()) { return; }
+
+            var list = new List<PaymentType>
+            {
+                new PaymentType {Name="OnlinePayment"},
+                new PaymentType {Name="In cash"}
+            };
+
+            foreach (var i in list)
+            {
+                await _context.PaymentTypes.AddAsync(i);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public static async Task OrderSeed(AppDbContext _context)
+        {
+            if (await _context.Orders.AnyAsync()) { return; }
+
+            var order = await File.ReadAllTextAsync("../DataAccess/Seed/OrderSeed.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var m = JsonSerializer.Deserialize<List<Order>>(order, jsonOptions);
+
+            foreach (var i in m)
+            {
+                await _context.Orders.AddAsync(i);
                 await _context.SaveChangesAsync();
             }
         }

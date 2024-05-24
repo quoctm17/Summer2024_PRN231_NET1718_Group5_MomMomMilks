@@ -1,0 +1,38 @@
+﻿[
+  {
+    "UserId": 1,
+    "HouseNumber": null,
+    "Street": null,
+    "Ward": null,
+    "District": null,
+    "City": null,
+    "Latitude": null
+  },
+  {
+    "UserId": 2,
+    "HouseNumber": null,
+    "Street": null,
+    "Ward": null,
+    "District": null,
+    "City": null,
+    "Latitude": null
+  },
+  {
+    "UserId": 3,
+    "HouseNumber": null,
+    "Street": null,
+    "Ward": null,
+    "District": null,
+    "City": null,
+    "Latitude": null
+  },
+  {
+    "UserId": 4,
+    "HouseNumber": null,
+    "Street": null,
+    "Ward": null,
+    "District": null,
+    "City": null,
+    "Latitude": null
+  }
+]

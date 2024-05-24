@@ -58,6 +58,8 @@ try
     await Seed.CategorySeed(context);
     await Seed.MilkSeed(context);
     await Seed.SeedUser(userManager, roleManager);
+    await Seed.PaynmentTypeSeed(context);
+    await Seed.OrderSeed(context);
 }
 catch (Exception ex)
 {
