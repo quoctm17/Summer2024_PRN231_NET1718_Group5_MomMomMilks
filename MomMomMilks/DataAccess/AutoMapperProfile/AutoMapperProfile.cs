@@ -18,6 +18,8 @@ namespace DataAccess.AutoMapperProfile
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier.Name))
                 .ReverseMap();
+
+            CreateMap<RegisterDTO, AppUser>();
         }
     }
 }

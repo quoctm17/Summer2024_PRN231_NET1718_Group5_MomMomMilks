@@ -6,27 +6,20 @@ using DataAccess.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MomMomMilks.Extensions;
 using Repository;
 using Repository.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<AppDbContext>();
-var connectionString =
-builder.Configuration.GetConnectionString("DefaultConnectionString");
-builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<AppUser, AppRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+//builder.Services.AddIdentity<AppUser, AppRole>()
+//    .AddEntityFrameworkStores<AppDbContext>()
+//    .AddDefaultTokenProviders();
+builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddControllers();
-
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IMilkDAO, MilkDAO>();
-builder.Services.AddScoped<IMilkRepository, MilkRepository>();
 
 var app = builder.Build();
 
@@ -64,6 +57,7 @@ try
     await Seed.SupplierSeed(context);
     await Seed.CategorySeed(context);
     await Seed.MilkSeed(context);
+    await Seed.SeedUser(userManager, roleManager);
 }
 catch (Exception ex)
 {
