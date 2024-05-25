@@ -21,7 +21,7 @@ namespace BusinessObject.Entities
         public AppUser Buyer { get; set; }
         public PaymentType PaymentType { get; set; }
         public Address Address { get; set; }
-        public Transaction Transaction { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
         public ICollection <Report> Reports { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<CouponUsageHistory> CouponUsageHistories { get; set; }

@@ -17,7 +17,6 @@ namespace BusinessObject.Entities
         public ICollection<Address> Addresses { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
-        public ICollection<Article> Articles { get; set; }
         public ICollection<Report> Reports { get; set; }
 
     }
