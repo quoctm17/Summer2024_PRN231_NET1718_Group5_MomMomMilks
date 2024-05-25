@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using MomMomMilks.Extensions;
 using Repository;
 using Repository.Interface;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,15 +21,24 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configure the HTTP request pipeline.
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+
 }
 else
 {
