@@ -27,7 +27,6 @@ namespace DataAccess
         public DbSet<AppUserRole> AppUserRole { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<MilkAge> MilkAges { get; set; }
-        public DbSet<Article> Articles { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<CouponUsageHistory> CouponUsageHistories { get; set; }
@@ -125,11 +124,6 @@ namespace DataAccess
                 .WithMany(b => b.Orders)
                 .HasForeignKey(or => or.BuyerId)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Order>()
-                .HasOne(or => or.Transaction)
-                .WithOne(ts => ts.Order)
-                .HasForeignKey<Order>(or => or.TransactionId)
-                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Report>()
@@ -171,20 +165,6 @@ namespace DataAccess
                 .HasOne(f => f.User)
                 .WithMany(u => u.Feedbacks)
                 .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-
-            builder.Entity<Article>()
-                .HasKey(a => a.Id);
-            builder.Entity<Article>()
-                .HasOne(a => a.AppUser)
-                .WithMany(u => u.Articles)
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Article>()
-                .HasOne(a => a.Milk)
-                .WithMany(m => m.Articles)
-                .HasForeignKey(a => a.MilkId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -244,6 +224,15 @@ namespace DataAccess
 
             builder.Entity<Supplier>()
                 .HasKey(s => s.Id);
+
+
+            builder.Entity<Transaction>()
+                .HasKey(t => t.Id);
+            builder.Entity<Transaction>()
+                .HasOne(t => t.Order)
+                .WithMany(o => o.Transactions)
+                .HasForeignKey(t => t.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

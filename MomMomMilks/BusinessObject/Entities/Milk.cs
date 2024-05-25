@@ -26,6 +26,5 @@ namespace BusinessObject.Entities
         public Supplier Supplier { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
-        public ICollection<Article> Articles { get; set; }
     }
 }
