@@ -23,12 +23,23 @@ namespace MomMomMilks.Extensions
             //Add services to container
             services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddScoped<IMilkDAO, MilkDAO>();
-            services.AddScoped<IMilkRepository, MilkRepository>();
+
+            // DAOs
             services.AddScoped<IOrderDAO, OrderDAO>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderDetailsDAO, OrderDetailsDAO>();
             services.AddScoped<IUserDAO, UserDAO>();
+            services.AddScoped<IMilkDAO, MilkDAO>();
+            services.AddScoped<ICategoryDAO, CategoryDAO>();
+
+            // Repositories
+            services.AddScoped<IMilkRepository, MilkRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            // Services
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             return services;
         }
     }

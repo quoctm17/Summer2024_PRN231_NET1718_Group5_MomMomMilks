@@ -1,4 +1,5 @@
 ﻿using FE.Models;
+using Newtonsoft.Json;
 using System.Text.Json;
 
 namespace FE.Services
@@ -14,11 +15,16 @@ namespace FE.Services
 
         public async Task<List<Milk>> GetMilksAsync()
         {
-            var response = await _httpClient.GetAsync("http://localhost:5215/api/Milk/milks");
-            response.EnsureSuccessStatusCode();
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<List<Milk>>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var response = await _httpClient.GetAsync("http://localhost:5215/odata/Milk");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<Milk>>(json);
+            }
+            else
+            {
+                return new List<Milk>();
+            }
         }
     }
 }

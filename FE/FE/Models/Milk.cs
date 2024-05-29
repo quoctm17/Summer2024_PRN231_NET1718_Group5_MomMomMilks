@@ -14,5 +14,6 @@
         public string Category { get; set; }
         public string MilkAge { get; set; }
         public string Supplier { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

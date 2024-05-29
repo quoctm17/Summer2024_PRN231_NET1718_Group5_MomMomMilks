@@ -1,23 +1,57 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessObject.Entities;
+using DataTransfer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Formatter;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Repository;
 using Repository.Interface;
+using Service.Interfaces;
 
 namespace MomMomMilks.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("odata/[controller]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderController : ODataController
     {
-        private readonly IOrderRepository _orderRepository;
-        public OrderController(IOrderRepository orderRepository)
+        private readonly IOrderService _orderService;
+        public OrderController(IOrderService orderService)
         {
-            _orderRepository = orderRepository;
+            _orderService = orderService;
         }
-        [HttpGet("orders")]
-        public async Task<IActionResult> GetAllOrders()
+
+        [EnableQuery]
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
-            return Ok(await _orderRepository.GetAllOrders());
+            var orders = await _orderService.GetAllOrders();
+            return Ok(orders);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] OrderRequestDto orderRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _orderService.CreateOrderAsync(orderRequest.Order, orderRequest.OrderDetails);
+            return Created(orderRequest.Order);
+        }
+
+        [EnableQuery]
+        [HttpGet("{key}")]
+        public async Task<IActionResult> Get([FromODataUri] int key)
+        {
+            var order = await _orderService.GetOrderAsync(key);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return Ok(order);
         }
     }
 }

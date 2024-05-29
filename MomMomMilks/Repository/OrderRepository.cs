@@ -1,4 +1,6 @@
-﻿using DataAccess.DAO.Interface;
+﻿using BusinessObject.Entities;
+using DataAccess.DAO;
+using DataAccess.DAO.Interface;
 using DataTransfer;
 using Repository.Interface;
 using System;
@@ -12,6 +14,7 @@ namespace Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly IOrderDAO _orderDAO;
+        private readonly IOrderDetailsDAO _orderDetailsDAO;
         public OrderRepository(IOrderDAO orderDAO)
         {
             _orderDAO = orderDAO;
@@ -20,6 +23,22 @@ namespace Repository
         public async Task<List<OrderDTO>> GetAllOrders()
         {
             return await _orderDAO.GetAllOrders();
+        }
+
+        public async Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails)
+        {
+            await _orderDAO.AddOrderAsync(order);
+
+            foreach (var detail in orderDetails)
+            {
+                detail.OrderId = order.Id; // Set OrderId for each detail
+                await _orderDetailsDAO.AddOrderDetailAsync(detail);
+            }
+        }
+
+        public async Task<Order> GetOrderAsync(int orderId)
+        {
+            return await _orderDAO.GetOrderByIdAsync(orderId);
         }
     }
 }

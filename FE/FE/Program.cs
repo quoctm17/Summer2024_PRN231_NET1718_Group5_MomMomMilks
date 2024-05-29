@@ -8,6 +8,8 @@ builder.Services.AddHttpClient();
 
 // Add Service
 builder.Services.AddScoped<FE.Services.MilkService>();
+builder.Services.AddScoped<FE.Services.CategoryService>();
+
 
 var app = builder.Build();
 
