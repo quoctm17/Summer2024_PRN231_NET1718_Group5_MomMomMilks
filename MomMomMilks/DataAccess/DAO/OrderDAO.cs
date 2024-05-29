@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessObject.Entities;
 using DataAccess.DAO.Interface;
 using DataTransfer;
 using Microsoft.EntityFrameworkCore;
@@ -34,5 +35,18 @@ namespace DataAccess.DAO
             }
             return orderDTO;
         }
+
+        public async Task AddOrderAsync(Order order)
+        {
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Order> GetOrderByIdAsync(int orderId)
+        {
+            return await _context.Orders.Include(o => o.OrderDetails).FirstOrDefaultAsync(o => o.Id == orderId);
+        }
     }
+
+
 }

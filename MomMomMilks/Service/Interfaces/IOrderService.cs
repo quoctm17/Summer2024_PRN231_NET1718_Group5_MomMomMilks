@@ -6,13 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.DAO.Interface
+namespace Service.Interfaces
 {
-    public interface IOrderDAO
+    public interface IOrderService
     {
         Task<List<OrderDTO>> GetAllOrders();
-        Task AddOrderAsync(Order order);
-        Task<Order> GetOrderByIdAsync(int orderId);
-
+        Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
+        Task<Order> GetOrderAsync(int orderId);
     }
 }

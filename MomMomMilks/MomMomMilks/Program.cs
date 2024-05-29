@@ -10,15 +10,30 @@ using MomMomMilks.Extensions;
 using Repository;
 using Repository.Interface;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.OData;
+using System.Reflection.Emit;
+using Microsoft.OData.ModelBuilder;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-//builder.Services.AddIdentity<AppUser, AppRole>()
-//    .AddEntityFrameworkStores<AppDbContext>()
-//    .AddDefaultTokenProviders();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
+
+// Add OData Service
+var modelBuilder = new ODataConventionModelBuilder();
+modelBuilder.EntitySet<Order>("Orders");
+modelBuilder.EntitySet<Category>("Categories");
+modelBuilder.EntitySet<Category>("Milks");
+
+var edmModel = modelBuilder.GetEdmModel();
+builder.Services.AddControllers().AddOData(opt =>
+    opt.Select()
+       .Filter()
+       .OrderBy()
+       .Expand()
+       .SetMaxTop(100)
+       .Count()
+       .AddRouteComponents("odata", edmModel));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -52,7 +67,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

@@ -1,5 +1,4 @@
 ﻿using BusinessObject.Entities;
-using DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.DAO.Interface
 {
-    public interface IOrderDAO
+    public interface IOrderDetailsDAO
     {
-        Task<List<OrderDTO>> GetAllOrders();
-        Task AddOrderAsync(Order order);
-        Task<Order> GetOrderByIdAsync(int orderId);
-
+        Task AddOrderDetailAsync(OrderDetail orderDetail);
+        Task<List<OrderDetail>> GetOrderDetailsByOrderIdAsync(int orderId);
     }
 }
