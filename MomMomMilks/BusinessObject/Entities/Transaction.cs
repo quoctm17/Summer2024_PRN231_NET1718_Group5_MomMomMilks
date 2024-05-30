@@ -11,6 +11,7 @@ namespace BusinessObject.Entities
         public int Id { get; set; }
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int OrderId { get; set; }
         public double GrossAmount { get; set;}
         public Order Order { get; set; }
     }

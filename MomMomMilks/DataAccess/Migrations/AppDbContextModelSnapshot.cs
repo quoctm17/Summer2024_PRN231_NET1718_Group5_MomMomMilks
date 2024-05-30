@@ -187,43 +187,6 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("BusinessObject.Entities.Article", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MilkId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MilkId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Articles");
-                });
-
             modelBuilder.Entity("BusinessObject.Entities.Brand", b =>
                 {
                     b.Property<int>("Id")
@@ -239,6 +202,54 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MilkId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("MilkId");
+
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Category", b =>
@@ -368,6 +379,10 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MilkAgeId")
                         .HasColumnType("int");
 
@@ -467,9 +482,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("BuyerId");
 
                     b.HasIndex("PaymentTypeId");
-
-                    b.HasIndex("TransactionId")
-                        .IsUnique();
 
                     b.ToTable("Orders");
                 });
@@ -603,7 +615,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Shipper");
+                    b.ToTable("Shippers");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Supplier", b =>
@@ -637,11 +649,16 @@ namespace DataAccess.Migrations
                     b.Property<double>("GrossAmount")
                         .HasColumnType("float");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Transaction");
                 });
@@ -764,21 +781,32 @@ namespace DataAccess.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("BusinessObject.Entities.Article", b =>
+            modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
                 {
+                    b.HasOne("BusinessObject.Entities.AppUser", "User")
+                        .WithOne("Cart")
+                        .HasForeignKey("BusinessObject.Entities.Cart", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.CartItem", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("BusinessObject.Entities.Milk", "Milk")
-                        .WithMany("Articles")
+                        .WithMany("CartItems")
                         .HasForeignKey("MilkId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Entities.AppUser", "AppUser")
-                        .WithMany("Articles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
+                    b.Navigation("Cart");
 
                     b.Navigation("Milk");
                 });
@@ -876,19 +904,11 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Entities.Transaction", "Transaction")
-                        .WithOne("Order")
-                        .HasForeignKey("BusinessObject.Entities.Order", "TransactionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("Address");
 
                     b.Navigation("Buyer");
 
                     b.Navigation("PaymentType");
-
-                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.OrderDetail", b =>
@@ -959,6 +979,17 @@ namespace DataAccess.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.Transaction", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.Order", "Order")
+                        .WithMany("Transactions")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("BusinessObject.Entities.AppRole", null)
@@ -1009,7 +1040,8 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("Addresses");
 
-                    b.Navigation("Articles");
+                    b.Navigation("Cart")
+                        .IsRequired();
 
                     b.Navigation("Feedbacks");
 
@@ -1028,6 +1060,11 @@ namespace DataAccess.Migrations
                     b.Navigation("Milks");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Category", b =>
                 {
                     b.Navigation("Milks");
@@ -1040,7 +1077,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessObject.Entities.Milk", b =>
                 {
-                    b.Navigation("Articles");
+                    b.Navigation("CartItems");
 
                     b.Navigation("Feedbacks");
 
@@ -1062,6 +1099,8 @@ namespace DataAccess.Migrations
 
                     b.Navigation("Schedule")
                         .IsRequired();
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.PaymentType", b =>
@@ -1077,12 +1116,6 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("BusinessObject.Entities.Supplier", b =>
                 {
                     b.Navigation("Milks");
-                });
-
-            modelBuilder.Entity("BusinessObject.Entities.Transaction", b =>
-                {
-                    b.Navigation("Order")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -20,6 +20,10 @@ namespace DataAccess.AutoMapperProfile
                 .ReverseMap();
 
             CreateMap<RegisterDTO, AppUser>();
+            CreateMap<Order, OrderDTO>()
+                .ReverseMap();
+            CreateMap<Shipper, ShipperDTO>()
+                .ReverseMap();
         }
     }
 }

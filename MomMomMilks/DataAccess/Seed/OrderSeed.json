@@ -1,0 +1,158 @@
+[
+  {
+    "CreateAt": "2023-05-01T10:00:00",
+    "UpdateAt": "2023-05-02T12:00:00",
+    "TotalAmount": 99.99,
+    "BuyerId": 1,
+    "AddressId": 1,
+    "PaymentTypeId": 1,
+    "TransactionId": 1,
+    "ShipperId": 1,
+    "Schedule": {
+      "ShipperId": 2,
+      "OrderId": 1,
+      "TimeSlot": "Morning"
+    },
+    "OrderDetail": [
+      {
+        "OrderId": 1,
+        "Quantity": 2,
+        "CreateAt": "2023-05-01T10:00:00",
+        "UpdateAt": "2023-05-01T10:00:00",
+        "MilkId": 1,
+        "Discount": 100,
+        "Price": 200,
+        "Total": 100
+      },
+      {
+        "OrderId": 1,
+        "Quantity": 2,
+        "CreateAt": "2023-05-01T10:00:00",
+        "UpdateAt": "2023-05-01T10:00:00",
+        "MilkId": 2,
+        "Discount": 100,
+        "Price": 200,
+        "Total": 100
+      }
+    ],
+    "Address": {
+      "UserId": 1,
+      "HouseNumber": "123",
+      "Street": "A1",
+      "Ward": "Nguyen Van Tang",
+      "District": "Thu Duc",
+      "City": "HCM",
+      "Latitude": "Vin",
+      "Longitude": "Vin"
+    },
+    "Transaction": {
+      "Status": "Pending",
+      "CreatedAt": "2023-05-01T10:00:00",
+      "GrossAmount": 1
+    }
+  },
+  {
+    "CreateAt": "2023-05-01T10:00:00",
+    "UpdateAt": "2023-05-02T12:00:00",
+    "TotalAmount": 99.99,
+    "BuyerId": 1,
+    "AddressId": 1,
+    "PaymentTypeId": 1,
+    "TransactionId": 1,
+    "ShipperId": 1,
+    "Schedule": {
+      "ShipperId": 2,
+      "OrderId": 2,
+      "TimeSlot": "Morning"
+    },
+    "OrderDetail": [
+      {
+        "OrderId": 2,
+        "Quantity": 2,
+        "CreateAt": "2023-05-01T10:00:00",
+        "UpdateAt": "2023-05-01T10:00:00",
+        "MilkId": 1,
+        "Discount": 100,
+        "Price": 200,
+        "Total": 100
+      },
+      {
+        "OrderId": 2,
+        "Quantity": 2,
+        "CreateAt": "2023-05-01T10:00:00",
+        "UpdateAt": "2023-05-01T10:00:00",
+        "MilkId": 2,
+        "Discount": 100,
+        "Price": 200,
+        "Total": 100
+      }
+    ],
+    "Address": {
+      "UserId": 1,
+      "HouseNumber": "123",
+      "Street": "A1",
+      "Ward": "Nguyen Van Tang",
+      "District": "Thu Duc",
+      "City": "HCM",
+      "Latitude": "Vin",
+      "Longitude": "Vin"
+    },
+    "Transaction": {
+      "Status": "Pending",
+      "CreatedAt": "2023-05-01T10:00:00",
+      "GrossAmount": 1
+    }
+  },
+  {
+    "CreateAt": "2023-05-01T10:00:00",
+    "UpdateAt": "2023-05-02T12:00:00",
+    "TotalAmount": 99.99,
+    "BuyerId": 1,
+    "AddressId": 1,
+    "PaymentTypeId": 1,
+    "TransactionId": 1,
+    "ShipperId": 1,
+    "Schedule": {
+      "ShipperId": 2,
+      "OrderId": 3,
+      "TimeSlot": "Morning"
+    },
+    "OrderDetail": [
+      {
+        "OrderId": 3,
+        "Quantity": 2,
+        "CreateAt": "2023-05-01T10:00:00",
+        "UpdateAt": "2023-05-01T10:00:00",
+        "MilkId": 1,
+        "Discount": 100,
+        "Price": 200,
+        "Total": 100
+      },
+      {
+        "OrderId": 3,
+        "Quantity": 2,
+        "CreateAt": "2023-05-01T10:00:00",
+        "UpdateAt": "2023-05-01T10:00:00",
+        "MilkId": 2,
+        "Discount": 100,
+        "Price": 200,
+        "Total": 100
+      }
+    ],
+    "Address": {
+      "UserId": 1,
+      "HouseNumber": "123",
+      "Street": "A1",
+      "Ward": "Nguyen Van Tang",
+      "District": "Thu Duc",
+      "City": "HCM",
+      "Latitude": "Vin",
+      "Longitude": "Vin"
+    },
+    "Transaction": {
+      "Status": "Pending",
+      "CreatedAt": "2023-05-01T10:00:00",
+      "GrossAmount": 1
+    }
+  }
+]

@@ -1,4 +1,5 @@
-﻿using DataAccess.DAO.Interface;
+﻿using BusinessObject.Entities;
+using DataAccess.DAO.Interface;
 using DataTransfer;
 using Repository.Interface;
 using System;
@@ -20,6 +21,11 @@ namespace Repository
         public async Task<List<MilkDTO>> GetAllMilk()
         {
             return await _milkDAO.GetAllMilk();
+        }
+
+        public async Task<Milk> GetByIdAsync(int milkId)
+        {
+            return await _milkDAO.GetByIdAsync(milkId);
         }
     }
 }

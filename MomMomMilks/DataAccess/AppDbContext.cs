@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection.Emit;
 
 
 namespace DataAccess
@@ -27,7 +28,6 @@ namespace DataAccess
         public DbSet<AppUserRole> AppUserRole { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<MilkAge> MilkAges { get; set; }
-        public DbSet<Article> Articles { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<CouponUsageHistory> CouponUsageHistories { get; set; }
@@ -39,6 +39,9 @@ namespace DataAccess
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Shipper> Shippers{ get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet <CartItem> CartItems { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -75,6 +78,10 @@ namespace DataAccess
                 .HasForeignKey(u => u.UserId)
                 .IsRequired();
 
+            builder.Entity<AppUser>()
+            .HasOne(a => a.Cart)
+            .WithOne(c => c.User)
+            .HasForeignKey<Cart>(c => c.UserId);
 
             builder.Entity<AppRole>()
                 .HasMany(ur => ur.UserRoles)
@@ -84,8 +91,21 @@ namespace DataAccess
 
 
             builder.Entity<Brand>()
-                .HasKey(b => b.Id);
+            .HasKey(b => b.Id);
 
+
+            builder.Entity<Cart>()
+                .HasMany(c => c.CartItems)
+                .WithOne(ci => ci.Cart)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<CartItem>()
+                .HasOne(ci => ci.Milk)
+                .WithMany(m => m.CartItems)
+                .HasForeignKey(ci => ci.MilkId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Category>()
                 .HasKey(c => c.Id);
@@ -124,11 +144,6 @@ namespace DataAccess
                 .HasOne(or => or.Buyer)
                 .WithMany(b => b.Orders)
                 .HasForeignKey(or => or.BuyerId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Order>()
-                .HasOne(or => or.Transaction)
-                .WithOne(ts => ts.Order)
-                .HasForeignKey<Order>(or => or.TransactionId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -171,20 +186,6 @@ namespace DataAccess
                 .HasOne(f => f.User)
                 .WithMany(u => u.Feedbacks)
                 .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-
-            builder.Entity<Article>()
-                .HasKey(a => a.Id);
-            builder.Entity<Article>()
-                .HasOne(a => a.AppUser)
-                .WithMany(u => u.Articles)
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Article>()
-                .HasOne(a => a.Milk)
-                .WithMany(m => m.Articles)
-                .HasForeignKey(a => a.MilkId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -244,6 +245,15 @@ namespace DataAccess
 
             builder.Entity<Supplier>()
                 .HasKey(s => s.Id);
+
+
+            builder.Entity<Transaction>()
+                .HasKey(t => t.Id);
+            builder.Entity<Transaction>()
+                .HasOne(t => t.Order)
+                .WithMany(o => o.Transactions)
+                .HasForeignKey(t => t.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

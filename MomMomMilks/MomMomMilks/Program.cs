@@ -9,26 +9,63 @@ using Microsoft.EntityFrameworkCore;
 using MomMomMilks.Extensions;
 using Repository;
 using Repository.Interface;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.OData;
+using System.Reflection.Emit;
+using Microsoft.OData.ModelBuilder;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-//builder.Services.AddIdentity<AppUser, AppRole>()
-//    .AddEntityFrameworkStores<AppDbContext>()
-//    .AddDefaultTokenProviders();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
 
+// Add OData Service
+var modelBuilder = new ODataConventionModelBuilder();
+modelBuilder.EntitySet<Order>("Orders");
+modelBuilder.EntitySet<Category>("Categories");
+modelBuilder.EntitySet<Category>("Milks");
+modelBuilder.EntitySet<Cart>("Carts");
+modelBuilder.EntitySet<CartItem>("CartItems");
+
+var edmModel = modelBuilder.GetEdmModel();
+builder.Services.AddControllers()
+    .AddOData(opt => opt.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100))
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configure the HTTP request pipeline.
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+
 }
 else
 {
@@ -39,10 +76,12 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -58,6 +97,8 @@ try
     await Seed.CategorySeed(context);
     await Seed.MilkSeed(context);
     await Seed.SeedUser(userManager, roleManager);
+    await Seed.PaynmentTypeSeed(context);
+    await Seed.OrderSeed(context);
 }
 catch (Exception ex)
 {
