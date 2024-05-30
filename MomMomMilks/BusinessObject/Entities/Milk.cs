@@ -20,11 +20,13 @@ namespace BusinessObject.Entities
         public int CategoryId { get; set; }
         public int MilkAgeId { get; set; }
         public int SupplierId { get; set; }
+        public string ImageUrl { get; set; }
         public Category Category { get; set; }
         public Brand Brand { get; set; }
         public MilkAge MilkAge { get; set; }
         public Supplier Supplier { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     }
 }

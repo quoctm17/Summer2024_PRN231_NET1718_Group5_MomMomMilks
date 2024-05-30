@@ -13,6 +13,7 @@ namespace BusinessObject.Entities
         public byte Status { get; set; }
         public int Point { get; set; }
         public Shipper Shipper { get; set; }
+        public Cart Cart { get; set; }
         public ICollection<AppUserRole> UserRoles { get; set; }
         public ICollection<Address> Addresses { get; set; }
         public ICollection<Order> Orders { get; set; }

@@ -93,7 +93,7 @@
                             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                             <li><a href="/shopping_cart"><i class="fa fa-shopping-bag"></i> <span id="cart-count">0</span></a></li>
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
+                        <div class="header__cart__price">Cart Total: <span>$150.00</span></div>
                     </div>
                 </div>
             </div>
@@ -200,11 +200,38 @@
             updateCartCount();
         });
 
-        function updateCartCount() {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').innerText = count;
+        async function updateCartCount() {
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk');
+                if (response.ok) {
+                    let cart = await response.json();
+                    console.log('API response:', cart); // Check the response from the API
+
+                    // Get cart data from $values property
+                    let cartItems = cart.$values || [];
+
+                    // Check if cartItems is an array
+                    if (Array.isArray(cartItems)) {
+                        let count = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
+                        let totalPrice = cartItems.reduce((sum, item) => sum + (item.Milk.Price * item.Quantity), 0);
+
+                        document.getElementById('cart-count').innerText = count;
+                        document.querySelector('.header__cart__price span').innerText = formatCurrency(totalPrice) + ' VND';
+                    } else {
+                        console.error('Cart items is not an array:', cartItems);
+                    }
+                } else {
+                    console.error('Failed to fetch cart count.');
+                }
+            } catch (error) {
+                console.error('Error fetching cart count:', error);
+            }
         }
+
+        function formatCurrency(amount) {
+            return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

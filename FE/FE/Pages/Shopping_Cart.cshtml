@@ -34,7 +34,6 @@
                             {
                                 <li><a href="#">@category.Name</a></li>
                             }
-
                         </ul>
                     </div>
                 </div>
@@ -109,8 +108,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="shoping__cart__btns">
-                        <a href="#" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
-                        <a href="#" class="primary-btn cart-btn cart-btn-right" onclick="updateCart()">
+                        <a href="/" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                        <a href="#" class="primary-btn cart-btn cart-btn-right" onclick="loadCart()">
                             <span class="icon_loading"></span>
                             Update Cart
                         </a>
@@ -151,106 +150,130 @@
             loadCart();
         });
 
-        function loadCart() {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var cartItems = cart.map(item => `
-                    <tr>
-                        <td class="shoping__cart__item">
-                            <img src="${item.imageUrl}" alt="${item.name}">
-                        </td>
-                        <td class="shoping__cart__item">
-                            <h5>${item.name}</h5>
-                        </td>
-                        <td class="shoping__cart__price">
-                            ${formatCurrency(item.price)} VND
-                        </td>
-                        <td class="shoping__cart__quantity">
-                            <div class="quantity">
-                                <button class="quantity-btn" onclick="decrementQuantity(${item.id})">-</button>
-                                <div class="pro-qty">
-                                    <input type="text" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)">
-                                </div>
-                                <button class="quantity-btn" onclick="incrementQuantity(${item.id})">+</button>
+        async function loadCart() {
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk');
+                if (response.ok) {
+                    let cart = await response.json();
+                    console.log('API response:', cart);
+
+                    let cartItems = cart.$values || [];
+
+                    let cartItemsHtml = cartItems.map(item => `
+                <tr>
+                    <td class="shoping__cart__item">
+                        <img src="${item.Milk.ImageUrl}" alt="${item.Milk.Name}">
+                    </td>
+                    <td class="shoping__cart__item">
+                        <h5>${item.Milk.Name}</h5>
+                    </td>
+                    <td class="shoping__cart__price">
+                        ${formatCurrency(item.Milk.Price)} VND
+                    </td>
+                    <td class="shoping__cart__quantity">
+                        <div class="quantity">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity - 1})">-</button>
+                            <div class="pro-qty">
+                                <input type="text" value="${item.Quantity}" onchange="updateQuantity(${item.MilkId}, this.value)">
                             </div>
-                        </td>
-                        <td class="shoping__cart__total">
-                            ${formatCurrency(item.price * item.quantity)} đ
-                        </td>
-                        <td class="shoping__cart__item__close">
-                            <span class="icon_close" onclick="removeFromCart(${item.id})"></span>
-                        </td>
-                    </tr>
-                `).join('');
-            document.getElementById('cart-items').innerHTML = cartItems;
-            updateCartTotal();
+                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity + 1})">+</button>
+                        </div>
+                    </td>
+                    <td class="shoping__cart__total">
+                        ${formatCurrency(item.Milk.Price * item.Quantity)} đ
+                    </td>
+                    <td class="shoping__cart__item__close">
+                        <span class="icon_close" onclick="removeFromCart(${item.Id})"></span>
+                    </td>
+                </tr>
+            `).join('');
+                    document.getElementById('cart-items').innerHTML = cartItemsHtml;
+                    updateCartTotal(cartItems);
+                } else {
+                    console.error('Failed to fetch cart data.');
+                }
+            } catch (error) {
+                console.error('Error fetching cart data:', error);
+            }
         }
 
         function formatCurrency(amount) {
             return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function updateQuantity(id, quantity) {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var item = cart.find(item => item.id === id);
-            if (item) {
-                item.quantity = parseInt(quantity);
-                if (item.quantity < 1) {
-                    item.quantity = 1;
+        async function updateQuantity(id, quantity) {
+            if (quantity < 1) quantity = 1;
+            try {
+                let response = await fetch(`http://localhost:5215/odata/Cart/UpdateItem?milkId=${id}&quantity=${quantity}`, {
+                    method: 'PUT'
+                });
+                if (response.ok) {
+                    loadCart();
+                    updateCartCount();
+                } else {
+                    console.error('Failed to update item quantity.');
                 }
+            } catch (error) {
+                console.error('Error updating item quantity:', error);
             }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            loadCart();
         }
 
-        function incrementQuantity(id) {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var item = cart.find(item => item.id === id);
-            if (item) {
-                item.quantity += 1;
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            loadCart();
-        }
-
-        function decrementQuantity(id) {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var item = cart.find(item => item.id === id);
-            if (item) {
-                item.quantity -= 1;
-                if (item.quantity < 1) {
-                    item.quantity = 1;
+        async function removeFromCart(cartItemId) {
+            try {
+                let response = await fetch(`http://localhost:5215/odata/Cart/${cartItemId}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    loadCart();
+                    updateCartCount();
+                } else {
+                    console.error('Failed to remove item from cart.');
                 }
+            } catch (error) {
+                console.error('Error removing item from cart:', error);
             }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            loadCart();
         }
 
-        function removeFromCart(id) {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart = cart.filter(item => item.id !== id);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            loadCart();
-            updateCartCount();
+        async function clearCart() {
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart/ClearCart', {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                    loadCart();
+                    updateCartCount();
+                } else {
+                    console.error('Failed to clear cart.');
+                }
+            } catch (error) {
+                console.error('Error clearing cart:', error);
+            }
         }
 
-        function clearCart() {
-            localStorage.removeItem('cart');
-            loadCart();
-            updateCartCount();
+        function updateCartTotal(cartItems) {
+            var subtotal = cartItems.reduce((sum, item) => sum + (item.Milk.Price * item.Quantity), 0);
+            document.getElementById('subtotal').innerText = `${formatCurrency(subtotal)} đ`;
+            document.getElementById('total').innerText = `${formatCurrency(subtotal)} đ`;
         }
 
-        function updateCartTotal() {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            document.getElementById('subtotal').innerText = `${formatCurrency(subtotal)} VND`;
-            document.getElementById('total').innerText = `${formatCurrency(subtotal)} VND`;
+        async function updateCartCount() {
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart');
+                if (response.ok) {
+                    let cart = await response.json();
+                    if (cart.$values) {
+                        cart = cart.$values;
+                    }
+                    let count = cart.reduce((sum, item) => sum + item.Quantity, 0);
+                    document.getElementById('cart-count').innerText = count;
+                } else {
+                    console.error('Failed to fetch cart count.');
+                }
+            } catch (error) {
+                console.error('Error fetching cart count:', error);
+            }
         }
 
-        function updateCartCount() {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').innerText = count;
-        }
     </script>
 
     <style>
@@ -287,3 +310,4 @@
 </body>
 
 </html>
+

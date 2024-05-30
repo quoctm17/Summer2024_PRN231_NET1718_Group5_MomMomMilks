@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.OData;
 using System.Reflection.Emit;
 using Microsoft.OData.ModelBuilder;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,16 +25,27 @@ var modelBuilder = new ODataConventionModelBuilder();
 modelBuilder.EntitySet<Order>("Orders");
 modelBuilder.EntitySet<Category>("Categories");
 modelBuilder.EntitySet<Category>("Milks");
+modelBuilder.EntitySet<Cart>("Carts");
+modelBuilder.EntitySet<CartItem>("CartItems");
 
 var edmModel = modelBuilder.GetEdmModel();
-builder.Services.AddControllers().AddOData(opt =>
-    opt.Select()
-       .Filter()
-       .OrderBy()
-       .Expand()
-       .SetMaxTop(100)
-       .Count()
-       .AddRouteComponents("odata", edmModel));
+builder.Services.AddControllers()
+    .AddOData(opt => opt.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100))
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -64,6 +76,7 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
