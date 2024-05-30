@@ -19,6 +19,7 @@ namespace BusinessObject.Entities
         public int ShipperId { get; set; }
         public Schedule Schedule { get; set; }
         public AppUser Buyer { get; set; }
+        public AppUser Shipper { get; set; }
         public PaymentType PaymentType { get; set; }
         public Address Address { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
