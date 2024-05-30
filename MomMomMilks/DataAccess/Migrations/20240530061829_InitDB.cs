@@ -273,7 +273,27 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shipper",
+                name: "Carts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Carts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Carts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shippers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -283,9 +303,9 @@ namespace DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shipper", x => x.Id);
+                    table.PrimaryKey("PK_Shippers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipper_AspNetUsers_AppUserId",
+                        name: "FK_Shippers_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -307,7 +327,8 @@ namespace DataAccess.Migrations
                     BrandId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     MilkAgeId = table.Column<int>(type: "int", nullable: false),
-                    SupplierId = table.Column<int>(type: "int", nullable: false)
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -366,6 +387,31 @@ namespace DataAccess.Migrations
                         name: "FK_Orders_PaymentTypes_PaymentTypeId",
                         column: x => x.PaymentTypeId,
                         principalTable: "PaymentTypes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CartId = table.Column<int>(type: "int", nullable: false),
+                    MilkId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CartItems_Carts_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Carts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CartItems_Milks_MilkId",
+                        column: x => x.MilkId,
+                        principalTable: "Milks",
                         principalColumn: "Id");
                 });
 
@@ -492,9 +538,9 @@ namespace DataAccess.Migrations
                         principalTable: "Orders",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Schedules_Shipper_ShipperId",
+                        name: "FK_Schedules_Shippers_ShipperId",
                         column: x => x.ShipperId,
-                        principalTable: "Shipper",
+                        principalTable: "Shippers",
                         principalColumn: "Id");
                 });
 
@@ -562,6 +608,22 @@ namespace DataAccess.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItems_CartId",
+                table: "CartItems",
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItems_MilkId",
+                table: "CartItems",
+                column: "MilkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Carts_UserId",
+                table: "Carts",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CouponUsageHistories_CouponId",
@@ -640,8 +702,8 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipper_AppUserId",
-                table: "Shipper",
+                name: "IX_Shippers_AppUserId",
+                table: "Shippers",
                 column: "AppUserId",
                 unique: true);
 
@@ -670,6 +732,9 @@ namespace DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CartItems");
+
+            migrationBuilder.DropTable(
                 name: "CouponUsageHistories");
 
             migrationBuilder.DropTable(
@@ -691,13 +756,16 @@ namespace DataAccess.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Carts");
+
+            migrationBuilder.DropTable(
                 name: "Coupons");
 
             migrationBuilder.DropTable(
                 name: "Milks");
 
             migrationBuilder.DropTable(
-                name: "Shipper");
+                name: "Shippers");
 
             migrationBuilder.DropTable(
                 name: "Orders");

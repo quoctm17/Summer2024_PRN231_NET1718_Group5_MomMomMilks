@@ -10,7 +10,8 @@
     "BrandId": 3,
     "CategoryId": 1,
     "MilkAgeId": 2,
-    "SupplierId": 2
+    "SupplierId": 2,
+    "ImageUrl": "/img/featured/feature-1.jpg"
   },
   {
     "Name": "Sữa Friso Gold số 4 1400g",
@@ -23,7 +24,8 @@
     "BrandId": 8,
     "CategoryId": 1,
     "MilkAgeId": 2,
-    "SupplierId": 4
+    "SupplierId": 4,
+    "ImageUrl": "/img/featured/feature-2.jpg"
   },
   {
     "Name": "Sữa Abbott Grow 4 900g",
@@ -36,7 +38,8 @@
     "BrandId": 3,
     "CategoryId": 1,
     "MilkAgeId": 2,
-    "SupplierId": 3
+    "SupplierId": 3,
+    "ImageUrl": "/img/featured/feature-3.jpg"
   },
   {
     "Name": "Sản phẩm dinh dưỡng Friso Gold Pro 4",
@@ -49,7 +52,8 @@
     "BrandId": 8,
     "CategoryId": 1,
     "MilkAgeId": 2,
-    "SupplierId": 8
+    "SupplierId": 8,
+    "ImageUrl": "/img/featured/feature-4.jpg"
   },
   {
     "Name": "Sữa bầu Friso Mum Gold 900g hương cam",
@@ -62,6 +66,7 @@
     "BrandId": 8,
     "CategoryId": 4,
     "MilkAgeId": 6,
-    "SupplierId": 4
+    "SupplierId": 4,
+    "ImageUrl": "/img/featured/feature-5.jpg"
   }
 ]

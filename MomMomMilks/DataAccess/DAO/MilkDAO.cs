@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessObject.Entities;
 using DataAccess.DAO.Interface;
 using DataTransfer;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,11 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
             return milk;
+        }
+
+        public async Task<Milk> GetByIdAsync(int milkId)
+        {
+            return await _context.Milks.FindAsync(milkId);
         }
     }
 }

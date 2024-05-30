@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection.Emit;
 
 
 namespace DataAccess
@@ -39,6 +40,8 @@ namespace DataAccess
         public DbSet<Report> Reports { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Shipper> Shippers{ get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet <CartItem> CartItems { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -75,6 +78,10 @@ namespace DataAccess
                 .HasForeignKey(u => u.UserId)
                 .IsRequired();
 
+            builder.Entity<AppUser>()
+            .HasOne(a => a.Cart)
+            .WithOne(c => c.User)
+            .HasForeignKey<Cart>(c => c.UserId);
 
             builder.Entity<AppRole>()
                 .HasMany(ur => ur.UserRoles)
@@ -84,8 +91,21 @@ namespace DataAccess
 
 
             builder.Entity<Brand>()
-                .HasKey(b => b.Id);
+            .HasKey(b => b.Id);
 
+
+            builder.Entity<Cart>()
+                .HasMany(c => c.CartItems)
+                .WithOne(ci => ci.Cart)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<CartItem>()
+                .HasOne(ci => ci.Milk)
+                .WithMany(m => m.CartItems)
+                .HasForeignKey(ci => ci.MilkId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Category>()
                 .HasKey(c => c.Id);

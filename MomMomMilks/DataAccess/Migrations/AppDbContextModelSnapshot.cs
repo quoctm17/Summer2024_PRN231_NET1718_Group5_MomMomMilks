@@ -204,6 +204,54 @@ namespace DataAccess.Migrations
                     b.ToTable("Brands");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MilkId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("MilkId");
+
+                    b.ToTable("CartItems");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -328,6 +376,10 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -729,6 +781,36 @@ namespace DataAccess.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.AppUser", "User")
+                        .WithOne("Cart")
+                        .HasForeignKey("BusinessObject.Entities.Cart", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.CartItem", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Entities.Milk", "Milk")
+                        .WithMany("CartItems")
+                        .HasForeignKey("MilkId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Milk");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.CouponUsageHistory", b =>
                 {
                     b.HasOne("BusinessObject.Entities.Coupon", "Coupon")
@@ -958,6 +1040,9 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("Addresses");
 
+                    b.Navigation("Cart")
+                        .IsRequired();
+
                     b.Navigation("Feedbacks");
 
                     b.Navigation("Orders");
@@ -975,6 +1060,11 @@ namespace DataAccess.Migrations
                     b.Navigation("Milks");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Category", b =>
                 {
                     b.Navigation("Milks");
@@ -987,6 +1077,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessObject.Entities.Milk", b =>
                 {
+                    b.Navigation("CartItems");
+
                     b.Navigation("Feedbacks");
 
                     b.Navigation("OrderDetails");
