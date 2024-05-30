@@ -1,0 +1,50 @@
+﻿@page
+@model FE.Pages.Customer.IndexModel
+@{
+    ViewData["Title"] = "Customer Information";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
+            <div class="text-center mb-4">
+                <h5>Bố Mẹ</h5>
+                <a href="#" class="d-block mb-3">Thông tin tài khoản</a>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action">Đơn mua</a>
+                <a href="#" class="list-group-item list-group-item-action">Sổ Địa Chỉ</a>
+                <a href="#" class="list-group-item list-group-item-action">Voucher Của Tôi</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-lg-10 col-md-9 main-content pt-4">
+            <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Tất cả</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Thanh Toán</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Chờ Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đang Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đã Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đã Hủy</a>
+                </li>
+            </ul>
+            <div class="text-center mt-4">
+                <p>Đặt hàng và trải nghiệm <span class="text-danger">Giao Siêu Tốc 1h</span></p>
+                <button class="btn btn-warning">Bắt Đầu Mua Sắm</button>
+                <button class="btn btn-outline-danger">Vào Xem Giỏ Hàng</button>
+            </div>
+        </div>
+    </div>
+</div>
