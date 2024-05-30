@@ -30,7 +30,7 @@ namespace FE.Pages
                 var account = await _accountService.LoginAsync(Credential.Email, Credential.Password);
                 if (account != null)
                 {
-                    SessionHelper.SetObjectAsJson(HttpContext.Session, "user", account);
+                    HttpContext.Session.SetObjectAsJson("user", account);
                     return RedirectToPage("/index");
                 }
                 else

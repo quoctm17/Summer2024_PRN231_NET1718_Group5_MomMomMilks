@@ -1,4 +1,5 @@
 ﻿using FE.Models;
+using FE.Pages;
 
 namespace FE.Services
 {
@@ -19,6 +20,15 @@ namespace FE.Services
                 email,
                 password
             });
+            response.EnsureSuccessStatusCode();
+
+            var user = await response.Content.ReadFromJsonAsync<User>();
+            return user;
+        }
+
+        public async Task<User> RegisterAsync(RegisterModel register)
+        {
+            var response = await _client.PostAsJsonAsync("api/Account/register", register);
             response.EnsureSuccessStatusCode();
 
             var user = await response.Content.ReadFromJsonAsync<User>();
