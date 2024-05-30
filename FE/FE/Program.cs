@@ -25,6 +25,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<FE.Services.MilkService>();
 builder.Services.AddScoped<FE.Services.CategoryService>();
 builder.Services.AddScoped<FE.Services.AccountService>();
+builder.Services.AddScoped<FE.Services.OrderService>();
 
 
 var app = builder.Build();

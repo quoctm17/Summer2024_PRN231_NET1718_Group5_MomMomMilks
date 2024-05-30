@@ -4,13 +4,37 @@
     ViewData["Title"] = "Customer Information";
 }
 
+<style>
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .main-content {
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+    }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+</style>
+
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
             <div class="text-center mb-4">
                 <h5>Bố Mẹ</h5>
-                <a href="#" class="d-block mb-3">Thông tin tài khoản</a>
+                <a href="#" class="d-block mb-3 mt-3">Thông tin tài khoản</a>
             </div>
             <div class="list-group list-group-flush">
                 <a href="#" class="list-group-item list-group-item-action">Đơn mua</a>
@@ -41,9 +65,40 @@
                 </li>
             </ul>
             <div class="text-center mt-4">
-                <p>Đặt hàng và trải nghiệm <span class="text-danger">Giao Siêu Tốc 1h</span></p>
-                <button class="btn btn-warning">Bắt Đầu Mua Sắm</button>
-                <button class="btn btn-outline-danger">Vào Xem Giỏ Hàng</button>
+                @if (Model.OrderHistories != null && Model.OrderHistories.Any())
+                {
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Đơn Hàng</th>
+                                <th>Đặt Vào</th>
+                                <th>Sửa Vào</th>
+                                <th>Tổng Tiền</th>
+                                <th>Phương thức thanh toán</th>
+                                <th>Shipper</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.OrderHistories)
+                            {
+                                <tr>
+                                    <td>@order.Id</td>
+                                    <td>@order.CreateAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@order.UpdateAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@order.TotalAmount</td>
+                                    <td>@order.PaymentType</td>
+                                    <td>@order.Shipper</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Đặt hàng và trải nghiệm <span class="text-danger">Giao Siêu Tốc 1h</span></p>
+                    <button class="btn btn-warning">Bắt Đầu Mua Sắm</button>
+                    <button class="btn btn-outline-danger">Vào Xem Giỏ Hàng</button>
+                }
             </div>
         </div>
     </div>
