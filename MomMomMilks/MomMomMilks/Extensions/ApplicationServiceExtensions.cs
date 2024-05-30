@@ -44,6 +44,7 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IMilkService, MilkService>();
             return services;
         }
     }

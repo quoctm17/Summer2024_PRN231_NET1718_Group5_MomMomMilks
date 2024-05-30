@@ -1,9 +1,10 @@
-﻿using BusinessObject.Entities;
+using BusinessObject.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Repository.Interface;
+using Service.Interfaces;
 using System.Threading.Tasks;
 
 namespace MomMomMilks.Controllers
@@ -12,19 +13,17 @@ namespace MomMomMilks.Controllers
     [ApiController]
     public class MilkController : ODataController
     {
-        private readonly IMilkRepository _milkRepository;
-
-        public MilkController(IMilkRepository milkRepository)
+        private readonly IMilkService _milkService;
+        public MilkController(IMilkService milkService)
         {
-            _milkRepository = milkRepository;
+            _milkService = milkService;
         }
 
         [EnableQuery]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var milks = await _milkRepository.GetAllMilk();
-            return Ok(milks);
+            return Ok(await _milkService.GetAllMilk());
         }
     }
 }
