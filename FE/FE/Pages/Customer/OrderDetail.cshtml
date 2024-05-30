@@ -1,0 +1,111 @@
+﻿@page
+@model FE.Pages.Customer.OrderDetailModel
+@{
+    ViewData["Title"] = "Order Detail";
+}
+<style>
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        height: fit-content;
+    }
+
+    .main-content {
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+    }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+</style>
+@{
+                    @using Helpers
+                    @using Models
+                    var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
+            <div class="text-center mb-4">
+                
+                @if (account != null)
+                {
+                    <h5>@account.UserName</h5>
+                }
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action rounded">Thông tin tài khoản</a>
+                <a asp-page="/Customer" asp-route-userId="@account.Id" class="list-group-item list-group-item-action rounded">Đơn mua</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Sổ Địa Chỉ</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Voucher Của Tôi</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-lg-10 col-md-9 main-content pt-4">
+            <h3 class="mb-4">Chi Tiết Đơn Hàng</h3>
+            @* <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Tất cả</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Thanh Toán</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Chờ Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đang Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đã Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đã Hủy</a>
+                </li>
+            </ul> *@
+            <div class="text-center mt-4">
+                @if (Model.OrderDetailHistory != null && Model.OrderDetailHistory.Any())
+                {
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sản Phẩm</th>
+                                <th>Đặt Vào</th>
+                                <th>Sửa Vào</th>
+                                <th>Số Lượng</th>
+                                <th>Giá Tiền</th>
+                                <th>Giảm Giá</th>
+                                <th>Tổng Tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.OrderDetailHistory)
+                            {
+                                <tr>
+                                    <td>@order.MilkName</td>
+                                    <td>@order.CreateAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@order.UpdateAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@order.Quantity</td>
+                                    <td>@order.Price</td>
+                                    <td>@order.Discount</td>
+                                    <td>@order.Total</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                    <a href="/Customer/OrderHistory?userId=@account.Id" class="btn btn-primary">Back to Order History</a>
+            </div>
+        </div>
+    </div>
+</div>
+}

@@ -43,6 +43,8 @@ namespace DataAccess
         public DbSet<Cart> Carts { get; set; }
         public DbSet <CartItem> CartItems { get; set; }
 
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -144,6 +146,11 @@ namespace DataAccess
                 .HasOne(or => or.Buyer)
                 .WithMany(b => b.Orders)
                 .HasForeignKey(or => or.BuyerId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Order>()
+                .HasOne(or => or.OrderStatus)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(or => or.OrderStatusId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -254,6 +261,9 @@ namespace DataAccess
                 .WithMany(o => o.Transactions)
                 .HasForeignKey(t => t.OrderId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<OrderStatus>()
+                .HasKey(c => c.Id);
         }
     }
 }

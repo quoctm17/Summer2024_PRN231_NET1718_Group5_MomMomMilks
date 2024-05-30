@@ -236,5 +236,25 @@ namespace DataAccess.Seed
                 await _context.SaveChangesAsync();
             }
         }
+
+        public static async Task OrderStatusSeed(AppDbContext _context)
+        {
+            if(await _context.OrderStatuses.AnyAsync()) { return; }
+
+            var list = new List<OrderStatus>
+            {
+                new OrderStatus{Name="Chờ Giao"},
+                new OrderStatus{Name="Đang Giao"},
+                new OrderStatus{Name="Đã Giao"},
+                new OrderStatus{Name="Đã Hủy"}
+            };
+
+            foreach(var i in list)
+            {
+                await _context.OrderStatuses.AddAsync(i);
+                await _context.SaveChangesAsync();
+            }
+
+        }
     }
 }

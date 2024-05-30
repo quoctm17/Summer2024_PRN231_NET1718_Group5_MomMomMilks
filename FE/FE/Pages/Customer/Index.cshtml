@@ -1,0 +1,117 @@
+﻿@page
+@model FE.Pages.Customer.IndexModel
+@{
+    ViewData["Title"] = "Customer Information";
+}
+
+<style>
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        height: fit-content;
+    }
+
+    .main-content {
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+    }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
+            <div class="text-center mb-4">
+                @{
+                    @using Helpers
+                    @using Models
+                    var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                }@if(account != null)
+                {
+                    <h5>@account.UserName</h5>
+                }
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action rounded">Thông tin tài khoản</a>
+                <a asp-page="/Customer" class="list-group-item list-group-item-action rounded">Đơn mua</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Sổ Địa Chỉ</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Voucher Của Tôi</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-lg-10 col-md-9 main-content pt-4">
+            <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Tất cả</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Thanh Toán</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Chờ Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đang Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đã Giao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Đã Hủy</a>
+                </li>
+            </ul>
+            <div class="text-center mt-4">
+                @if (Model.OrderHistories != null && Model.OrderHistories.Any())
+                {
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Đơn Hàng</th>
+                                <th>Đặt Vào</th>
+                                <th>Sửa Vào</th>
+                                <th>Tổng Tiền</th>
+                                <th>Phương thức thanh toán</th>
+                                <th>Shipper</th>
+                                <th>Trạng Thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.OrderHistories)
+                            {
+                                <tr>
+                                    <td>@order.Id</td>
+                                    <td>@order.CreateAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@order.UpdateAt.ToString("dd/MM/yyyy")</td>
+                                    <td>@order.TotalAmount</td>
+                                    <td>@order.PaymentType</td>
+                                    <td>@order.Shipper</td>
+                                    <td>@order.OrderStatus</td>
+                                    <td><a asp-page="/Customer/OrderDetail" asp-route-id="@order.Id" class="site-btn">Xem</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Đặt hàng và trải nghiệm <span class="text-danger">Giao Siêu Tốc 1h</span></p>
+                    <button class="btn btn-warning">Bắt Đầu Mua Sắm</button>
+                    <button class="btn btn-outline-danger">Vào Xem Giỏ Hàng</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
