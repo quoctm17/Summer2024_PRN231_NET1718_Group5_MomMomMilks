@@ -34,6 +34,7 @@ namespace MomMomMilks.Controllers
             if (!result) return Unauthorized("Invalid username or password");
             return new UserDTO
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
                 Status = user.Status,
@@ -61,6 +62,7 @@ namespace MomMomMilks.Controllers
 
                 return new UserDTO
                 {
+                    Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
                     Status = user.Status,
