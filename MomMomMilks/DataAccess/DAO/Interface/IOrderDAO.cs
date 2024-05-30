@@ -13,6 +13,6 @@ namespace DataAccess.DAO.Interface
         Task<List<OrderDTO>> GetAllOrders();
         Task AddOrderAsync(Order order);
         Task<Order> GetOrderByIdAsync(int orderId);
-
+        Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId);
     }
 }

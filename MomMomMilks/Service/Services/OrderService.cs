@@ -36,5 +36,10 @@ namespace Service.Services
             return _orderRepository.GetAllOrders();
         }
 
+        public async Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId)
+        {
+            return await _orderRepository.GetAllOrderHistory(userId);
+        }
+
     }
 }

@@ -24,6 +24,10 @@ namespace DataAccess.AutoMapperProfile
                 .ReverseMap();
             CreateMap<Shipper, ShipperDTO>()
                 .ReverseMap();
+            CreateMap<Order, OrderHistoryDTO>()
+                .ForMember(dest => dest.Shipper, opt => opt.MapFrom(src => src.Shipper.UserName))
+                .ForMember(dest => dest.PaymentType, opt => opt.MapFrom(src => src.PaymentType.Name))
+                .ReverseMap();
         }
     }
 }

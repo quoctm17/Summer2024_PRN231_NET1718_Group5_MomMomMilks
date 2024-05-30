@@ -53,5 +53,16 @@ namespace MomMomMilks.Controllers
             }
             return Ok(order);
         }
+        [EnableQuery]
+        [HttpGet("OrderHistory({userId})")]
+        public async Task<IActionResult> GetOrderHistoryByUserId([FromODataUri] int userId)
+        {
+            var orderHistory = await _orderService.GetAllOrderHistory(userId);
+            if (orderHistory == null)
+            {
+                return NotFound();
+            }
+            return Ok(orderHistory);
+        }
     }
 }
