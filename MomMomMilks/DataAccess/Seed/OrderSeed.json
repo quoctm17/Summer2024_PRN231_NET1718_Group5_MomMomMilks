@@ -8,6 +8,7 @@
     "PaymentTypeId": 1,
     "TransactionId": 1,
     "ShipperId": 1,
+    "OrderStatusId": 2,
     "Schedule": {
       "ShipperId": 2,
       "OrderId": 1,
@@ -60,6 +61,7 @@
     "PaymentTypeId": 1,
     "TransactionId": 1,
     "ShipperId": 1,
+    "OrderStatusId": 2,
     "Schedule": {
       "ShipperId": 2,
       "OrderId": 2,
@@ -112,6 +114,7 @@
     "PaymentTypeId": 1,
     "TransactionId": 1,
     "ShipperId": 1,
+    "OrderStatusId": 2,
     "Schedule": {
       "ShipperId": 2,
       "OrderId": 3,
