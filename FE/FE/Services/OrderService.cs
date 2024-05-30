@@ -26,5 +26,19 @@ namespace FE.Services
                 return new List<OrderHistory>();
             }
         }
+
+        public async Task<List<OrderDetailHistory>> GetAllOrderDetailHistory(int orderId)
+        {
+            var response = await _client.GetAsync($"odata/Order/OrderDetail({orderId})");
+            if(response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<OrderDetailHistory>>(json);
+            }
+            else
+            {
+                return new List<OrderDetailHistory>();
+            }
+        }
     }
 }

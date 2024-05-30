@@ -52,8 +52,32 @@ namespace DataAccess.DAO
             List<OrderHistoryDTO> list = null;
             try
             {
-                var l = await _context.Orders.Include(o => o.OrderDetails).ThenInclude(o => o.Milk).Include(o => o.PaymentType).Include(o => o.Shipper).Where(o => o.BuyerId == userId).ToListAsync();
+                var l = await _context.Orders
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(o => o.Milk)
+                    .Include(o => o.PaymentType)
+                    .Include(o => o.Shipper)
+                    .Include(o => o.OrderStatus)
+                    .Where(o => o.BuyerId == userId)
+                    .ToListAsync();
                 list = _mapper.Map<List<OrderHistoryDTO>>(l);
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return list;
+        }
+
+        public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
+        {
+            List<OrderDetailHistoryDTO> list = null;
+            try
+            {
+                var l = await _context.OrderDetails
+                    .Include(o => o.Milk)
+                    .Where(o => o.OrderId == orderId)
+                    .ToListAsync();
+                list = _mapper.Map<List<OrderDetailHistoryDTO>>(l);
             }catch(Exception ex)
             {
                 throw new Exception(ex.Message);

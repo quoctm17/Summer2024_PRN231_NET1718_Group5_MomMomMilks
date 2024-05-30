@@ -45,5 +45,9 @@ namespace Repository
         {
             return await _orderDAO.GetAllOrderHistory(userId);
         }
+        public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
+        {
+            return await _orderDAO.GetDetailHistory(orderId);
+        }
     }
 }

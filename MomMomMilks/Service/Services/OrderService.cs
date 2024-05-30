@@ -40,6 +40,9 @@ namespace Service.Services
         {
             return await _orderRepository.GetAllOrderHistory(userId);
         }
-
+        public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
+        {
+            return await _orderRepository.GetDetailHistory(orderId);
+        }
     }
 }

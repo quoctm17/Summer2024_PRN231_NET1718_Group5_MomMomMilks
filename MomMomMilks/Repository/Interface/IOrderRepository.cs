@@ -14,5 +14,6 @@ namespace Repository.Interface
         Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
         Task<Order> GetOrderAsync(int orderId);
         Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId);
+        Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId);
     }
 }

@@ -11,5 +11,6 @@
         public string PaymentType { get; set; }
         public int TransactionId { get; set; }
         public string Shipper { get; set; }
+        public string OrderStatus { get; set; }
     }
 }
