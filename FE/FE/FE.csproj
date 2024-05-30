@@ -10,4 +10,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\PRN231\FE\FE\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\PRN231\FE\FE\.editorconfig" />
+  </ItemGroup>
+
 </Project>

@@ -53,9 +53,23 @@
                                     <li><a href="#">English</a></li>
                                 </ul>
                             </div>
-                            <div class="header__top__right__auth">
-                                <a href="/Login"><i class="fa fa-user"></i> Login</a>
-                            </div>
+                            @{
+                                @using Helpers
+                                @using Models
+                                var account = SessionHelper.GetObjectFromJson<User>(Context.Session, "user");
+                            }
+                            @if(account == null)
+                            {
+                                <div class="header__top__right__auth">
+                                    <a href="/Login"><i class="fa fa-user"></i> Login</a>
+                                </div>
+                            } 
+                            else
+                            {
+                                <div class="header__top__right__auth">
+                                    <a href="/"><i class="fa fa-user"></i> Welcome, @account.UserName</a>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
