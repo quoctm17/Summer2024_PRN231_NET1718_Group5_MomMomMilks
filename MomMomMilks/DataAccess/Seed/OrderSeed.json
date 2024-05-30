@@ -14,7 +14,7 @@
       "OrderId": 1,
       "TimeSlot": "Morning"
     },
-    "OrderDetail": [
+    "OrderDetails": [
       {
         "OrderId": 1,
         "Quantity": 2,
@@ -67,7 +67,7 @@
       "OrderId": 2,
       "TimeSlot": "Morning"
     },
-    "OrderDetail": [
+    "OrderDetails": [
       {
         "OrderId": 2,
         "Quantity": 2,
@@ -120,7 +120,7 @@
       "OrderId": 3,
       "TimeSlot": "Morning"
     },
-    "OrderDetail": [
+    "OrderDetails": [
       {
         "OrderId": 3,
         "Quantity": 2,
