@@ -25,6 +25,7 @@ namespace MomMomMilks.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IMilkDAO, MilkDAO>();
             services.AddScoped<IMilkRepository, MilkRepository>();
+            services.AddScoped<IMilkService, MilkService>();
             return services;
         }
     }

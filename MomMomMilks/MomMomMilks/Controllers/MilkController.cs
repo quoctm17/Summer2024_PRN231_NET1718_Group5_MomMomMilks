@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Interface;
+using Service.Interfaces;
 
 namespace MomMomMilks.Controllers
 {
@@ -8,16 +9,16 @@ namespace MomMomMilks.Controllers
     [ApiController]
     public class MilkController : ControllerBase
     {
-        private readonly IMilkRepository _milkRepository;
-        public MilkController(IMilkRepository milkRepository)
+        private readonly IMilkService _milkService;
+        public MilkController(IMilkService milkService)
         {
-            _milkRepository = milkRepository;
+            _milkService = milkService;
         }
 
         [HttpGet("milks")]
         public async Task<IActionResult> GetAllMilk()
         {
-            return Ok(await _milkRepository.GetAllMilk());
+            return Ok(await _milkService.GetAllMilk());
         }
     }
 }
