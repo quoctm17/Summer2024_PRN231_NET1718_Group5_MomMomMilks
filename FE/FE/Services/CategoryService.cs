@@ -9,15 +9,17 @@ namespace FE.Services
     public class CategoryService
     {
         private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public CategoryService(HttpClient httpClient)
+        public CategoryService(IHttpClientFactory clientFactory)
         {
-            _httpClient = httpClient;
+            _clientFactory = clientFactory;
+            _httpClient = _clientFactory.CreateClient("MyClient");
         }
 
         public async Task<List<Category>> GetCategoriesAsync()
         {
-            var response = await _httpClient.GetAsync("http://localhost:5215/odata/Category");
+            var response = await _httpClient.GetAsync("odata/Category");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
