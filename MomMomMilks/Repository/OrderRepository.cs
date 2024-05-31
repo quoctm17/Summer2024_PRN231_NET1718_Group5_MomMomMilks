@@ -2,6 +2,7 @@
 using DataAccess.DAO;
 using DataAccess.DAO.Interface;
 using DataTransfer;
+using DataTransfer.Shipper;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,26 @@ namespace Repository
         public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
         {
             return await _orderDAO.GetDetailHistory(orderId);
+        }
+
+        public async Task<List<ShipperOrderDTO>> GetShipperOrders(int shipperId)
+        {
+            return await _orderDAO.GetShipperAssignedOrder(shipperId);
+        }
+
+        public async Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId)
+        {
+            return await _orderDAO.GetShipperOrderDetail(shipperId, orderId);
+        }
+
+        public async Task<bool> ConfirmShipped(int shipperId, int orderId)
+        {
+            return await _orderDAO.ConfirmShipped(shipperId, orderId);
+        }
+
+        public async Task<bool> ConfirmCancelled(int shipperId, int orderId)
+        {
+            return await _orderDAO.ConfirmCancelled(shipperId, orderId);
         }
     }
 }

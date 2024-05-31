@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using BusinessObject.Entities;
 using DataAccess.DAO.Interface;
 using DataTransfer;
+using DataTransfer.Shipper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -83,6 +85,85 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
             return list;
+        }
+
+        public async Task<List<ShipperOrderDTO>> GetShipperAssignedOrder(int shipperId)
+        {
+            try
+            {
+                var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
+                if (shipper == null)
+                {
+                    throw new Exception("Không tìm thấy shipper");
+                }
+                var orders = await _context.Orders.Where(x => x.ShipperId == shipper.Id)
+                    .ProjectTo<ShipperOrderDTO>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
+                return orders;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Lỗi");
+            }
+        }
+        public async Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId)
+        {
+            try
+            {
+                var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
+                if (shipper == null)
+                {
+                    throw new Exception("Không tìm thấy shipper");
+                }
+                var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
+                    .ProjectTo<ShipperOrderDetailDTO>(_mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync();
+                return order;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi");
+            }
+        }
+
+        public async Task<bool> ConfirmShipped(int shipperId, int orderId)
+        {
+            try
+            {
+                var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
+                if (shipper == null)
+                {
+                    throw new Exception("Không tìm thấy shipper");
+                }
+                var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
+                    .FirstOrDefaultAsync();
+                order.OrderStatusId = 3;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ConfirmCancelled(int shipperId, int orderId)
+        {
+            try
+            {
+                var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
+                if (shipper == null)
+                {
+                    throw new Exception("Không tìm thấy shipper");
+                }
+                var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
+                    .FirstOrDefaultAsync();
+                order.OrderStatusId = 4;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 

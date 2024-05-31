@@ -1,4 +1,5 @@
 ﻿using FE.Models;
+using FE.Models.Shipper;
 using Newtonsoft.Json;
 
 namespace FE.Services
@@ -39,6 +40,47 @@ namespace FE.Services
             {
                 return new List<OrderDetailHistory>();
             }
+        }
+
+        public async Task<List<ShipperOrder>> GetShipperOrders()
+        {
+            var response = await _client.GetAsync($"odata/Order/ShipperOrders");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<ShipperOrder>>(json);
+            }
+            return null;
+        }
+        public async Task<ShipperOrderDetail> GetShipperOrder(int orderId)
+        {
+            var response = await _client.GetAsync($"odata/Order/ShipperOrders({orderId})");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<ShipperOrderDetail>(json);
+            }
+            return null;
+        }
+        public async Task<bool> ConfirmShippedShipperOrder(int orderId)
+        {
+            var response = await _client.PutAsync($"odata/Order/ShipperOrders/confirm({orderId})", null);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(json);
+            }
+            return false;
+        }
+        public async Task<bool> ConfirmCancelledShipperOrder(int orderId)
+        {
+            var response = await _client.PutAsync($"odata/Order/ShipperOrders/cancel({orderId})", null);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(json);
+            }
+            return false;
         }
     }
 }

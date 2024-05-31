@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entities;
 using DataTransfer;
+using DataTransfer.Shipper;
 using Repository.Interface;
 using Service.Interfaces;
 using System;
@@ -43,6 +44,26 @@ namespace Service.Services
         public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
         {
             return await _orderRepository.GetDetailHistory(orderId);
+        }
+
+        public async Task<List<ShipperOrderDTO>> GetShipperOrders(int shipperId)
+        {
+            return await _orderRepository.GetShipperOrders(shipperId);
+        }
+
+        public async Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId)
+        {
+            return await _orderRepository.GetShipperOrderDetail(shipperId, orderId);
+        }
+
+        public async Task<bool> ConfirmShipped(int shipperId, int orderId)
+        {
+            return await _orderRepository.ConfirmShipped(shipperId, orderId);
+        }
+
+        public async Task<bool> ConfirmCancelled(int shipperId, int orderId)
+        {
+            return await _orderRepository.ConfirmCancelled(shipperId, orderId);
         }
     }
 }

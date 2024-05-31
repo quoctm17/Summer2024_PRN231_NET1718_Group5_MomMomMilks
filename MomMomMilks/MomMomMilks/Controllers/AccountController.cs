@@ -32,12 +32,14 @@ namespace MomMomMilks.Controllers
             if (user == null) return Unauthorized("Invalid Email");
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!result) return Unauthorized("Invalid username or password");
+            var role = await _userManager.GetRolesAsync(user);
             return new UserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
                 Status = user.Status,
+                Role = role.FirstOrDefault(),
                 Token = await _tokenService.GenerateToken(user)
             };
 
@@ -67,6 +69,7 @@ namespace MomMomMilks.Controllers
                     Email = user.Email,
                     Status = user.Status,
                     Point = user.Point,
+                    Role = "Customer",
                     Token = await _tokenService.GenerateToken(user),
                 };
             }

@@ -1,0 +1,77 @@
+﻿@page
+@model FE.Pages.Shipper.IndexModel
+@{
+}
+
+<table id="orderTable" class="table align-middle mb-0 bg-white vh-100">
+    <thead class="bg-light">
+        <tr>
+            <th>Khách hàng</th>
+            <th>Ngày tạo</th>
+            <th>Lần cuối cập nhật</th>
+            <th>Thời gian</th>
+            <th>Trạng thái</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var order in Model.ShipperOrders)
+        {
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="ms-3">
+                            <p class="fw-bold mb-1">@order.BuyerName</p>
+                            <p class="text-muted mb-0">@order.BuyerEmail</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">@order.CreateAt</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">@order.UpdateAt</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">@order.ScheduleTimeSlot</p>
+                </td>
+                <td>
+                    @if(order.OrderStatusName == "Chờ Giao")
+                    {
+                        <span class="badge badge-warning rounded-pill d-inline">
+                            @order.OrderStatusName
+                        </span>
+                    } else if(order.OrderStatusName == "Đang Giao")
+                    {
+                        <span class="badge badge-info rounded-pill d-inline">
+                            @order.OrderStatusName
+                        </span>
+                    } else if(order.OrderStatusName == "Đã Giao")
+                    {
+                        <span class="badge badge-success rounded-pill d-inline">
+                            @order.OrderStatusName
+                        </span>
+                    } else
+                    {
+                        <span class="badge badge-danger rounded-pill d-inline">
+                            @order.OrderStatusName
+                        </span>
+                    }
+
+                </td>
+                <td>
+                    <a class="btn btn-link btn-sm btn-rounded" asp-page="/shipper/orderdetail" asp-route-orderId="@order.Id">
+                        Xem
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+        let table = new DataTable('#orderTable', {
+            responsive: true
+        });
+    </script>
+}

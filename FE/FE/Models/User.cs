@@ -7,6 +7,7 @@
         public string Email { get; set; }
         public byte Status { get; set; }
         public int Point { get; set; }
+        public string Role { get; set; }
         public string Token { get; set; }
     }
 }
