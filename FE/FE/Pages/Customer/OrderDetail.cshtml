@@ -30,8 +30,12 @@
 @{
                     @using Helpers
                     @using Models
-                    var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
-<div class="container-fluid">
+    var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+    @if(account == null)
+    {
+        RedirectToPage("/Login");
+    }
+    <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
         <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
@@ -44,34 +48,14 @@
             </div>
             <div class="list-group list-group-flush">
                 <a href="#" class="list-group-item list-group-item-action rounded">Thông tin tài khoản</a>
-                <a asp-page="/Customer" asp-route-userId="@account.Id" class="list-group-item list-group-item-action rounded">Đơn mua</a>
+                    <a href="/Customer/OrderHistory?userId="  class="list-group-item list-group-item-action rounded">Đơn mua</a>
                 <a href="#" class="list-group-item list-group-item-action rounded">Sổ Địa Chỉ</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">Voucher Của Tôi</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Coupon Của Tôi</a>
             </div>
         </div>
         <!-- Main Content -->
         <div class="col-lg-10 col-md-9 main-content pt-4">
             <h3 class="mb-4">Chi Tiết Đơn Hàng</h3>
-            @* <ul class="nav nav-tabs mb-4">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Tất cả</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Thanh Toán</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Chờ Giao</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Đang Giao</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Đã Giao</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Đã Hủy</a>
-                </li>
-            </ul> *@
             <div class="text-center mt-4">
                 @if (Model.OrderDetailHistory != null && Model.OrderDetailHistory.Any())
                 {

@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/Customer/OrderHistory"
 @model FE.Pages.Customer.IndexModel
 @{
     ViewData["Title"] = "Customer Information";
@@ -38,16 +38,23 @@
                     @using Helpers
                     @using Models
                     var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
-                }@if(account != null)
+                }
+                @if (account != null)
                 {
                     <h5>@account.UserName</h5>
+                }
+                else
+                {
+                    <script>
+                        window.location.href = '/Login';
+                    </script>
                 }
             </div>
             <div class="list-group list-group-flush">
                 <a href="#" class="list-group-item list-group-item-action rounded">Thông tin tài khoản</a>
-                <a asp-page="/Customer" class="list-group-item list-group-item-action rounded">Đơn mua</a>
+                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Đơn mua</a>
                 <a href="#" class="list-group-item list-group-item-action rounded">Sổ Địa Chỉ</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">Voucher Của Tôi</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Coupon Của Tôi</a>
             </div>
         </div>
         <!-- Main Content -->
