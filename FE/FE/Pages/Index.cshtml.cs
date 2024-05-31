@@ -26,9 +26,5 @@ public class IndexModel : PageModel
         Categories = await _categoryService.GetCategoriesAsync();
 
         Milks = await _milkService.GetMilksAsync();
-        for (int i = 0; i < Milks.Count; i++)
-        {
-            Milks[i].ImageUrl = $"/img/featured/feature-{i + 1}.jpg";
-        }
     }
 }
