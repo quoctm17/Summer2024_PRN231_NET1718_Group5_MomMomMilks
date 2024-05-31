@@ -7,5 +7,6 @@ namespace Repository.Interface
     {
         Task<List<MilkDTO>> GetAllMilk();
         Task<Milk> GetByIdAsync(int milkId);
+        Task<MilkDTO> GetMilkByIdAsync(int milkId);
     }
 }

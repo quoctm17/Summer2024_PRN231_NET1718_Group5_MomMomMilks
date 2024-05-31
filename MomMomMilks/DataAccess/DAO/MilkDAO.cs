@@ -40,5 +40,14 @@ namespace DataAccess.DAO
         {
             return await _context.Milks.FindAsync(milkId);
         }
+        public async Task<MilkDTO> GetMilkByIdAsync(int milkId)
+        {
+            return _mapper.Map<MilkDTO>(await _context.Milks
+                .Include(m => m.Category)
+                .Include(m => m.Brand)
+                .Include(m => m.Supplier)
+                .Include(m => m.MilkAge)
+                .Where(m => m.Id == milkId).FirstOrDefaultAsync());
+        }
     }
 }

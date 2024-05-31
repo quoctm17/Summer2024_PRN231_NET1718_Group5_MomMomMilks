@@ -27,5 +27,9 @@ namespace Repository
         {
             return await _milkDAO.GetByIdAsync(milkId);
         }
+        public async Task<MilkDTO> GetMilkByIdAsync(int milkId)
+        {
+            return await _milkDAO.GetMilkByIdAsync(milkId);
+        }
     }
 }
