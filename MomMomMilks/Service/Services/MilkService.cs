@@ -21,5 +21,9 @@ namespace Service.Services
         {
             return await _milkRepository.GetAllMilk();
         }
+        public async Task<MilkDTO> GetMilkById(int id)
+        {
+            return await _milkRepository.GetMilkByIdAsync(id);
+        }
     }
 }
