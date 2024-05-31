@@ -25,6 +25,9 @@ namespace MomMomMilks.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            //Add HostedService
+            services.AddSingleton<IHostedService, BackgroundMomMom>();
+
             // DAOs
             services.AddScoped<IOrderDAO, OrderDAO>();
             services.AddScoped<IOrderDetailsDAO, OrderDetailsDAO>();
@@ -32,6 +35,7 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IMilkDAO, MilkDAO>();
             services.AddScoped<ICategoryDAO, CategoryDAO>();
             services.AddScoped<ICartDAO, CartDAO>();
+            services.AddScoped<ICouponDAO, CouponDAO>();
 
             // Repositories
             services.AddScoped<IMilkRepository, MilkRepository>();
@@ -39,12 +43,14 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICouponRepository, CouponRepository>();
 
             // Services
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IMilkService, MilkService>();
+            services.AddScoped<ICouponService, CouponService>();
             return services;
         }
     }

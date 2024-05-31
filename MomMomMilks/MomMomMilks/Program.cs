@@ -100,6 +100,7 @@ try
     await Seed.PaynmentTypeSeed(context);
     await Seed.OrderStatusSeed(context);
     await Seed.OrderSeed(context);
+    await Seed.CouponSeed(context);
 }
 catch (Exception ex)
 {
