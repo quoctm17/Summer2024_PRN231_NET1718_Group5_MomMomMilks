@@ -256,5 +256,26 @@ namespace DataAccess.Seed
             }
 
         }
+        public static async Task CouponSeed(AppDbContext _context)
+        {
+            if (await _context.Coupons.AnyAsync()) { return; }
+
+            var list = new List<Coupon>
+            {
+                new Coupon{Code="FPTCOUPON100", Name="Coupon 1", Discount=100, EpiryDate=DateTime.Now.AddDays(1), CreateAt=DateTime.Now, UpdateAt= DateTime.Now, NumberOfUse=10, Status=1},
+                new Coupon{Code="FPTCOUPON200", Name="Coupon 2", Discount=200, EpiryDate=DateTime.Now.AddDays(30), CreateAt=DateTime.Now, UpdateAt= DateTime.Now, NumberOfUse=10, Status=1},
+                new Coupon{Code="FPTCOUPON300", Name="Coupon 3", Discount=300, EpiryDate=DateTime.Now.AddDays(30), CreateAt=DateTime.Now, UpdateAt= DateTime.Now, NumberOfUse=10, Status=1},
+                new Coupon{Code="FPTCOUPON400", Name="Coupon 4", Discount=400, EpiryDate=DateTime.Now.AddDays(60), CreateAt=DateTime.Now, UpdateAt= DateTime.Now, NumberOfUse=10, Status=1},
+                new Coupon{Code="FPTCOUPON500", Name="Coupon 5", Discount=500, EpiryDate=DateTime.Now.AddDays(60), CreateAt=DateTime.Now, UpdateAt= DateTime.Now, NumberOfUse=10, Status=1},
+                new Coupon{Code="FPTCOUPON600", Name="Coupon 6", Discount=600, EpiryDate=DateTime.Now.AddDays(5), CreateAt=DateTime.Now, UpdateAt= DateTime.Now, NumberOfUse=10, Status=1}
+            };
+
+            foreach (var i in list)
+            {
+                await _context.Coupons.AddAsync(i);
+                await _context.SaveChangesAsync();
+            }
+
+        }
     }
 }
