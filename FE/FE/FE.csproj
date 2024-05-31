@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <None Include="D:\PRN231\FE\FE\.editorconfig" />
+    <None Include="wwwroot\lib\datatables\datatables.min.js" />
   </ItemGroup>
 
   <ItemGroup>

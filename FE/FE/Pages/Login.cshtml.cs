@@ -31,6 +31,10 @@ namespace FE.Pages
                 if (account != null)
                 {
                     HttpContext.Session.SetObjectAsJson("user", account);
+                    if(account.Role == "Shipper")
+                    {
+                        return RedirectToPage("/shipper/index");
+                    }
                     return RedirectToPage("/index");
                 }
                 else

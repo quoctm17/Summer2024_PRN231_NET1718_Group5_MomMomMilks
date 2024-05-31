@@ -1,10 +1,12 @@
 ﻿using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using MomMomMilks.Extensions;
 using Repository;
 using Repository.Interface;
 using Service.Interfaces;
@@ -74,6 +76,41 @@ namespace MomMomMilks.Controllers
                 return NotFound();
             }
             return Ok(orderDetail);
+        }
+
+        [EnableQuery]
+        [HttpGet("ShipperOrders")]
+        [Authorize]
+        public async Task<IActionResult> GetShipperOrders()
+        {
+            var userId = User.GetUserId();
+            var result = await _orderService.GetShipperOrders(userId);
+            return Ok(result);
+        }
+        [EnableQuery]
+        [HttpGet("ShipperOrders({orderId})")]
+        [Authorize]
+        public async Task<IActionResult> GetShipperOrder([FromODataUri] int orderId)
+        {
+            var userId = User.GetUserId();
+            var result = await _orderService.GetShipperOrderDetail(userId, orderId);
+            return Ok(result);
+        }
+        [HttpPut("ShipperOrders/confirm({orderId})")]
+        [Authorize]
+        public async Task<IActionResult> ConfirmShippedShipperOrder([FromODataUri] int orderId)
+        {
+            var userId = User.GetUserId();
+            var result = await _orderService.ConfirmShipped(userId, orderId);
+            return Ok(result);
+        }
+        [HttpPut("ShipperOrders/cancel({orderId})")]
+        [Authorize]
+        public async Task<IActionResult> ConfirmCancelledShipperOrder([FromODataUri] int orderId)
+        {
+            var userId = User.GetUserId();
+            var result = await _orderService.ConfirmCancelled(userId, orderId);
+            return Ok(result);
         }
     }
 }

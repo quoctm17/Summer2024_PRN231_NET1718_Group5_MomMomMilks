@@ -28,7 +28,7 @@
             <div class="wrap-login100">
                 <form method="post" class="login100-form validate-form">
                     <span class="login100-form-title p-b-43">
-                        Sign up to continue
+                        Đăng ký
                     </span>
 
                     <div class="text-danger" asp-validation-summary="All"></div>
@@ -42,52 +42,42 @@
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="text" asp-for="Register.UserName">
                         <span class="focus-input100"></span>
-                        <span class="label-input100">Username</span>
+                        <span class="label-input100">Tên</span>
                         <span class="text-danger" asp-validation-for="Register.UserName"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="text" asp-for="Register.PhoneNumber">
                         <span class="focus-input100"></span>
-                        <span class="label-input100">Phone Number</span>
+                        <span class="label-input100">Số điện thoại</span>
                         <span class="text-danger" asp-validation-for="Register.PhoneNumber"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="password" asp-for="Register.Password">
                         <span class="focus-input100"></span>
-                        <span class="label-input100">Password</span>
+                        <span class="label-input100">Mật khẩu</span>
                         <span class="text-danger" asp-validation-for="Register.Password"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input">
                         <input class="input100" type="password" asp-for="Register.ConfirmedPassword">
                         <span class="focus-input100"></span>
-                        <span class="label-input100">Confirm Password</span>
+                        <span class="label-input100">Xác nhận mật khẩu</span>
                         <span class="text-danger" asp-validation-for="Register.ConfirmedPassword"></span>
                     </div>
 
                     <div class="container-login100-form-btn">
                         <button class="login100-form-btn" type="submit">
-                            Sign Up
+                            Đăng ký
                         </button>
                     </div>
 
                     <div class="text-center p-t-46 p-b-20">
                         <span class="txt2">
-                            or <a href="/Login">login here</a>
+                            hoặc <a href="/Login">đăng nhập tại đây</a>
                         </span>
                     </div>
-
-                    @* <div class="login100-form-social flex-c-m">
-                    <a href="#" class="login100-form-social-item flex-c-m bg1 m-r-5">
-                    <i class="fa fa-facebook-f" aria-hidden="true"></i>
-                    </a>
-
-                    <a href="#" class="login100-form-social-item flex-c-m bg2 m-r-5">
-                    <i class="fa fa-twitter" aria-hidden="true"></i>
-                    </a>
-                    </div> *@
                 </form>
 
                 <div class="login100-more" style="background-image: url('img/bg-01.jpg');">
