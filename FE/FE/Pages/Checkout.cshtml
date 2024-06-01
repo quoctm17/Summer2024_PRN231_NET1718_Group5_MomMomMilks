@@ -23,7 +23,6 @@
                             {
                                 <li><a href="#">@category.Name</a></li>
                             }
-
                         </ul>
                     </div>
                 </div>
@@ -206,33 +205,37 @@
             loadOrderSummary();
         });
 
-        function loadOrderSummary() {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var orderItems = cart.map(item => `
-                        <li class="checkout__order__item row">
-                            <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
-                            <div class="col-lg-2">${item.quantity}</div>
-                            <div class="col-lg-4 text-right">${formatCurrency(item.price * item.quantity)} đ</div>
-                        </li>
-                    `).join('');
-            document.getElementById('order-items').innerHTML = orderItems;
-            updateOrderTotal();
-        }
+        async function loadOrderSummary() {
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk');
+                if (response.ok) {
+                    let cart = await response.json();
+                    console.log('API response:', cart);
 
-        function truncateText(text, maxLength) {
-            if (text.length > maxLength) {
-                return text.substring(0, maxLength) + '...';
+                    let cartItems = cart.$values || [];
+                    let orderItemsHtml = cartItems.map(item => `
+                            <li class="checkout__order__item row">
+                                <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
+                                <div class="col-lg-2">${item.Quantity}</div>
+                                <div class="col-lg-4 text-right">${formatCurrency(item.Milk.Price * item.Quantity)} đ</div>
+                            </li>
+                        `).join('');
+                    document.getElementById('order-items').innerHTML = orderItemsHtml;
+                    updateOrderTotal(cartItems);
+                } else {
+                    console.error('Failed to fetch cart data.');
+                }
+            } catch (error) {
+                console.error('Error fetching cart data:', error);
             }
-            return text;
         }
 
         function formatCurrency(amount) {
             return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function updateOrderTotal() {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        function updateOrderTotal(cartItems) {
+            var subtotal = cartItems.reduce((sum, item) => sum + (item.Milk.Price * item.Quantity), 0);
             var discount = calculateDiscount(subtotal);
             var total = subtotal - discount;
             document.getElementById('order-subtotal').innerText = `${formatCurrency(subtotal)} đ`;
