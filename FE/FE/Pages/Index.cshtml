@@ -433,14 +433,19 @@
     <!-- Blog Section End -->
 
     <script>
-        async function addToCart(id, name, price, imageUrl) {
+        async function addToCart(id) {
+            const token = sessionStorage.getItem('token');
             try {
                 let response = await fetch(`http://localhost:5215/odata/Cart/AddItem?milkId=${id}&quantity=1`, {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
                 if (response.ok) {
                     alert('Added to cart successfully!');
-                    updateCartCount(); // Cập nhật số lượng sản phẩm trong giỏ hàng sau khi thêm
+                    updateCartCount();
+                    updateCartTotalPrice();
                 } else {
                     alert('Failed to add to cart.');
                 }
@@ -451,16 +456,16 @@
         }
 
         async function updateCartCount() {
+            const token = sessionStorage.getItem('token');
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart');
+                let response = await fetch('http://localhost:5215/odata/Cart', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (response.ok) {
                     let cart = await response.json();
-                    console.log('API response:', cart); // Check the response from the API
-
-                    // Get cart data from $values ​​property
                     let cartItems = cart.$values || [];
-
-                    // Check if cartItems is an array
                     if (Array.isArray(cartItems)) {
                         let count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
                         document.getElementById('cart-count').innerText = count;
@@ -475,8 +480,39 @@
             }
         }
 
+        async function updateCartTotalPrice() {
+            const token = sessionStorage.getItem('token');
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    let cart = await response.json();
+                    let cartItems = cart.$values || [];
+                    let totalPrice = cartItems.reduce((sum, item) => sum + (item.milk.price * item.quantity), 0);
+                    let cartTotalElement = document.getElementById('cart-total');
+                    if (cartTotalElement) {
+                        cartTotalElement.innerText = `${formatCurrency(totalPrice)} đ`;
+                    } else {
+                        console.error('Element with ID "cart-total" not found.');
+                    }
+                } else {
+                    console.error('Failed to fetch cart total price.');
+                }
+            } catch (error) {
+                console.error('Error fetching cart total price:', error);
+            }
+        }
+
+        function formatCurrency(amount) {
+            return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
-            updateCartCount(); // Update the number of products in the cart when the page reloads
+            updateCartCount();
+            updateCartTotalPrice();
         });
     </script>
 

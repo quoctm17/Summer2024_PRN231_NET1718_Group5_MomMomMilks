@@ -42,8 +42,8 @@ namespace MomMomMilks.Controllers
                 Role = role.FirstOrDefault(),
                 Token = await _tokenService.GenerateToken(user)
             };
-
         }
+
         [HttpPost("register")]
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDto)
         {
