@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace MomMomMilks.Controllers
 {
@@ -12,57 +15,167 @@ namespace MomMomMilks.Controllers
     public class CartController : ODataController
     {
         private readonly ICartService _cartService;
+        private readonly ILogger<CartController> _logger;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, ILogger<CartController> logger)
         {
             _cartService = cartService;
+            _logger = logger;
         }
 
         [HttpGet]
         [EnableQuery]
         public async Task<IActionResult> Get()
         {
-            int userId = 1; // Temporary userId for testing
-            var cart = await _cartService.GetCartByUserIdAsync(userId);
-            if (cart == null)
+            try
             {
-                return NotFound();
+                var userId = GetUserIdFromToken();
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                var cart = await _cartService.GetCartByUserIdAsync(userId.Value);
+                if (cart == null)
+                {
+                    return NotFound();
+                }
+                return Ok(cart.CartItems);
             }
-            return Ok(cart.CartItems);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching cart.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost]
         [Route("AddItem")]
         public async Task<IActionResult> AddItem(int milkId, int quantity)
         {
-            int userId = 1; // Temporary userId for testing
-            await _cartService.AddCartItemAsync(userId, milkId, quantity);
-            return Ok();
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                await _cartService.AddCartItemAsync(userId.Value, milkId, quantity);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while adding item to cart.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPut]
         [Route("UpdateItem")]
         public async Task<IActionResult> UpdateItem(int milkId, int quantity)
         {
-            int userId = 1; // Temporary userId for testing
-            await _cartService.UpdateCartItemAsync(userId, milkId, quantity);
-            return NoContent();
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                await _cartService.UpdateCartItemAsync(userId.Value, milkId, quantity);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating cart item.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpDelete("{cartItemId}")]
         public async Task<IActionResult> Delete(int cartItemId)
         {
-            int userId = 1; // Temporary userId for testing
-            await _cartService.RemoveCartItemAsync(userId, cartItemId);
-            return NoContent();
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                await _cartService.RemoveCartItemAsync(userId.Value, cartItemId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting cart item.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost("ClearCart")]
         public async Task<IActionResult> ClearCart()
         {
-            int userId = 1; // Temporary userId for testing
-            await _cartService.ClearCartAsync(userId);
-            return NoContent();
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                await _cartService.ClearCartAsync(userId.Value);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while clearing cart.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        private int? GetUserIdFromToken()
+        {
+            try
+            {
+                var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                _logger.LogInformation($"Authorization header: {authHeader}");
+                if (authHeader != null && authHeader.StartsWith("Bearer "))
+                {
+                    var token = authHeader.Substring("Bearer ".Length).Trim();
+                    _logger.LogInformation($"Token: {token}");
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+                    if (jwtToken != null)
+                    {
+                        var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
+                        if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                        {
+                            _logger.LogInformation($"User ID from token: {userId}");
+                            return userId;
+                        }
+                        else
+                        {
+                            _logger.LogWarning("User ID claim not found or invalid");
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogWarning("JWT token is null");
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("Authorization header is null or doesn't start with 'Bearer '");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while extracting UserId from token.");
+            }
+            return null;
         }
     }
 }

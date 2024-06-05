@@ -117,7 +117,8 @@
                             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                             <li><a href="/shopping_cart"><i class="fa fa-shopping-bag"></i> <span id="cart-count">0</span></a></li>
                         </ul>
-                        <div class="header__cart__price">Cart Total: <span>$150.00</span></div>
+                        <div class="header__cart__price">Cart Total: <span id="cart-total">0.00đ</span></div>
+
                     </div>
                 </div>
             </div>
@@ -222,22 +223,20 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            updateCartCount();
-            updateCartTotalPrice(); // Cập nhật tổng tiền của giỏ hàng
-        });
-
         async function updateCartCount() {
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart');
+                const token = sessionStorage.getItem('token');
+                console.log('Token:', token);
+
+                let response = await fetch('http://localhost:5215/odata/Cart', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
                 if (response.ok) {
                     let cart = await response.json();
-                    console.log('API response:', cart); // Check the response from the API
-
-                    // Get cart data from $values ​​property
                     let cartItems = cart.$values || [];
-
-                    // Check if cartItems is an array
                     if (Array.isArray(cartItems)) {
                         let count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
                         document.getElementById('cart-count').innerText = count;
@@ -254,17 +253,25 @@
 
         async function updateCartTotalPrice() {
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart');
+                const token = sessionStorage.getItem('token');
+                console.log('Token:', token);
+
+                let response = await fetch('http://localhost:5215/odata/Cart', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
                 if (response.ok) {
                     let cart = await response.json();
-                    console.log('API response:', cart);
-
-
                     let cartItems = cart.$values || [];
-
-
                     let totalPrice = cartItems.reduce((sum, item) => sum + (item.milk.price * item.quantity), 0);
-                    document.getElementById('cart-total').innerText = `${formatCurrency(totalPrice)} đ`;
+                    let cartTotalElement = document.getElementById('cart-total');
+                    if (cartTotalElement) {
+                        cartTotalElement.innerText = `${formatCurrency(totalPrice)} đ`;
+                    } else {
+                        console.error('Element with ID "cart-total" not found.');
+                    }
                 } else {
                     console.error('Failed to fetch cart total price.');
                 }
@@ -276,6 +283,11 @@
         function formatCurrency(amount) {
             return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateCartCount();
+            updateCartTotalPrice();
+        });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

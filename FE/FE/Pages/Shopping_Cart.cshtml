@@ -151,8 +151,13 @@
         });
 
         async function loadCart() {
+            const token = sessionStorage.getItem('token');
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk');
+                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (response.ok) {
                     let cart = await response.json();
                     console.log('API response:', cart);
@@ -160,33 +165,33 @@
                     let cartItems = cart.$values || [];
 
                     let cartItemsHtml = cartItems.map(item => `
-                <tr>
-                    <td class="shoping__cart__item">
-                        <img src="${item.Milk.ImageUrl}" alt="${item.Milk.Name}">
-                    </td>
-                    <td class="shoping__cart__item">
-                        <h5>${item.Milk.Name}</h5>
-                    </td>
-                    <td class="shoping__cart__price">
-                        ${formatCurrency(item.Milk.Price)} VND
-                    </td>
-                    <td class="shoping__cart__quantity">
-                        <div class="quantity">
-                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity - 1})">-</button>
-                            <div class="pro-qty">
-                                <input type="text" value="${item.Quantity}" onchange="updateQuantity(${item.MilkId}, this.value)">
-                            </div>
-                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity + 1})">+</button>
-                        </div>
-                    </td>
-                    <td class="shoping__cart__total">
-                        ${formatCurrency(item.Milk.Price * item.Quantity)} đ
-                    </td>
-                    <td class="shoping__cart__item__close">
-                        <span class="icon_close" onclick="removeFromCart(${item.Id})"></span>
-                    </td>
-                </tr>
-            `).join('');
+                        <tr>
+                            <td class="shopping__cart__item">
+                                <img class="shopping__cart__item__image" src="${item.Milk.ImageUrl}" alt="${item.Milk.Name}">
+                            </td>
+                            <td class="shopping__cart__item">
+                                <h5>${item.Milk.Name}</h5>
+                            </td>
+                            <td class="shopping__cart__price">
+                                ${formatCurrency(item.Milk.Price)} đ
+                            </td>
+                            <td class="shopping__cart__quantity">
+                                <div class="quantity">
+                                    <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity - 1})">-</button>
+                                    <div class="pro-qty">
+                                        <input type="text" value="${item.Quantity}" onchange="updateQuantity(${item.MilkId}, this.value)">
+                                    </div>
+                                    <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity + 1})">+</button>
+                                </div>
+                            </td>
+                            <td class="shopping__cart__total">
+                                ${formatCurrency(item.Milk.Price * item.Quantity)} đ
+                            </td>
+                            <td class="shopping__cart__item__close">
+                                <span class="icon_close" onclick="removeFromCart(${item.Id})"></span>
+                            </td>
+                        </tr>
+                    `).join('');
                     document.getElementById('cart-items').innerHTML = cartItemsHtml;
                     updateCartTotal(cartItems);
                 } else {
@@ -203,9 +208,13 @@
 
         async function updateQuantity(id, quantity) {
             if (quantity < 1) quantity = 1;
+            const token = sessionStorage.getItem('token');
             try {
                 let response = await fetch(`http://localhost:5215/odata/Cart/UpdateItem?milkId=${id}&quantity=${quantity}`, {
-                    method: 'PUT'
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
                 if (response.ok) {
                     loadCart();
@@ -219,9 +228,13 @@
         }
 
         async function removeFromCart(cartItemId) {
+            const token = sessionStorage.getItem('token');
             try {
                 let response = await fetch(`http://localhost:5215/odata/Cart/${cartItemId}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
                 if (response.ok) {
                     loadCart();
@@ -235,9 +248,13 @@
         }
 
         async function clearCart() {
+            const token = sessionStorage.getItem('token');
             try {
                 let response = await fetch('http://localhost:5215/odata/Cart/ClearCart', {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
                 if (response.ok) {
                     loadCart();
@@ -257,8 +274,13 @@
         }
 
         async function updateCartCount() {
+            const token = sessionStorage.getItem('token');
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart');
+                let response = await fetch('http://localhost:5215/odata/Cart', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (response.ok) {
                     let cart = await response.json();
                     if (cart.$values) {
@@ -273,7 +295,6 @@
                 console.error('Error fetching cart count:', error);
             }
         }
-
     </script>
 
     <style>
@@ -305,6 +326,11 @@
                 width: 40px;
                 text-align: center;
             }
+
+        .shopping__cart__item__image {
+            max-width: 50% !important; /* Adjust this value as needed */
+            height: auto;
+        }
     </style>
 
 </body>

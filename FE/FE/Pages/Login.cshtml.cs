@@ -4,7 +4,7 @@ using FE.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace FE.Pages
 {
@@ -31,11 +31,11 @@ namespace FE.Pages
                 if (account != null)
                 {
                     HttpContext.Session.SetObjectAsJson("user", account);
-                    if(account.Role == "Shipper")
-                    {
-                        return RedirectToPage("/shipper/index");
-                    }
-                    return RedirectToPage("/index");
+                    HttpContext.Session.SetString("token", account.Token);
+
+                    // Return a script to set the token in sessionStorage
+                    var script = $"<script>sessionStorage.setItem('token', '{account.Token}'); window.location.href = '/index';</script>";
+                    return Content(script, "text/html");
                 }
                 else
                 {
@@ -44,7 +44,7 @@ namespace FE.Pages
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Account", "An error occured during login proccess");
+                ModelState.AddModelError("Account", "An error occurred during the login process");
             }
 
             return Page();
