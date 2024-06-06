@@ -98,6 +98,8 @@ try
     await Seed.CategorySeed(context);
     await Seed.MilkSeed(context);
     await Seed.SeedUser(userManager, roleManager);
+    await Seed.SeedDistrictsAndWards(context);
+    await Seed.SeedAddress(context);
     await Seed.PaynmentTypeSeed(context);
     await Seed.OrderStatusSeed(context);
     await Seed.OrderSeed(context);
