@@ -88,53 +88,60 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
-                                        <p>First Name<span>*</span></p>
-                                        <input type="text" name="firstName" required>
+                                        <p>User Name<span>*</span></p>
+                                        <input type="text" id="firstName" name="firstName" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
-                                        <p>Last Name<span>*</span></p>
-                                        <input type="text" name="lastName" required>
+                                        <p>Full Name<span>*</span></p>
+                                        <input type="text" id="lastName" name="lastName" required>
                                     </div>
                                 </div>
                             </div>
-                            <div class="checkout__input">
-                                <p>Country<span>*</span></p>
-                                <input type="text" name="country" required>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>House Number<span>*</span></p>
+                                        <input type="text" id="houseNumber" placeholder="House Number">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Street Address<span>*</span></p>
+                                        <input type="text" id="street" placeholder="Street Address" required>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="checkout__input">
-                                <p>Address<span>*</span></p>
-                                <input type="text" placeholder="Street Address" class="checkout__input__add" name="address" required>
-                                <input type="text" placeholder="Apartment, suite, unit etc (optional)" name="address2">
-                            </div>
-                            <div class="checkout__input">
-                                <p>Town/City<span>*</span></p>
-                                <input type="text" name="city" required>
-                            </div>
-                            <div class="checkout__input">
-                                <p>State<span>*</span></p>
-                                <input type="text" name="state" required>
-                            </div>
-                            <div class="checkout__input">
-                                <p>Postcode / ZIP<span>*</span></p>
-                                <input type="text" name="postcode" required>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>Ward<span>*</span></p>
+                                        <input type="text" id="ward" name="ward" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="checkout__input">
+                                        <p>District<span>*</span></p>
+                                        <input type="text" id="district" name="district" required>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Phone<span>*</span></p>
-                                        <input type="text" name="phone" required>
+                                        <input type="text" id="phone" name="phone" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="text" name="email" required>
+                                        <input type="text" id="email" name="email" required>
                                     </div>
                                 </div>
                             </div>
-                            <div class="checkout__input__checkbox">
+                            @*<div class="checkout__input__checkbox">
                                 <label for="acc">
                                     Create an account?
                                     <input type="checkbox" id="acc" name="createAccount">
@@ -154,9 +161,9 @@
                                     <input type="checkbox" id="diff-acc" name="shipDifferentAddress">
                                     <span class="checkmark"></span>
                                 </label>
-                            </div>
+                            </div>*@
                             <div class="checkout__input">
-                                <p>Order notes<span>*</span></p>
+                                <p>Order notes</p>
                                 <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="orderNotes">
                             </div>
                         </div>
@@ -203,6 +210,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             loadOrderSummary();
+            loadUserDetails();
         });
 
         async function loadOrderSummary() {
@@ -219,12 +227,12 @@
 
                     let cartItems = cart.$values || [];
                     let orderItemsHtml = cartItems.map(item => `
-                            <li class="checkout__order__item row">
-                                <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
-                                <div class="col-lg-2">${item.Quantity}</div>
-                                <div class="col-lg-4 text-right">${formatCurrency(item.Milk.Price * item.Quantity)} đ</div>
-                            </li>
-                        `).join('');
+                        <li class="checkout__order__item row">
+                            <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
+                            <div class="col-lg-2">${item.Quantity}</div>
+                            <div class="col-lg-4 text-right">${formatCurrency(item.Milk.Price * item.Quantity)} đ</div>
+                        </li>
+                    `).join('');
                     document.getElementById('order-items').innerHTML = orderItemsHtml;
                     updateOrderTotal(cartItems);
                 } else {
@@ -232,6 +240,45 @@
                 }
             } catch (error) {
                 console.error('Error fetching cart data:', error);
+            }
+        }
+
+        async function loadUserDetails() {
+            const token = sessionStorage.getItem('token');
+            const userId = getUserIdFromToken();
+            if (!userId) {
+                return;
+            }
+
+            try {
+                let response = await fetch(`http://localhost:5215/odata/User/${userId}?$expand=Addresses`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    let user = await response.json();
+                    console.log('User with Addresses:', user);
+
+                    document.getElementById('firstName').value = user.userName || '';
+                    document.getElementById('lastName').value = user.lastName || '';
+                    document.getElementById('phone').value = user.phoneNumber || '';
+                    document.getElementById('email').value = user.email || '';
+
+                    if (user.addresses && user.addresses.$values.length > 0) {
+                        let address = user.addresses.$values[0];
+                        document.getElementById('street').value = address.street || '';
+                        document.getElementById('houseNumber').value = address.houseNumber || '';
+                        document.getElementById('ward').value = address.ward ? address.ward.name : '';
+                        document.getElementById('district').value = address.ward.district ? address.ward.district.name : '';
+                        document.getElementById('state').value = address.state || '';
+                        document.getElementById('postcode').value = address.postcode || '';
+                    }
+                } else {
+                    console.error('Failed to fetch user data.');
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
             }
         }
 
@@ -253,5 +300,15 @@
             var discountPercentage = 10;
             return subtotal * discountPercentage / 100;
         }
+
+        function getUserIdFromToken() {
+            const token = sessionStorage.getItem('token');
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                return payload.nameid;
+            }
+            return null;
+        }
+
     </script>
 </body>

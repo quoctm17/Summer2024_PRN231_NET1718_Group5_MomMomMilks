@@ -41,6 +41,11 @@ namespace DataAccess.DAO
             return await _context.Addresses.ToListAsync();
         }
 
+        public async Task<List<Address>> GetAddressesByUserIdAsync(int userId)
+        {
+            return await _context.Addresses.Where(a => a.UserId == userId).ToListAsync();
+        }
+
         public async Task AddAddressAsync(Address address)
         {
             await _context.Addresses.AddAsync(address);

@@ -11,8 +11,10 @@ namespace Service.Interfaces
     {
         Task<List<Address>> GetAllAddressesAsync();
         Task<Address> GetAddressByIdAsync(int addressId);
+        Task<List<Address>> GetAddressesByUserIdAsync(int userId);
         Task AddAddressAsync(Address address);
         Task UpdateAddressAsync(Address address);
         Task DeleteAddressAsync(int addressId);
+        
     }
 }

@@ -47,30 +47,29 @@ namespace DataAccess.DAO
 
         public async Task<List<AppUser>> GetAllUsers()
         {
-            List<AppUser> users = null;
-            try
-            {
-                var userList = await _context.Users.ToListAsync();
-                users = _mapper.Map<List<AppUser>>(userList);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return users;
+            return await _context.Users
+                .Include(u => u.Addresses)
+                    .ThenInclude(a => a.Ward)
+                .Include(u => u.Addresses)
+                    .ThenInclude(a => a.District)
+                .Include(u => u.Cart)
+                .ThenInclude(c => c.CartItems)
+                .Include(u => u.Orders)
+                .ToListAsync();
         }
 
         public async Task<AppUser> GetUserById(int userId)
         {
-            try
-            {
-                var user = await _context.Users.FindAsync(userId);
-                return _mapper.Map<AppUser>(user);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.Addresses)
+                    .ThenInclude(a => a.Ward)
+                .Include(u => u.Addresses)
+                    .ThenInclude(a => a.District)
+                 .Include(u => u.Cart)
+                 .ThenInclude(c => c.CartItems)
+                 .Include(u => u.Orders)
+                 .FirstOrDefaultAsync();
         }
 
         public async Task AddUser(AppUser user)

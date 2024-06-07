@@ -19,11 +19,15 @@ builder.Services.AddApplicationServices(builder.Configuration);
 
 // Add OData Service
 var modelBuilder = new ODataConventionModelBuilder();
-modelBuilder.EntitySet<Order>("Orders");
+modelBuilder.EntitySet<Address>("Addresses");
+modelBuilder.EntitySet<AppUser>("Users");
 modelBuilder.EntitySet<Category>("Categories");
 modelBuilder.EntitySet<Category>("Milks");
 modelBuilder.EntitySet<Cart>("Carts");
 modelBuilder.EntitySet<CartItem>("CartItems");
+modelBuilder.EntitySet<District>("Districts");
+modelBuilder.EntitySet<Order>("Orders");
+modelBuilder.EntitySet<Ward>("Wards");
 
 var edmModel = modelBuilder.GetEdmModel();
 builder.Services.AddControllers()
