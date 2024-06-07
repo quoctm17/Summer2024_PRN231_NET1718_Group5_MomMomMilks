@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Interface
+namespace Service.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserService
     {
         Task<List<ShipperDTO>> GetAllShippers();
         Task<List<AppUser>> GetAllUsers();

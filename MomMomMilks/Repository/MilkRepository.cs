@@ -1,5 +1,5 @@
 ﻿using BusinessObject.Entities;
-using DataAccess.DAO.Interface;
+using DataAccess.DAO;
 using DataTransfer;
 using Repository.Interface;
 using System;
@@ -12,24 +12,34 @@ namespace Repository
 {
     public class MilkRepository : IMilkRepository
     {
-        private readonly IMilkDAO _milkDAO;
-        public MilkRepository(IMilkDAO milkDAO)
+        public async Task<List<MilkDTO>> GetAllMilkAsync()
         {
-            _milkDAO = milkDAO;
-        }
-
-        public async Task<List<MilkDTO>> GetAllMilk()
-        {
-            return await _milkDAO.GetAllMilk();
+            return await MilkDAO.Instance.GetAllMilk();
         }
 
         public async Task<Milk> GetByIdAsync(int milkId)
         {
-            return await _milkDAO.GetByIdAsync(milkId);
+            return await MilkDAO.Instance.GetByIdAsync(milkId);
         }
+
         public async Task<MilkDTO> GetMilkByIdAsync(int milkId)
         {
-            return await _milkDAO.GetMilkByIdAsync(milkId);
+            return await MilkDAO.Instance.GetMilkByIdAsync(milkId);
+        }
+
+        public async Task AddMilkAsync(Milk milk)
+        {
+            await MilkDAO.Instance.AddMilkAsync(milk);
+        }
+
+        public async Task UpdateMilkAsync(Milk milk)
+        {
+            await MilkDAO.Instance.UpdateMilkAsync(milk);
+        }
+
+        public async Task DeleteMilkAsync(int milkId)
+        {
+            await MilkDAO.Instance.DeleteMilkAsync(milkId);
         }
     }
 }

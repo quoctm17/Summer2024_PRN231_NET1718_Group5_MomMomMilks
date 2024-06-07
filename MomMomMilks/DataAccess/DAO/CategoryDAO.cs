@@ -3,16 +3,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessObject.Entities;
 using DataAccess;
-using DataAccess.DAO.Interface;
 using Microsoft.EntityFrameworkCore;
 
-public class CategoryDAO : ICategoryDAO
+public class CategoryDAO
 {
     private readonly AppDbContext _context;
 
-    public CategoryDAO(AppDbContext context)
+    private static CategoryDAO instance;
+
+    private CategoryDAO()
     {
-        _context = context;
+        _context = new AppDbContext();
+    }
+
+    public static CategoryDAO Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new CategoryDAO();
+            }
+            return instance;
+        }
     }
 
     public async Task<List<Category>> GetAllCategoriesAsync()

@@ -1,4 +1,5 @@
-﻿using DataTransfer;
+﻿using BusinessObject.Entities;
+using DataTransfer;
 
 namespace Service.Interfaces
 {
@@ -6,5 +7,8 @@ namespace Service.Interfaces
     {
         Task<List<MilkDTO>> GetAllMilk();
         Task<MilkDTO> GetMilkById(int id);
+        Task AddMilkAsync(Milk milk);
+        Task UpdateMilkAsync(Milk milk);
+        Task DeleteMilkAsync(int milkId);
     }
 }

@@ -49,17 +49,15 @@ namespace DataAccess
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(GetConnectionString());
-        }
+            => optionsBuilder.UseSqlServer(GetConnectionString());
 
         private string GetConnectionString()
         {
             IConfiguration config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                 .AddJsonFile("MomMomMilks/appsettings.json", true, true)
+                .SetBasePath(Directory.GetCurrentDirectory())
+                 .AddJsonFile("appsettings.json", true, true)
                  .Build();
-            var strConn = config["ConnectionStrings:DefaultConnectionString"];
+            var strConn = config.GetConnectionString("DefaultConnectionString");
 
             return strConn;
         }

@@ -23,47 +23,47 @@ namespace Service.Services
         public async Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails)
         {
            
-            await _orderRepository.CreateOrderAsync(order, orderDetails);
+            await _orderRepository.AddOrderAsync(order, orderDetails);
         }
 
         public async Task<Order> GetOrderAsync(int orderId)
         {
             
-            return await _orderRepository.GetOrderAsync(orderId);
+            return await _orderRepository.GetOrderByIdAsync(orderId);
         }
 
         public Task<List<OrderDTO>> GetAllOrders()
         {
-            return _orderRepository.GetAllOrders();
+            return _orderRepository.GetAllOrdersAsync();
         }
 
         public async Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId)
         {
-            return await _orderRepository.GetAllOrderHistory(userId);
+            return await _orderRepository.GetAllOrderHistoryAsync(userId);
         }
         public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
         {
-            return await _orderRepository.GetDetailHistory(orderId);
+            return await _orderRepository.GetDetailHistoryAsync(orderId);
         }
 
         public async Task<List<ShipperOrderDTO>> GetShipperOrders(int shipperId)
         {
-            return await _orderRepository.GetShipperOrders(shipperId);
+            return await _orderRepository.GetShipperAssignedOrderAsync(shipperId);
         }
 
         public async Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId)
         {
-            return await _orderRepository.GetShipperOrderDetail(shipperId, orderId);
+            return await _orderRepository.GetShipperOrderDetailAsync(shipperId, orderId);
         }
 
         public async Task<bool> ConfirmShipped(int shipperId, int orderId)
         {
-            return await _orderRepository.ConfirmShipped(shipperId, orderId);
+            return await _orderRepository.ConfirmShippedAsync(shipperId, orderId);
         }
 
         public async Task<bool> ConfirmCancelled(int shipperId, int orderId)
         {
-            return await _orderRepository.ConfirmCancelled(shipperId, orderId);
+            return await _orderRepository.ConfirmCancelledAsync(shipperId, orderId);
         }
     }
 }

@@ -1,22 +1,19 @@
 using BusinessObject.Entities;
 using DataAccess;
-using DataAccess.DAO;
-using DataAccess.DAO.Interface;
 using DataAccess.Seed;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MomMomMilks.Extensions;
-using Repository;
-using Repository.Interface;
-using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.OData;
-using System.Reflection.Emit;
 using Microsoft.OData.ModelBuilder;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Regist Service From DAO
+DataAccessServiceRegistration.AddDataAccessServices(builder.Services, builder.Configuration);
+
+// Add identity services.
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
 

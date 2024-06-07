@@ -1,23 +1,39 @@
-﻿using DataAccess.DAO.Interface;
+﻿
+using BusinessObject.Entities;
+using DataAccess.DAO;
 using Repository.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Repository
 {
     public class CouponRepository : ICouponRepository
     {
-        private readonly ICouponDAO _couponDAO;
-        public CouponRepository(ICouponDAO couponDAO)
+        public async Task<List<Coupon>> GetAllCouponsAsync()
         {
-            _couponDAO = couponDAO;
+            return await CouponDAO.Instance.GetAllCouponsAsync();
         }
+
+        public async Task<Coupon> GetCouponByIdAsync(int couponId)
+        {
+            return await CouponDAO.Instance.GetCouponByIdAsync(couponId);
+        }
+
+        public async Task AddCouponAsync(Coupon coupon)
+        {
+            await CouponDAO.Instance.AddCouponAsync(coupon);
+        }
+
+        public async Task UpdateCouponAsync(Coupon coupon)
+        {
+            await CouponDAO.Instance.UpdateCouponAsync(coupon);
+        }
+
+        public async Task DeleteCouponAsync(int couponId)
+        {
+            await CouponDAO.Instance.DeleteCouponAsync(couponId);
+        }
+
         public async Task UpdateCouponExpiryDate()
         {
-            await _couponDAO.UpdateCouponExpiryDate();
+            await CouponDAO.Instance.UpdateCouponExpiryDate();
         }
     }
 }
