@@ -165,33 +165,33 @@
                     let cartItems = cart.$values || [];
 
                     let cartItemsHtml = cartItems.map(item => `
-                        <tr>
-                            <td class="shopping__cart__item">
-                                <img class="shopping__cart__item__image" src="${item.Milk.ImageUrl}" alt="${item.Milk.Name}">
-                            </td>
-                            <td class="shopping__cart__item">
-                                <h5>${item.Milk.Name}</h5>
-                            </td>
-                            <td class="shopping__cart__price">
-                                ${formatCurrency(item.Milk.Price)} đ
-                            </td>
-                            <td class="shopping__cart__quantity">
-                                <div class="quantity">
-                                    <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity - 1})">-</button>
-                                    <div class="pro-qty">
-                                        <input type="text" value="${item.Quantity}" onchange="updateQuantity(${item.MilkId}, this.value)">
-                                    </div>
-                                    <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity + 1})">+</button>
-                                </div>
-                            </td>
-                            <td class="shopping__cart__total">
-                                ${formatCurrency(item.Milk.Price * item.Quantity)} đ
-                            </td>
-                            <td class="shopping__cart__item__close">
-                                <span class="icon_close" onclick="removeFromCart(${item.Id})"></span>
-                            </td>
-                        </tr>
-                    `).join('');
+                <tr>
+                    <td class="shopping__cart__item">
+                        <img class="shopping__cart__item__image" src="${item.Milk.ImageUrl}" alt="${item.Milk.Name}">
+                    </td>
+                    <td class="shopping__cart__item">
+                        <h5>${item.Milk.Name}</h5>
+                    </td>
+                    <td class="shopping__cart__price">
+                        ${formatCurrency(item.Milk.Price)} đ
+                    </td>
+                    <td class="shopping__cart__quantity">
+                        <div class="quantity">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity - 1})">-</button>
+                            <div class="pro-qty">
+                                <input type="text" value="${item.Quantity}" onchange="updateQuantity(${item.MilkId}, this.value)">
+                            </div>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity + 1})">+</button>
+                        </div>
+                    </td>
+                    <td class="shopping__cart__total">
+                        ${formatCurrency(item.Milk.Price * item.Quantity)} đ
+                    </td>
+                    <td class="shopping__cart__item__close">
+                        <span class="icon_close" onclick="confirmRemoveFromCart(${item.Id})"></span>
+                    </td>
+                </tr>
+            `).join('');
                     document.getElementById('cart-items').innerHTML = cartItemsHtml;
                     updateCartTotal(cartItems);
                 } else {
@@ -224,6 +224,12 @@
                 }
             } catch (error) {
                 console.error('Error updating item quantity:', error);
+            }
+        }
+
+        function confirmRemoveFromCart(cartItemId) {
+            if (confirm("Are you sure you want to remove this item from the cart?")) {
+                removeFromCart(cartItemId);
             }
         }
 
@@ -295,6 +301,7 @@
                 console.error('Error fetching cart count:', error);
             }
         }
+
     </script>
 
     <style>
@@ -328,9 +335,40 @@
             }
 
         .shopping__cart__item__image {
-            max-width: 50% !important; /* Adjust this value as needed */
+            max-width: 100px; /* Adjust this value as needed */
             height: auto;
+            padding-right: 20px;
         }
+
+        .shopping__cart__table th,
+        .shopping__cart__table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+            .shopping__cart__table th:first-child,
+            .shopping__cart__table td:first-child {
+                width: 120px; /* Adjust this value as needed */
+            }
+
+        .shoping__cart__table table thead th.shoping__product {
+            text-align: center;
+        }
+
+        .shoping__cart__table table {
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Add hover effect and cursor change for the close icon */
+        .icon_close {
+            cursor: pointer;
+        }
+
+            .icon_close:hover {
+                color: red;
+            }
+
     </style>
 
 </body>

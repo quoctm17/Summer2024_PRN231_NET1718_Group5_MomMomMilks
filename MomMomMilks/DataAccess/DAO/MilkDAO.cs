@@ -1,24 +1,33 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
-using DataAccess.DAO.Interface;
 using DataTransfer;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.DAO
 {
-    public class MilkDAO : IMilkDAO
+    public class MilkDAO
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public MilkDAO(AppDbContext context, IMapper mapper)
+
+        private static MilkDAO instance;
+
+        public MilkDAO()
         {
-            _context = context;
-            _mapper = mapper;
+            _context = new AppDbContext();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile.AutoMapperProfile())).CreateMapper();
+        }
+
+        public static MilkDAO Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new MilkDAO();
+                }
+                return instance;
+            }
         }
 
         public async Task<List<MilkDTO>> GetAllMilk()
@@ -40,6 +49,7 @@ namespace DataAccess.DAO
         {
             return await _context.Milks.FindAsync(milkId);
         }
+
         public async Task<MilkDTO> GetMilkByIdAsync(int milkId)
         {
             return _mapper.Map<MilkDTO>(await _context.Milks
@@ -48,6 +58,28 @@ namespace DataAccess.DAO
                 .Include(m => m.Supplier)
                 .Include(m => m.MilkAge)
                 .Where(m => m.Id == milkId).FirstOrDefaultAsync());
+        }
+
+        public async Task AddMilkAsync(Milk milk)
+        {
+            await _context.Milks.AddAsync(milk);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateMilkAsync(Milk milk)
+        {
+            _context.Milks.Update(milk);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteMilkAsync(int milkId)
+        {
+            var milk = await _context.Milks.FindAsync(milkId);
+            if (milk != null)
+            {
+                _context.Milks.Remove(milk);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

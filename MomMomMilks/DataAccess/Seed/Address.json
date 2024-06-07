@@ -1,38 +1,42 @@
 ﻿[
   {
     "UserId": 1,
-    "HouseNumber": null,
-    "Street": null,
-    "Ward": null,
-    "District": null,
-    "City": null,
-    "Latitude": null
+    "HouseNumber": "123",
+    "Street": "Nguyễn Thị Minh Khai",
+    "WardId": 1,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7773912",
+    "Longitude": "106.7033312"
   },
   {
     "UserId": 2,
-    "HouseNumber": null,
-    "Street": null,
-    "Ward": null,
-    "District": null,
-    "City": null,
-    "Latitude": null
+    "HouseNumber": "456",
+    "Street": "Hai Bà Trưng",
+    "WardId": 2,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7782342",
+    "Longitude": "106.7072874"
   },
   {
     "UserId": 3,
-    "HouseNumber": null,
-    "Street": null,
-    "Ward": null,
-    "District": null,
-    "City": null,
-    "Latitude": null
+    "HouseNumber": "789",
+    "Street": "Đinh Tiên Hoàng",
+    "WardId": 3,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.783123",
+    "Longitude": "106.702345"
   },
   {
     "UserId": 4,
-    "HouseNumber": null,
-    "Street": null,
-    "Ward": null,
-    "District": null,
-    "City": null,
-    "Latitude": null
+    "HouseNumber": "321",
+    "Street": "Lý Tự Trọng",
+    "WardId": 4,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7776543",
+    "Longitude": "106.6987643"
   }
 ]

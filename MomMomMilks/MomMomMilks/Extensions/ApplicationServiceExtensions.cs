@@ -1,12 +1,9 @@
-﻿using DataAccess.DAO.Interface; ///
-using DataAccess.DAO; ///
-using Microsoft.EntityFrameworkCore; ///
-using Repository.Interface;
+﻿using Repository.Interface;
 using Repository;
 using Service.Interfaces;
 using Service.Services;
-using DataAccess; ///
 using Service;
+using Service.Interface;
 
 namespace MomMomMilks.Extensions
 {
@@ -14,12 +11,7 @@ namespace MomMomMilks.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
-            //Add DBContext
-            services.AddDbContext<AppDbContext>();
-            var connectionString =
-            config.GetConnectionString("DefaultConnectionString");
-            services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(connectionString));
+
 
             //Add services to container
             services.AddScoped<ITokenService, TokenService>();
@@ -28,29 +20,32 @@ namespace MomMomMilks.Extensions
             //Add HostedService
             services.AddSingleton<IHostedService, BackgroundMomMom>();
 
-            // DAOs
-            services.AddScoped<IOrderDAO, OrderDAO>();
-            services.AddScoped<IOrderDetailsDAO, OrderDetailsDAO>();
-            services.AddScoped<IUserDAO, UserDAO>();
-            services.AddScoped<IMilkDAO, MilkDAO>();
-            services.AddScoped<ICategoryDAO, CategoryDAO>();
-            services.AddScoped<ICartDAO, CartDAO>();
-            services.AddScoped<ICouponDAO, CouponDAO>();
-
             // Repositories
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICouponRepository, CouponRepository>();
+            services.AddScoped<IDistrictRepository, DistrictRepository>();
             services.AddScoped<IMilkRepository, MilkRepository>();
+            services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<ICouponRepository, CouponRepository>();
+            services.AddScoped<IWardRepository, WardRepository>();
+
 
             // Services
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<ICartService, CartService>();
-            services.AddScoped<IMilkService, MilkService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICouponService, CouponService>();
+            services.AddScoped<IDistrictService, DistrictService>();
+            services.AddScoped<IMilkService, MilkService>();
+            services.AddScoped<IOrderDetailsService, OrderDetailsService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IWardService, WardService>();
+
+
             return services;
         }
     }

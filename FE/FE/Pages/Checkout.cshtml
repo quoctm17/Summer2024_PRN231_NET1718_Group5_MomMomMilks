@@ -206,8 +206,13 @@
         });
 
         async function loadOrderSummary() {
+            const token = sessionStorage.getItem('token');
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk');
+                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (response.ok) {
                     let cart = await response.json();
                     console.log('API response:', cart);

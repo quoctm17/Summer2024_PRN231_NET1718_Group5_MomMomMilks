@@ -1,24 +1,33 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
-using DataAccess.DAO.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccess.DAO
 {
-    public class OrderDetailsDAO : IOrderDetailsDAO
+    public class OrderDetailsDAO
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public OrderDetailsDAO(AppDbContext context, IMapper mapper)
+        private static OrderDetailsDAO instance;
+
+        public OrderDetailsDAO()
         {
-            _context = context;
-            _mapper = mapper;
+            _context = new AppDbContext();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile.AutoMapperProfile())).CreateMapper();
+        }
+
+        public static OrderDetailsDAO Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new OrderDetailsDAO();
+                }
+                return instance;
+            }
         }
 
         public async Task AddOrderDetailAsync(OrderDetail orderDetail)
@@ -30,6 +39,27 @@ namespace DataAccess.DAO
         public async Task<List<OrderDetail>> GetOrderDetailsByOrderIdAsync(int orderId)
         {
             return await _context.OrderDetails.Where(od => od.OrderId == orderId).ToListAsync();
+        }
+
+        public async Task<OrderDetail> GetOrderDetailByIdAsync(int orderDetailId)
+        {
+            return await _context.OrderDetails.FindAsync(orderDetailId);
+        }
+
+        public async Task UpdateOrderDetailAsync(OrderDetail orderDetail)
+        {
+            _context.OrderDetails.Update(orderDetail);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteOrderDetailAsync(int orderDetailId)
+        {
+            var orderDetail = await _context.OrderDetails.FindAsync(orderDetailId);
+            if (orderDetail != null)
+            {
+                _context.OrderDetails.Remove(orderDetail);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

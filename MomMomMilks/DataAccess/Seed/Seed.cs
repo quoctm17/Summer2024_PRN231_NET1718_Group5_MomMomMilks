@@ -106,6 +106,48 @@ namespace DataAccess.Seed
             await _userManager.AddToRolesAsync(shipper3, new[] { "Shipper" });
         }
 
+        public static async Task SeedDistrictsAndWards(AppDbContext _context)
+        {
+            if (await _context.Districts.AnyAsync() && await _context.Wards.AnyAsync()) return;
+
+            var districtData = await File.ReadAllTextAsync("../DataAccess/Seed/District.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var districts = JsonSerializer.Deserialize<List<District>>(districtData, jsonOptions);
+
+            var wardData = await File.ReadAllTextAsync("../DataAccess/Seed/Ward.json");
+            var wards = JsonSerializer.Deserialize<List<Ward>>(wardData, jsonOptions);
+
+            foreach (var district in districts)
+            {
+                await _context.Districts.AddAsync(district);
+            }
+
+            foreach (var ward in wards)
+            {
+                await _context.Wards.AddAsync(ward);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public static async Task SeedAddress(AppDbContext _context)
+        {
+            if (await _context.Addresses.AnyAsync()) return;
+
+            var addressData = await File.ReadAllTextAsync("../DataAccess/Seed/Address.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var addresses = JsonSerializer.Deserialize<List<Address>>(addressData, jsonOptions);
+
+            foreach (var address in addresses)
+            {
+                await _context.Addresses.AddAsync(address);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+
+
         public static async Task SeedBranch(AppDbContext _context)
         {
             if(await _context.Brands.AnyAsync()) { return; }

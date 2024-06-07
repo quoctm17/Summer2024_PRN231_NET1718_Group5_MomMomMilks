@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.DAO.Interface
+namespace Repository.Interface
 {
-    public interface IOrderDetailsDAO
+    public interface IOrderDetailsRepository
     {
         Task AddOrderDetailAsync(OrderDetail orderDetail);
         Task<List<OrderDetail>> GetOrderDetailsByOrderIdAsync(int orderId);
+        Task<OrderDetail> GetOrderDetailByIdAsync(int orderDetailId);
+        Task UpdateOrderDetailAsync(OrderDetail orderDetail);
+        Task DeleteOrderDetailAsync(int orderDetailId);
     }
 }

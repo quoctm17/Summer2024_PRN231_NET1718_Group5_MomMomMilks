@@ -1,26 +1,35 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BusinessObject.Entities;
-using DataAccess.DAO.Interface;
 using DataTransfer;
 using DataTransfer.Shipper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.DAO
 {
-    public class OrderDAO : IOrderDAO
+    public class OrderDAO
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public OrderDAO(AppDbContext context, IMapper mapper)
+
+        private static OrderDAO instance;
+
+        public OrderDAO()
         {
-            _context = context;
-            _mapper = mapper;
+            _context = new AppDbContext();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile.AutoMapperProfile())).CreateMapper();
+        }
+
+        public static OrderDAO Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new OrderDAO();
+                }
+                return instance;
+            }
         }
 
         public async Task<List<OrderDTO>> GetAllOrders()
@@ -94,7 +103,7 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Không tìm thấy shipper");
+                    throw new Exception("Do not find Shipper");
                 }
                 var orders = await _context.Orders.Where(x => x.ShipperId == shipper.Id)
                     .ProjectTo<ShipperOrderDTO>(_mapper.ConfigurationProvider)
@@ -103,7 +112,7 @@ namespace DataAccess.DAO
             }
             catch(Exception ex)
             {
-                throw new Exception("Lỗi");
+                throw new Exception("Error");
             }
         }
         public async Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId)
@@ -113,7 +122,7 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Không tìm thấy shipper");
+                    throw new Exception("Do not find Shipper");
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .ProjectTo<ShipperOrderDetailDTO>(_mapper.ConfigurationProvider)
@@ -122,7 +131,7 @@ namespace DataAccess.DAO
             }
             catch (Exception ex)
             {
-                throw new Exception("Lỗi");
+                throw new Exception("Error");
             }
         }
 
@@ -133,7 +142,7 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Không tìm thấy shipper");
+                    throw new Exception("Do not find Shipper");
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .FirstOrDefaultAsync();
@@ -153,7 +162,7 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Không tìm thấy shipper");
+                    throw new Exception("Do not find Shipper");
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .FirstOrDefaultAsync();

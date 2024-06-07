@@ -1,16 +1,29 @@
 ﻿using BusinessObject.Entities;
 using DataAccess;
-using DataAccess.DAO.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-public class CartDAO : ICartDAO
+public class CartDAO
 {
     private readonly AppDbContext _context;
 
-    public CartDAO(AppDbContext context)
+    private static CartDAO instance;
+
+    public CartDAO()
     {
-        _context = context;
+        _context = new AppDbContext();
+    }
+
+    public static CartDAO Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new CartDAO();
+            }
+            return instance;
+        }
     }
 
     public async Task<Cart> GetCartByUserIdAsync(int userId)

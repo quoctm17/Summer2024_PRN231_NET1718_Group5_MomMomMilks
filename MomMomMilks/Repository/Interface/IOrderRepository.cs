@@ -11,14 +11,14 @@ namespace Repository.Interface
 {
     public interface IOrderRepository
     {
-        Task<List<OrderDTO>> GetAllOrders();
-        Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
-        Task<Order> GetOrderAsync(int orderId);
-        Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId);
-        Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId);
-        Task<List<ShipperOrderDTO>> GetShipperOrders(int shipperId);
-        Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId);
-        Task<bool> ConfirmShipped(int shipperId, int orderId);
-        Task<bool> ConfirmCancelled(int shipperId, int orderId);
+        Task<List<OrderDTO>> GetAllOrdersAsync();
+        Task AddOrderAsync(Order order, List<OrderDetail> orderDetails);
+        Task<Order> GetOrderByIdAsync(int orderId);
+        Task<List<OrderHistoryDTO>> GetAllOrderHistoryAsync(int userId);
+        Task<List<OrderDetailHistoryDTO>> GetDetailHistoryAsync(int orderId);
+        Task<List<ShipperOrderDTO>> GetShipperAssignedOrderAsync(int shipperId);
+        Task<ShipperOrderDetailDTO> GetShipperOrderDetailAsync(int shipperId, int orderId);
+        Task<bool> ConfirmShippedAsync(int shipperId, int orderId);
+        Task<bool> ConfirmCancelledAsync(int shipperId, int orderId);
     }
 }

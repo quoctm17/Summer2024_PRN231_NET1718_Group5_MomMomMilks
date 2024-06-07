@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240606103352_AddDistrictandWard_UpdateSeedforAddress")]
+    partial class AddDistrictandWard_UpdateSeedforAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("WardId");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.AppRole", b =>
@@ -199,7 +202,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
@@ -221,7 +224,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.CartItem", b =>
@@ -247,7 +250,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("MilkId");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Category", b =>
@@ -268,7 +271,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Coupon", b =>
@@ -307,7 +310,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Coupons", (string)null);
+                    b.ToTable("Coupons");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.CouponUsageHistory", b =>
@@ -322,7 +325,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CouponId");
 
-                    b.ToTable("CouponUsageHistories", (string)null);
+                    b.ToTable("CouponUsageHistories");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.District", b =>
@@ -347,7 +350,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Districts", (string)null);
+                    b.ToTable("Districts");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Feedback", b =>
@@ -381,7 +384,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Milk", b =>
@@ -444,7 +447,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Milks", (string)null);
+                    b.ToTable("Milks");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.MilkAge", b =>
@@ -463,7 +466,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MilkAges", (string)null);
+                    b.ToTable("MilkAges");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Order", b =>
@@ -513,7 +516,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ShipperId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.OrderDetail", b =>
@@ -554,7 +557,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetails", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.OrderStatus", b =>
@@ -571,7 +574,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderStatuses", (string)null);
+                    b.ToTable("OrderStatuses");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.PaymentType", b =>
@@ -588,7 +591,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentTypes", (string)null);
+                    b.ToTable("PaymentTypes");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Report", b =>
@@ -619,7 +622,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("Reports", (string)null);
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Schedule", b =>
@@ -639,7 +642,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Shipper", b =>
@@ -662,7 +665,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Shippers", (string)null);
+                    b.ToTable("Shippers");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Supplier", b =>
@@ -679,7 +682,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Transaction", b =>
@@ -707,7 +710,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Transaction", (string)null);
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Ward", b =>
@@ -737,7 +740,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("Wards", (string)null);
+                    b.ToTable("Wards");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

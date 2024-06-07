@@ -39,25 +39,25 @@ namespace DataAccess
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<Shipper> Shippers{ get; set; }
+        public DbSet<Shipper> Shippers { get; set; }
         public DbSet<Cart> Carts { get; set; }
-        public DbSet <CartItem> CartItems { get; set; }
-
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
+        public DbSet<Ward> Wards { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(GetConnectionString());
-        }
+            => optionsBuilder.UseSqlServer(GetConnectionString());
 
         private string GetConnectionString()
         {
             IConfiguration config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                 .AddJsonFile("MomMomMilks/appsettings.json", true, true)
+                .SetBasePath(Directory.GetCurrentDirectory())
+                 .AddJsonFile("appsettings.json", true, true)
                  .Build();
-            var strConn = config["ConnectionStrings:DefaultConnectionString"];
+            var strConn = config.GetConnectionString("DefaultConnectionString");
 
             return strConn;
         }
@@ -71,6 +71,18 @@ namespace DataAccess
                 .HasOne(a => a.User)
                 .WithMany(u => u.Addresses)
                 .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Address>()
+                .HasOne(a => a.Ward)
+                .WithMany(w => w.Addresses)
+                .HasForeignKey(a => a.WardId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Address>()
+                .HasOne(a => a.District)
+                .WithMany(d => d.Addresses)
+                .HasForeignKey(a => a.DistrictId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -127,6 +139,14 @@ namespace DataAccess
                 .HasOne(cuh => cuh.Order)
                 .WithMany(o => o.CouponUsageHistories)
                 .HasForeignKey(cuh => cuh.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<District>()
+                .HasKey(d => d.Id);
+            builder.Entity<District>()
+                .HasMany(d => d.Wards)
+                .WithOne(w => w.District)
+                .HasForeignKey(w => w.DistrictId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -264,6 +284,9 @@ namespace DataAccess
 
             builder.Entity<OrderStatus>()
                 .HasKey(c => c.Id);
+
+            builder.Entity<Ward>()
+                .HasKey(w => w.Id);
         }
     }
 }

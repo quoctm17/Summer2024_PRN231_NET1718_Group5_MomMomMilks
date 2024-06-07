@@ -1,0 +1,122 @@
+[
+  {
+    "Name": "Quận 1",
+    "Latitude": "10.7758439",
+    "Longitude": "106.7009829"
+  },
+  {
+    "Name": "Quận 2",
+    "Latitude": "10.7872725",
+    "Longitude": "106.7498315"
+  },
+  {
+    "Name": "Quận 3",
+    "Latitude": "10.7843695",
+    "Longitude": "106.6938787"
+  },
+  {
+    "Name": "Quận 4",
+    "Latitude": "10.7643597",
+    "Longitude": "106.7022121"
+  },
+  {
+    "Name": "Quận 5",
+    "Latitude": "10.7546663",
+    "Longitude": "106.6644227"
+  },
+  {
+    "Name": "Quận 6",
+    "Latitude": "10.7481942",
+    "Longitude": "106.6368445"
+  },
+  {
+    "Name": "Quận 7",
+    "Latitude": "10.7270838",
+    "Longitude": "106.7216063"
+  },
+  {
+    "Name": "Quận 8",
+    "Latitude": "10.7271223",
+    "Longitude": "106.6291302"
+  },
+  {
+    "Name": "Quận 9",
+    "Latitude": "10.8434285",
+    "Longitude": "106.8242259"
+  },
+  {
+    "Name": "Quận 10",
+    "Latitude": "10.776003",
+    "Longitude": "106.667905"
+  },
+  {
+    "Name": "Quận 11",
+    "Latitude": "10.7627458",
+    "Longitude": "106.6446463"
+  },
+  {
+    "Name": "Quận 12",
+    "Latitude": "10.8654193",
+    "Longitude": "106.6141206"
+  },
+  {
+    "Name": "Quận Bình Tân",
+    "Latitude": "10.7653714",
+    "Longitude": "106.6017333"
+  },
+  {
+    "Name": "Quận Bình Thạnh",
+    "Latitude": "10.8021341",
+    "Longitude": "106.7062419"
+  },
+  {
+    "Name": "Quận Gò Vấp",
+    "Latitude": "10.8381742",
+    "Longitude": "106.6792177"
+  },
+  {
+    "Name": "Quận Phú Nhuận",
+    "Latitude": "10.7971207",
+    "Longitude": "106.6800986"
+  },
+  {
+    "Name": "Quận Tân Bình",
+    "Latitude": "10.8014652",
+    "Longitude": "106.6525973"
+  },
+  {
+    "Name": "Quận Tân Phú",
+    "Latitude": "10.7875769",
+    "Longitude": "106.6281942"
+  },
+  {
+    "Name": "Quận Thủ Đức",
+    "Latitude": "10.8497458",
+    "Longitude": "106.7532175"
+  },
+  {
+    "Name": "Huyện Bình Chánh",
+    "Latitude": "10.7042148",
+    "Longitude": "106.5503025"
+  },
+  {
+    "Name": "Huyện Cần Giờ",
+    "Latitude": "10.4282167",
+    "Longitude": "106.9545372"
+  },
+  {
+    "Name": "Huyện Củ Chi",
+    "Latitude": "10.973349",
+    "Longitude": "106.4936652"
+  },
+  {
+    "Name": "Huyện Hóc Môn",
+    "Latitude": "10.8911512",
+    "Longitude": "106.6209933"
+  },
+  {
+    "Name": "Huyện Nhà Bè",
+    "Latitude": "10.6610295",
+    "Longitude": "106.7043104"
+  }
+]

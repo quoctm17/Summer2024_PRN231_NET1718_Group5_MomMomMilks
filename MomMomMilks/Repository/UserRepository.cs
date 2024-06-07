@@ -1,25 +1,40 @@
-﻿using DataAccess.DAO.Interface;
+﻿using BusinessObject.Entities;
+using DataAccess.DAO;
 using DataTransfer;
 using Repository.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly IUserDAO _userDAO;
-        public UserRepository(IUserDAO userDAO)
-        {
-            _userDAO = userDAO;
-        }
-
         public async Task<List<ShipperDTO>> GetAllShippers()
         {
-            return await _userDAO.GetAllShipper();
+            return await UserDAO.Instance.GetAllShippers();
+        }
+
+        public async Task<List<AppUser>> GetAllUsers()
+        {
+            return await UserDAO.Instance.GetAllUsers();
+        }
+
+        public async Task<AppUser> GetUserById(int userId)
+        {
+            return await UserDAO.Instance.GetUserById(userId);
+        }
+
+        public async Task AddUser(AppUser user)
+        {
+            await UserDAO.Instance.AddUser(user);
+        }
+
+        public async Task UpdateUser(AppUser user)
+        {
+            await UserDAO.Instance.UpdateUser(user);
+        }
+
+        public async Task DeleteUser(int userId)
+        {
+            await UserDAO.Instance.DeleteUser(userId);
         }
     }
 }

@@ -1,22 +1,65 @@
 ﻿using AutoMapper;
-using DataAccess.DAO.Interface;
+using BusinessObject.Entities;
+using DataAccess.AutoMapperProfile;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.DAO
 {
-    public class CouponDAO : ICouponDAO
+    public class CouponDAO
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public CouponDAO(AppDbContext context, IMapper mapper)
+
+        private static CouponDAO instance;
+
+        public CouponDAO()
         {
-            _context = context;
-            _mapper = mapper;
+            _context = new AppDbContext();
+            _mapper = new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile.AutoMapperProfile())).CreateMapper();
+        }
+
+        public static CouponDAO Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new CouponDAO();
+                }
+                return instance;
+            }
+        }
+
+        public async Task<List<Coupon>> GetAllCouponsAsync()
+        {
+            return await _context.Coupons.ToListAsync();
+        }
+
+        public async Task<Coupon> GetCouponByIdAsync(int couponId)
+        {
+            return await _context.Coupons.FindAsync(couponId);
+        }
+
+        public async Task AddCouponAsync(Coupon coupon)
+        {
+            await _context.Coupons.AddAsync(coupon);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateCouponAsync(Coupon coupon)
+        {
+            _context.Coupons.Update(coupon);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCouponAsync(int couponId)
+        {
+            var coupon = await _context.Coupons.FindAsync(couponId);
+            if (coupon != null)
+            {
+                _context.Coupons.Remove(coupon);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateCouponExpiryDate()

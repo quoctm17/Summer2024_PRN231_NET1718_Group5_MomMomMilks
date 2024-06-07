@@ -4,19 +4,20 @@ using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Logging;
 
 namespace MomMomMilks.Controllers
 {
     [Route("odata/[controller]")]
     [ApiController]
-    public class UserController : ODataController
+    public class AddressController : ODataController
     {
-        private readonly IUserService _userService;
-        private readonly ILogger<UserController> _logger;
+        private readonly IAddressService _addressService;
+        private readonly ILogger<AddressController> _logger;
 
-        public UserController(IUserService userService, ILogger<UserController> logger)
+        public AddressController(IAddressService addressService, ILogger<AddressController> logger)
         {
-            _userService = userService;
+            _addressService = addressService;
             _logger = logger;
         }
 
@@ -26,89 +27,83 @@ namespace MomMomMilks.Controllers
         {
             try
             {
-                var users = await _userService.GetAllUsers();
-                return Ok(users);
+                var addresses = await _addressService.GetAllAddresses();
+                return Ok(addresses);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching users.");
+                _logger.LogError(ex, "Error occurred while fetching addresses.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserById(int userId)
+        [HttpGet("{addressId}")]
+        public async Task<IActionResult> GetAddressById(int addressId)
         {
             try
             {
-                var user = await _userService.GetUserById(userId);
-                if (user == null)
+                var address = await _addressService.GetAddressByIdAsync(addressId);
+                if (address == null)
                 {
                     return NotFound();
                 }
-                return Ok(user);
+                return Ok(address);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching user by ID.");
+                _logger.LogError(ex, "Error occurred while fetching address by ID.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] AppUser user)
+        public async Task<IActionResult> AddAddress([FromBody] Address address)
         {
             try
             {
-                await _userService.AddUser(user);
-                return Created(user);
+                await _addressService.AddAddressAsync(address);
+                return Created(address);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while adding user.");
+                _logger.LogError(ex, "Error occurred while adding address.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUser(int userId, [FromBody] AppUser user)
+        [HttpPut("{addressId}")]
+        public async Task<IActionResult> UpdateAddress(int addressId, [FromBody] Address address)
         {
             try
             {
-                if (userId != user.Id)
+                if (addressId != address.Id)
                 {
-                    return BadRequest("User ID mismatch");
+                    return BadRequest("Address ID mismatch");
                 }
 
-                await _userService.UpdateUser(user);
+                await _addressService.UpdateAddressAsync(address);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while updating user.");
+                _logger.LogError(ex, "Error occurred while updating address.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(int userId)
+        [HttpDelete("{addressId}")]
+        public async Task<IActionResult> DeleteAddress(int addressId)
         {
             try
             {
-                await _userService.DeleteUser(userId);
+                await _addressService.DeleteAddressAsync(addressId);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while deleting user.");
+                _logger.LogError(ex, "Error occurred while deleting address.");
                 return StatusCode(500, "Internal server error");
             }
-        }
-
-        [HttpGet("shippers")]
-        public async Task<IActionResult> GetAllShippers()
-        {
-            return Ok(await _userService.GetAllShippers());
         }
 
         private int? GetUserIdFromToken()
