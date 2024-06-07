@@ -23,6 +23,11 @@ namespace Repository
             return await _addressDAO.GetAddressAsync(addressId);
         }
 
+        public async Task<List<Address>> GetAddressesByUserIdAsync(int userId)
+        {
+            return await AddressDAO.Instance.GetAddressesByUserIdAsync(userId);
+        }
+
         public async Task AddAddressAsync(Address address)
         {
             await _addressDAO.AddAddressAsync(address);

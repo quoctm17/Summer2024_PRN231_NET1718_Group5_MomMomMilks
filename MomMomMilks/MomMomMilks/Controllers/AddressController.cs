@@ -27,7 +27,7 @@ namespace MomMomMilks.Controllers
         {
             try
             {
-                var addresses = await _addressService.GetAllAddresses();
+                var addresses = await _addressService.GetAllAddressesAsync();
                 return Ok(addresses);
             }
             catch (Exception ex)
@@ -102,6 +102,21 @@ namespace MomMomMilks.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while deleting address.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetAddressesByUserIdAsync(int userId)
+        {
+            try
+            {
+                var addresses = await _addressService.GetAddressesByUserIdAsync(userId);
+                return Ok(addresses);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching addresses by user ID.");
                 return StatusCode(500, "Internal server error");
             }
         }

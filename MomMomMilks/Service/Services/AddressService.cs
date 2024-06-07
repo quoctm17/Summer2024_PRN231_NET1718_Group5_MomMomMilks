@@ -23,6 +23,11 @@ namespace Service.Services
             return await _addressRepository.GetAddressByIdAsync(addressId);
         }
 
+        public async Task<List<Address>> GetAddressesByUserIdAsync(int userId)
+        {
+            return await _addressRepository.GetAddressesByUserIdAsync(userId);
+        }
+
         public async Task AddAddressAsync(Address address)
         {
             await _addressRepository.AddAddressAsync(address);
