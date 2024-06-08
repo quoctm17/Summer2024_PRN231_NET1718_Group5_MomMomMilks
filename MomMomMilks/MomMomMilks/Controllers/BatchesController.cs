@@ -21,7 +21,8 @@ namespace MomMomMilks.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _batchService.GetAllBatches());
+            var result = await _batchService.GetAllBatches();
+            return Ok(result);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleBatch(int id)
