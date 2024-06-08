@@ -16,8 +16,8 @@ namespace Repository.Interface
         Task<Order> GetOrderByIdAsync(int orderId);
         Task<List<OrderHistoryDTO>> GetAllOrderHistoryAsync(int userId);
         Task<List<OrderDetailHistoryDTO>> GetDetailHistoryAsync(int orderId);
-        Task<List<ShipperOrderDTO>> GetShipperAssignedOrderAsync(int shipperId);
-        Task<ShipperOrderDetailDTO> GetShipperOrderDetailAsync(int shipperId, int orderId);
+        Task<List<Order>> GetShipperAssignedOrderAsync(int shipperId);
+        Task<Order> GetShipperOrderDetailAsync(int shipperId, int orderId);
         Task<bool> ConfirmShippedAsync(int shipperId, int orderId);
         Task<bool> ConfirmCancelledAsync(int shipperId, int orderId);
         Task AutoAssignOrdersToShippers();

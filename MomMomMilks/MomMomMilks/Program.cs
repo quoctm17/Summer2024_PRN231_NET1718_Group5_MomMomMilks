@@ -119,6 +119,7 @@ try
     await Seed.SupplierSeed(context);
     await Seed.CategorySeed(context);
     await Seed.MilkSeed(context);
+    await Seed.MilkBatchSeed(context);
     await Seed.SeedDistrictsAndWards(context);
     await Seed.SeedUser(userManager, roleManager);
     await Seed.SeedAddress(context);

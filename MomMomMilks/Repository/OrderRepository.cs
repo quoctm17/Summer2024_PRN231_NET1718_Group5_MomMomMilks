@@ -52,12 +52,12 @@ namespace Repository
             return await OrderDAO.Instance.GetDetailHistory(orderId);
         }
 
-        public async Task<List<ShipperOrderDTO>> GetShipperAssignedOrderAsync(int shipperId)
+        public async Task<List<Order>> GetShipperAssignedOrderAsync(int shipperId)
         {
             return await OrderDAO.Instance.GetShipperAssignedOrder(shipperId);
         }
 
-        public async Task<ShipperOrderDetailDTO> GetShipperOrderDetailAsync(int shipperId, int orderId)
+        public async Task<Order> GetShipperOrderDetailAsync(int shipperId, int orderId)
         {
             return await OrderDAO.Instance.GetShipperOrderDetail(shipperId, orderId);
         }

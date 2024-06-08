@@ -1,4 +1,5 @@
-﻿using BusinessObject.Entities;
+﻿using AutoMapper;
+using BusinessObject.Entities;
 using DataTransfer;
 using DataTransfer.Shipper;
 using Repository.Interface;
@@ -14,10 +15,12 @@ namespace Service.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IMapper _mapper;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
+            _mapper = mapper;
         }
 
         public async Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails)
@@ -60,12 +63,14 @@ namespace Service.Services
 
         public async Task<List<ShipperOrderDTO>> GetShipperOrders(int shipperId)
         {
-            return await _orderRepository.GetShipperAssignedOrderAsync(shipperId);
+            var result = await _orderRepository.GetShipperAssignedOrderAsync(shipperId);
+            return _mapper.Map<List<ShipperOrderDTO>>(result);
         }
 
         public async Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId)
         {
-            return await _orderRepository.GetShipperOrderDetailAsync(shipperId, orderId);
+            var result = _mapper.Map<ShipperOrderDetailDTO>(await _orderRepository.GetShipperOrderDetailAsync(shipperId, orderId));
+            return result;
         }
 
         public async Task<bool> ConfirmShipped(int shipperId, int orderId)

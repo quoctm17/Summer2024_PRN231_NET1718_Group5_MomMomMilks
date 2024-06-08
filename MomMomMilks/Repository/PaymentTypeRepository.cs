@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataAccess.DAO;
 using Repository.Interface;
 
 namespace Repository
