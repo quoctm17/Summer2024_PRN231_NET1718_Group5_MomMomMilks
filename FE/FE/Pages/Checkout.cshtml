@@ -191,12 +191,12 @@
 
                     let cartItems = cart.$values || [];
                     let orderItemsHtml = cartItems.map(item => `
-                    <li class="checkout__order__item row" data-milk-id="${item.Milk.Id}" data-quantity="${item.Quantity}" data-price="${item.Milk.Price}" data-total="${item.Milk.Price * item.Quantity}">
-                        <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
-                        <div class="col-lg-2 quantity">${item.Quantity}</div>
-                        <div class="col-lg-4 text-right item-price">${formatCurrency(item.Milk.Price)} đ</div>
-                    </li>
-                `).join('');
+                            <li class="checkout__order__item row" data-milk-id="${item.Milk.Id}" data-quantity="${item.Quantity}" data-price="${item.Milk.Price}" data-total="${item.Milk.Price * item.Quantity}">
+                                <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
+                                <div class="col-lg-2 quantity">${item.Quantity}</div>
+                                <div class="col-lg-4 text-right item-price">${formatCurrency(item.Milk.Price)} đ</div>
+                            </li>
+                        `).join('');
                     document.getElementById('order-items').innerHTML = orderItemsHtml;
                     updateOrderTotal(cartItems);
                 } else {

@@ -11,7 +11,7 @@ namespace DataAccess.Seed
         {
             if (!await _context.Districts.AnyAsync())
             {
-                var districtData = await File.ReadAllTextAsync("../DataAccess/Seed/DistrictSeed.json");
+                var districtData = await File.ReadAllTextAsync("../DataAccess/Seed/District.json");
                 var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var districts = JsonSerializer.Deserialize<List<District>>(districtData, jsonOptions);
 
@@ -25,7 +25,7 @@ namespace DataAccess.Seed
 
             if (!await _context.Wards.AnyAsync())
             {
-                var wardData = await File.ReadAllTextAsync("../DataAccess/Seed/WardSeed.json");
+                var wardData = await File.ReadAllTextAsync("../DataAccess/Seed/Ward.json");
                 var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var wards = JsonSerializer.Deserialize<List<Ward>>(wardData, jsonOptions);
 
@@ -146,7 +146,7 @@ namespace DataAccess.Seed
         {
             if (await _context.Addresses.AnyAsync()) return;
 
-            var addressData = await File.ReadAllTextAsync("../DataAccess/Seed/AddressSeed.json");
+            var addressData = await File.ReadAllTextAsync("../DataAccess/Seed/Address.json");
             var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var addresses = JsonSerializer.Deserialize<List<Address>>(addressData, jsonOptions);
 
@@ -256,6 +256,24 @@ namespace DataAccess.Seed
             foreach (var i in m)
             {
                 await _context.Milks.AddAsync(i);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public static async Task MilkBatchSeed(AppDbContext _context)
+        {
+            if (await _context.Batches.AnyAsync()) { return; }
+
+            var batches = await File.ReadAllTextAsync("../DataAccess/Seed/BatchSeed.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var b = JsonSerializer.Deserialize<List<Batch>>(batches, jsonOptions);
+            var random = new Random();
+            foreach (var i in b)
+            {
+                var randomNumber = random.Next(1, 5);
+                i.ImportDate = DateTime.Now.AddMonths(-randomNumber);
+                i.ExpiredDate = DateTime.Now.AddMonths(-randomNumber + 6);
+                await _context.Batches.AddAsync(i);
                 await _context.SaveChangesAsync();
             }
         }
