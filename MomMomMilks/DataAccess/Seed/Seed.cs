@@ -7,6 +7,37 @@ namespace DataAccess.Seed
 {
     public class Seed
     {
+        public static async Task SeedDistrictsAndWards(AppDbContext _context)
+        {
+            if (!await _context.Districts.AnyAsync())
+            {
+                var districtData = await File.ReadAllTextAsync("../DataAccess/Seed/DistrictSeed.json");
+                var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var districts = JsonSerializer.Deserialize<List<District>>(districtData, jsonOptions);
+
+                foreach (var district in districts)
+                {
+                    await _context.Districts.AddAsync(district);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            if (!await _context.Wards.AnyAsync())
+            {
+                var wardData = await File.ReadAllTextAsync("../DataAccess/Seed/WardSeed.json");
+                var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var wards = JsonSerializer.Deserialize<List<Ward>>(wardData, jsonOptions);
+
+                foreach (var ward in wards)
+                {
+                    await _context.Wards.AddAsync(ward);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public static async Task SeedUser(UserManager<AppUser> _userManager, RoleManager<AppRole> _roleManager)
         {
             if (await _userManager.Users.AnyAsync()) return;
@@ -68,7 +99,8 @@ namespace DataAccess.Seed
                 Point = 0,
                 Shipper = new Shipper
                 {
-                    Status = "Available"
+                    Status = "Available",
+                    DistrictId = 1
                 }
             };
 
@@ -83,7 +115,8 @@ namespace DataAccess.Seed
                 Point = 0,
                 Shipper = new Shipper
                 {
-                    Status = "Unavailable"
+                    Status = "Unavailable",
+                    DistrictId = 2
                 }
             };
 
@@ -98,7 +131,8 @@ namespace DataAccess.Seed
                 Point = 0,
                 Shipper = new Shipper
                 {
-                    Status = "Shipping"
+                    Status = "Shipping",
+                    DistrictId = 3
                 }
             };
 
@@ -106,35 +140,13 @@ namespace DataAccess.Seed
             await _userManager.AddToRolesAsync(shipper3, new[] { "Shipper" });
         }
 
-        public static async Task SeedDistrictsAndWards(AppDbContext _context)
-        {
-            if (await _context.Districts.AnyAsync() && await _context.Wards.AnyAsync()) return;
 
-            var districtData = await File.ReadAllTextAsync("../DataAccess/Seed/District.json");
-            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var districts = JsonSerializer.Deserialize<List<District>>(districtData, jsonOptions);
-
-            var wardData = await File.ReadAllTextAsync("../DataAccess/Seed/Ward.json");
-            var wards = JsonSerializer.Deserialize<List<Ward>>(wardData, jsonOptions);
-
-            foreach (var district in districts)
-            {
-                await _context.Districts.AddAsync(district);
-            }
-
-            foreach (var ward in wards)
-            {
-                await _context.Wards.AddAsync(ward);
-            }
-
-            await _context.SaveChangesAsync();
-        }
 
         public static async Task SeedAddress(AppDbContext _context)
         {
             if (await _context.Addresses.AnyAsync()) return;
 
-            var addressData = await File.ReadAllTextAsync("../DataAccess/Seed/Address.json");
+            var addressData = await File.ReadAllTextAsync("../DataAccess/Seed/AddressSeed.json");
             var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var addresses = JsonSerializer.Deserialize<List<Address>>(addressData, jsonOptions);
 
@@ -150,7 +162,7 @@ namespace DataAccess.Seed
 
         public static async Task SeedBranch(AppDbContext _context)
         {
-            if(await _context.Brands.AnyAsync()) { return; }
+            if (await _context.Brands.AnyAsync()) { return; }
 
             var list = new List<Brand>
             {
@@ -164,7 +176,7 @@ namespace DataAccess.Seed
                 new Brand {Name="Friso"}
             };
 
-            foreach(var i in list)
+            foreach (var i in list)
             {
                 await _context.Brands.AddAsync(i);
                 await _context.SaveChangesAsync();
@@ -185,7 +197,7 @@ namespace DataAccess.Seed
                 new MilkAge {Min = 30, Max = 60}
             };
 
-            foreach(var i in list)
+            foreach (var i in list)
             {
                 await _context.MilkAges.AddAsync(i);
                 await _context.SaveChangesAsync();
@@ -208,7 +220,7 @@ namespace DataAccess.Seed
                 new Supplier{Name="Hà Lan"}
             };
 
-            foreach(var i in list)
+            foreach (var i in list)
             {
                 await _context.Suppliers.AddAsync(i);
                 await _context.SaveChangesAsync();
@@ -220,12 +232,12 @@ namespace DataAccess.Seed
 
             var list = new List<Category>
             {
-                new Category {Name="Sữa bột cho trẻ", Description = "Sữa bột dành cho trẻ sơ sinh hoặc trẻ từ trên 12 tháng tuổi"},
-                new Category {Name="Sữa hộp cho bé", Description = "Sữa hộp dành cho trẻ em từ 3 đến 12 tuổi"},
-                new Category {Name="Sữa hộp bình thường", Description = "Sữa hộp dành cho trẻ từ 12 tuổi và người trưởng thành"},
-                new Category {Name="Sữa dành cho bà bầu", Description="Sữa bột dành cho các bà mẹ đang mang thai"}
+                new Category {Name="Chilren Milk", Description = "Powdered milk for infants or children over 12 months old"},
+                new Category {Name="Baby Milk", Description = "Milk for children from 3 to 12 years old"},
+                new Category {Name="Dairy Cow", Description = "Milk for children from 12 years old and adults"},
+                new Category {Name="Pregnant Milk", Description="Powdered milk for pregnant mothers"}
             };
-            
+
             foreach (var i in list)
             {
                 await _context.Categories.AddAsync(i);
@@ -241,12 +253,13 @@ namespace DataAccess.Seed
             var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var m = JsonSerializer.Deserialize<List<Milk>>(milk, jsonOptions);
 
-            foreach(var i in m)
+            foreach (var i in m)
             {
                 await _context.Milks.AddAsync(i);
                 await _context.SaveChangesAsync();
             }
         }
+
         public static async Task PaynmentTypeSeed(AppDbContext _context)
         {
             if (await _context.PaymentTypes.AnyAsync()) { return; }
@@ -264,34 +277,40 @@ namespace DataAccess.Seed
             }
         }
 
-        public static async Task OrderSeed(AppDbContext _context)
+        public static async Task TimeSlotsSeed(AppDbContext _context)
         {
-            if (await _context.Orders.AnyAsync()) { return; }
+            if (await _context.TimeSlots.AnyAsync()) return;
 
-            var order = await File.ReadAllTextAsync("../DataAccess/Seed/OrderSeed.json");
-            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var m = JsonSerializer.Deserialize<List<Order>>(order, jsonOptions);
-
-            foreach (var i in m)
+            var list = new List<TimeSlot>
             {
-                await _context.Orders.AddAsync(i);
-                await _context.SaveChangesAsync();
+                new TimeSlot { Name = "Morning", StartTime = new TimeSpan(7, 0, 0), EndTime = new TimeSpan(10, 0, 0) },
+                new TimeSlot { Name = "Afternoon", StartTime = new TimeSpan(12, 0, 0), EndTime = new TimeSpan(15, 0, 0) },
+                new TimeSlot { Name = "Evening", StartTime = new TimeSpan(17, 0, 0), EndTime = new TimeSpan(20, 0, 0) }
+            };
+
+            foreach (var timeSlot in list)
+            {
+                await _context.TimeSlots.AddAsync(timeSlot);
             }
+
+            await _context.SaveChangesAsync();
         }
 
         public static async Task OrderStatusSeed(AppDbContext _context)
         {
-            if(await _context.OrderStatuses.AnyAsync()) { return; }
+            if (await _context.OrderStatuses.AnyAsync()) { return; }
 
             var list = new List<OrderStatus>
             {
-                new OrderStatus{Name="Chờ Giao"},
-                new OrderStatus{Name="Đang Giao"},
-                new OrderStatus{Name="Đã Giao"},
-                new OrderStatus{Name="Đã Hủy"}
+                new OrderStatus{Name="To Pay"},
+                new OrderStatus{Name="To Ship"},
+                new OrderStatus{Name="To Receive"},
+                new OrderStatus{Name="Completed"},
+                new OrderStatus{Name="Cancelled"},
+                new OrderStatus{Name="Return Refund"}
             };
 
-            foreach(var i in list)
+            foreach (var i in list)
             {
                 await _context.OrderStatuses.AddAsync(i);
                 await _context.SaveChangesAsync();
@@ -318,6 +337,78 @@ namespace DataAccess.Seed
                 await _context.SaveChangesAsync();
             }
 
+        }
+
+        public static async Task OrderSeed(AppDbContext _context)
+        {
+            if (await _context.Orders.AnyAsync()) { return; }
+
+            var order = await File.ReadAllTextAsync("../DataAccess/Seed/OrderSeed.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var m = JsonSerializer.Deserialize<List<Order>>(order, jsonOptions);
+
+            foreach (var i in m)
+            {
+                await _context.Orders.AddAsync(i);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public static async Task OrderDetailSeed(AppDbContext _context)
+        {
+            if (await _context.OrderDetails.AnyAsync()) return;
+
+            var orderDetailData = await File.ReadAllTextAsync("../DataAccess/Seed/OrderDetailSeed.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var orderDetails = JsonSerializer.Deserialize<List<OrderDetail>>(orderDetailData, jsonOptions);
+
+            foreach (var orderDetail in orderDetails)
+            {
+                await _context.OrderDetails.AddAsync(orderDetail);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+
+        public static async Task ScheduleSeed(AppDbContext _context)
+        {
+            if (await _context.Schedules.AnyAsync()) return;
+
+            var scheduleData = await File.ReadAllTextAsync("../DataAccess/Seed/ScheduleSeed.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var schedules = JsonSerializer.Deserialize<List<Schedule>>(scheduleData, jsonOptions);
+
+            foreach (var schedule in schedules)
+            {
+                await _context.Schedules.AddAsync(schedule);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+
+        public static async Task TransactionSeed(AppDbContext _context)
+        {
+            if (await _context.Transactions.AnyAsync()) return;
+
+            var transactionData = await File.ReadAllTextAsync("../DataAccess/Seed/TransactionSeed.json");
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var transactions = JsonSerializer.Deserialize<List<Transaction>>(transactionData, jsonOptions);
+
+            foreach (var transaction in transactions)
+            {
+                await _context.Transactions.AddAsync(transaction);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private class ShipperSeedData
+        {
+            public string UserName { get; set; }
+            public string Email { get; set; }
+            public string Status { get; set; }
+            public int DistrictId { get; set; }
         }
     }
 }
