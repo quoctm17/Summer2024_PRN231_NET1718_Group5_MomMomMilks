@@ -41,6 +41,12 @@ namespace MomMomMilks.Controllers
         {
             try
             {
+                //var userIdFromToken = GetUserIdFromToken();
+                //if (userIdFromToken == null)
+                //{
+                //    return Unauthorized("User not logged in");
+                //}
+
                 var user = await _userService.GetUserById(userId);
                 if (user == null)
                 {
@@ -55,11 +61,42 @@ namespace MomMomMilks.Controllers
             }
         }
 
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                var user = await _userService.GetUserById(userId.Value);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching current user.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] AppUser user)
         {
             try
             {
+                var userIdFromToken = GetUserIdFromToken();
+                if (userIdFromToken == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
                 await _userService.AddUser(user);
                 return Created(user);
             }
@@ -75,6 +112,12 @@ namespace MomMomMilks.Controllers
         {
             try
             {
+                var userIdFromToken = GetUserIdFromToken();
+                if (userIdFromToken == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
                 if (userId != user.Id)
                 {
                     return BadRequest("User ID mismatch");
@@ -95,6 +138,12 @@ namespace MomMomMilks.Controllers
         {
             try
             {
+                var userIdFromToken = GetUserIdFromToken();
+                if (userIdFromToken == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
                 await _userService.DeleteUser(userId);
                 return NoContent();
             }
@@ -108,7 +157,21 @@ namespace MomMomMilks.Controllers
         [HttpGet("shippers")]
         public async Task<IActionResult> GetAllShippers()
         {
-            return Ok(await _userService.GetAllShippers());
+            try
+            {
+                var userIdFromToken = GetUserIdFromToken();
+                if (userIdFromToken == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                return Ok(await _userService.GetAllShippers());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching shippers.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         private int? GetUserIdFromToken()

@@ -7,6 +7,11 @@ using MomMomMilks.Extensions;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.ModelBuilder;
 using System.Text.Json.Serialization;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
+using Service.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +32,7 @@ modelBuilder.EntitySet<Cart>("Carts");
 modelBuilder.EntitySet<CartItem>("CartItems");
 modelBuilder.EntitySet<District>("Districts");
 modelBuilder.EntitySet<Order>("Orders");
+modelBuilder.EntitySet<TimeSlot>("TimeSlots");
 modelBuilder.EntitySet<Ward>("Wards");
 
 var edmModel = modelBuilder.GetEdmModel();
@@ -52,6 +58,21 @@ builder.Services.AddControllers();
 builder.Services.AddLogging();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add Quartz services
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory(); // Correct method name
+    var jobKey = new JobKey("AssignOrdersJob");
+    q.AddJob<AssignOrdersJob>(opts => opts.WithIdentity(jobKey));
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("AssignOrdersJob-trigger")
+        .WithCronSchedule("0 0 6,12,17 * * ?")); // Schedule at 6AM, 12PM, and 5PM
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
 
 var app = builder.Build();
 
@@ -98,13 +119,19 @@ try
     await Seed.SupplierSeed(context);
     await Seed.CategorySeed(context);
     await Seed.MilkSeed(context);
-    await Seed.SeedUser(userManager, roleManager);
     await Seed.SeedDistrictsAndWards(context);
+    await Seed.SeedUser(userManager, roleManager);
     await Seed.SeedAddress(context);
     await Seed.PaynmentTypeSeed(context);
     await Seed.OrderStatusSeed(context);
-    await Seed.OrderSeed(context);
     await Seed.CouponSeed(context);
+    await Seed.TimeSlotsSeed(context);
+    await Seed.OrderSeed(context);
+    await Seed.OrderDetailSeed(context);
+    await Seed.ScheduleSeed(context);
+    await Seed.TransactionSeed(context);
+
+
 }
 catch (Exception ex)
 {

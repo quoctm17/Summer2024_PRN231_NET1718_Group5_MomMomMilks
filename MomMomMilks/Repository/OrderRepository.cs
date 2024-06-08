@@ -13,17 +13,30 @@ namespace Repository
             return await OrderDAO.Instance.GetAllOrders();
         }
 
-
         public async Task AddOrderAsync(Order order, List<OrderDetail> orderDetails)
         {
-            await OrderDAO.Instance.AddOrderAsync(order);
-
-            foreach (var detail in orderDetails)
+            try
             {
-                detail.OrderId = order.Id; // Set OrderId for each detail
-                await OrderDetailsDAO.Instance.AddOrderDetailAsync(detail);
+                await OrderDAO.Instance.AddOrderAsync(order);
+
+                foreach (var detail in orderDetails)
+                {
+                    detail.OrderId = order.Id; // Set OrderId for each detail
+                    await OrderDetailsDAO.Instance.AddOrderDetailAsync(detail);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log detailed error message and inner exception details
+                Console.WriteLine($"Error in AddOrderAsync: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                throw new Exception("An error occurred while adding the order details.", ex);
             }
         }
+
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
@@ -57,6 +70,11 @@ namespace Repository
         public async Task<bool> ConfirmCancelledAsync(int shipperId, int orderId)
         {
             return await OrderDAO.Instance.ConfirmCancelled(shipperId, orderId);
+        }
+
+        public async Task AutoAssignOrdersToShippers()
+        {
+            await OrderDAO.Instance.AutoAssignOrdersToShippers();
         }
     }
 }
