@@ -20,5 +20,6 @@ namespace Service.Interfaces
         Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId);
         Task<bool> ConfirmShipped(int shipperId, int orderId);
         Task<bool> ConfirmCancelled(int shipperId, int orderId);
+        Task AutoAssignOrdersToShippers();
     }
 }
