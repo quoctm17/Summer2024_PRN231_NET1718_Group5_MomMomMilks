@@ -33,6 +33,7 @@ namespace MomMomMilks.Extensions
             services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWardRepository, WardRepository>();
+            services.AddScoped<IBatchRepository, BatchRepository>();
 
 
             // Services
@@ -48,6 +49,7 @@ namespace MomMomMilks.Extensions
             services.AddScoped<ITimeSlotService, TimeSlotService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IWardService, WardService>();
+            services.AddScoped<IBatchService, BatchService>();
 
 
             return services;
