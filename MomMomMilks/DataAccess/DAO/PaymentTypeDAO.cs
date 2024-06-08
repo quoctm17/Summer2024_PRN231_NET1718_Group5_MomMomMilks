@@ -1,39 +1,33 @@
 ﻿using BusinessObject.Entities;
+
+using DataAccess;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DataAccess.DAO
+public class PaymentTypeDAO
 {
-    public class PaymentTypeDAO
+    private readonly AppDbContext _context;
+
+    private static PaymentTypeDAO instance;
+
+    public PaymentTypeDAO()
     {
-        private readonly AppDbContext _context;
+        _context = new AppDbContext();
+    }
 
-        private static PaymentTypeDAO instance;
-
-        public PaymentTypeDAO()
+    public static PaymentTypeDAO Instance
+    {
+        get
         {
-            _context = new AppDbContext();
-        }
-
-        public static PaymentTypeDAO Instance
-        {
-            get
+            if (instance == null)
             {
-                if (instance == null)
-                {
-                    instance = new PaymentTypeDAO();
-                }
-                return instance;
+                instance = new PaymentTypeDAO();
             }
+            return instance;
         }
+    }
 
-        public async Task<List<PaymentType>> GetAllPaymentTypesAsync()
-        {
-            return await _context.PaymentTypes.AsNoTracking().ToListAsync();
-        }
+    public async Task<List<PaymentType>> GetAllPaymentTypesAsync()
+    {
+        return await _context.PaymentTypes.AsNoTracking().ToListAsync();
     }
 }
