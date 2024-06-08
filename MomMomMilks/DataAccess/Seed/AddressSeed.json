@@ -10,6 +10,26 @@
     "Longitude": "106.7033312"
   },
   {
+    "UserId": 1,
+    "HouseNumber": "123A",
+    "Street": "Lê Văn Sỹ",
+    "WardId": 29,
+    "DistrictId": 3,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.781755",
+    "Longitude": "106.690696"
+  },
+  {
+    "UserId": 1,
+    "HouseNumber": "456B",
+    "Street": "Nguyễn Văn Linh",
+    "WardId": 71,
+    "DistrictId": 7,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7319209",
+    "Longitude": "106.7166537"
+  },
+  {
     "UserId": 2,
     "HouseNumber": "456",
     "Street": "Hai Bà Trưng",
@@ -33,7 +53,7 @@
     "UserId": 4,
     "HouseNumber": "321",
     "Street": "Lý Tự Trọng",
-    "WardId": 4,
+    "WardId": 2,
     "DistrictId": 1,
     "City": "Hồ Chí Minh",
     "Latitude": "10.7776543",

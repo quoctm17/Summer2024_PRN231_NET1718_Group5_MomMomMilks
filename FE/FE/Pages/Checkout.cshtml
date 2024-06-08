@@ -82,48 +82,32 @@
             </div>
             <div class="checkout__form">
                 <h4>Billing Details</h4>
-                <form action="/Checkout" method="post">
+                <form id="checkoutForm" method="post">
                     <div class="row">
                         <div class="col-lg-8 col-md-6">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>User Name<span>*</span></p>
-                                        <input type="text" id="firstName" name="firstName" required>
+                                        <input type="text" id="firstName" name="firstName" required readonly>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
-                                        <p>Full Name<span>*</span></p>
-                                        <input type="text" id="lastName" name="lastName" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="checkout__input">
-                                        <p>House Number<span>*</span></p>
-                                        <input type="text" id="houseNumber" placeholder="House Number">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="checkout__input">
-                                        <p>Street Address<span>*</span></p>
-                                        <input type="text" id="street" placeholder="Street Address" required>
+                                        <p>Time Slot<span>*</span></p>
+                                        <select id="timeSlot" name="timeSlot" required>
+                                            <option value="" disabled selected>Select a time slot</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="row" style="margin-bottom: 20px;">
+                                <div class="col-lg-8">
                                     <div class="checkout__input">
-                                        <p>Ward<span>*</span></p>
-                                        <input type="text" id="ward" name="ward" required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="checkout__input">
-                                        <p>District<span>*</span></p>
-                                        <input type="text" id="district" name="district" required>
+                                        <p>Select Address<span>*</span></p>
+                                        <select id="addressSelect" name="addressSelect" required>
+                                            <option value="" disabled selected>Select an address</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -131,37 +115,16 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Phone<span>*</span></p>
-                                        <input type="text" id="phone" name="phone" required>
+                                        <input type="text" id="phone" name="phone" required readonly>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="text" id="email" name="email" required>
+                                        <input type="text" id="email" name="email" required readonly>
                                     </div>
                                 </div>
                             </div>
-                            @*<div class="checkout__input__checkbox">
-                                <label for="acc">
-                                    Create an account?
-                                    <input type="checkbox" id="acc" name="createAccount">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <p>
-                                Create an account by entering the information below. If you are a returning customer please login at the top of the page.
-                            </p>
-                            <div class="checkout__input">
-                                <p>Account Password<span>*</span></p>
-                                <input type="password" name="password">
-                            </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="diff-acc">
-                                    Ship to a different address?
-                                    <input type="checkbox" id="diff-acc" name="shipDifferentAddress">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>*@
                             <div class="checkout__input">
                                 <p>Order notes</p>
                                 <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="orderNotes">
@@ -178,26 +141,23 @@
                                     </div>
                                 </div>
                                 <ul id="order-items" class="checkout__order__items">
-                                    <!-- Order items will be dynamically inserted here -->
+                                    <!-- Example order item, dynamically generated -->
+                                    <li class="checkout__order__item row" data-milk-id="1" data-quantity="2" data-price="100" data-total="200">
+                                        <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Milk Name</div>
+                                        <div class="col-lg-2 quantity">2</div>
+                                        <div class="col-lg-4 text-right item-price">100 đ</div>
+                                    </li>
                                 </ul>
                                 <div class="checkout__order__subtotal">Subtotal <span id="order-subtotal">0 đ</span></div>
                                 <div class="checkout__order__discount">Discount <span id="order-discount">0 đ</span></div>
                                 <div class="checkout__order__total">Total <span id="order-total">0 đ</span></div>
                                 <div class="checkout__input__checkbox">
-                                    <label for="payment">
-                                        Check Payment
-                                        <input type="checkbox" id="payment" name="paymentMethod" value="Check">
-                                        <span class="checkmark"></span>
-                                    </label>
+                                    <select id="paymentType" name="paymentType" required>
+                                        <option value="" disabled selected>Select a payment type</option>
+                                    </select>
                                 </div>
-                                <div class="checkout__input__checkbox">
-                                    <label for="paypal">
-                                        Paypal
-                                        <input type="checkbox" id="paypal" name="paymentMethod" value="Paypal">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <button type="submit" class="site-btn">PLACE ORDER</button>
+
+                                <button type="button" id="placeOrderButton" class="site-btn">PLACE ORDER</button>
                             </div>
                         </div>
                     </div>
@@ -211,6 +171,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             loadOrderSummary();
             loadUserDetails();
+            loadTimeSlots();
+            loadPaymentTypes();
+
+            document.getElementById('placeOrderButton').addEventListener('click', placeOrder);
         });
 
         async function loadOrderSummary() {
@@ -227,12 +191,12 @@
 
                     let cartItems = cart.$values || [];
                     let orderItemsHtml = cartItems.map(item => `
-                        <li class="checkout__order__item row">
-                            <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
-                            <div class="col-lg-2">${item.Quantity}</div>
-                            <div class="col-lg-4 text-right">${formatCurrency(item.Milk.Price * item.Quantity)} đ</div>
-                        </li>
-                    `).join('');
+                    <li class="checkout__order__item row" data-milk-id="${item.Milk.Id}" data-quantity="${item.Quantity}" data-price="${item.Milk.Price}" data-total="${item.Milk.Price * item.Quantity}">
+                        <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
+                        <div class="col-lg-2 quantity">${item.Quantity}</div>
+                        <div class="col-lg-4 text-right item-price">${formatCurrency(item.Milk.Price)} đ</div>
+                    </li>
+                `).join('');
                     document.getElementById('order-items').innerHTML = orderItemsHtml;
                     updateOrderTotal(cartItems);
                 } else {
@@ -240,6 +204,57 @@
                 }
             } catch (error) {
                 console.error('Error fetching cart data:', error);
+            }
+        }
+
+
+        async function loadTimeSlots() {
+            const token = sessionStorage.getItem('token');
+            try {
+                let response = await fetch('http://localhost:5215/odata/TimeSlot', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    let timeSlots = await response.json();
+                    console.log('TimeSlots:', timeSlots);
+
+                    let timeSlotDropdown = document.getElementById('timeSlot');
+                    timeSlotDropdown.innerHTML = '<option value="" disabled selected>Select a time slot</option>'; // Clear previous options
+
+                    let currentTime = new Date();
+                    console.log('Current Time:', currentTime);
+
+                    for (let i = 0; i < timeSlots.$values.length; i++) {
+                        let timeSlot = timeSlots.$values[i];
+                        let startTime = new Date();
+                        let [hours, minutes, seconds] = timeSlot.startTime.split(':').map(Number);
+                        startTime.setHours(hours, minutes, seconds, 0);
+
+                        // Decrease 1 hour
+                        startTime.setHours(startTime.getHours() - 1);
+                        console.log(`Start Time for ${timeSlot.name}:`, startTime);
+
+                        let option = document.createElement('option');
+                        option.value = timeSlot.id;
+                        option.text = `${timeSlot.name} (${timeSlot.startTime} - ${timeSlot.endTime})`;
+
+                        // Disable the option if the current time is greater than or equal to the start time
+                        if (currentTime >= startTime) {
+                            option.disabled = true;
+                        }
+
+                        timeSlotDropdown.appendChild(option);
+                    }
+
+                    // Update nice-select UI
+                    $('#timeSlot').niceSelect('update');
+                } else {
+                    console.error('Failed to fetch time slots.');
+                }
+            } catch (error) {
+                console.error('Error fetching time slots:', error);
             }
         }
 
@@ -261,24 +276,143 @@
                     console.log('User with Addresses:', user);
 
                     document.getElementById('firstName').value = user.userName || '';
-                    document.getElementById('lastName').value = user.lastName || '';
                     document.getElementById('phone').value = user.phoneNumber || '';
                     document.getElementById('email').value = user.email || '';
 
                     if (user.addresses && user.addresses.$values.length > 0) {
-                        let address = user.addresses.$values[0];
-                        document.getElementById('street').value = address.street || '';
-                        document.getElementById('houseNumber').value = address.houseNumber || '';
-                        document.getElementById('ward').value = address.ward ? address.ward.name : '';
-                        document.getElementById('district').value = address.ward.district ? address.ward.district.name : '';
-                        document.getElementById('state').value = address.state || '';
-                        document.getElementById('postcode').value = address.postcode || '';
+                        let addressDropdown = document.getElementById('addressSelect');
+                        addressDropdown.innerHTML = '<option value="" disabled selected>Select an address</option>'; // Clear previous options
+                        for (let i = 0; i < user.addresses.$values.length; i++) {
+                            let address = user.addresses.$values[i];
+                            let option = document.createElement('option');
+                            option.value = address.id;
+                            option.text = `${address.houseNumber} ${address.street}, ${address.ward.name}, ${address.ward.district.name}`;
+                            addressDropdown.appendChild(option);
+                        }
+
+                        // Update nice-select UI
+                        $('#addressSelect').niceSelect('update');
                     }
                 } else {
                     console.error('Failed to fetch user data.');
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
+            }
+        }
+
+        async function loadPaymentTypes() {
+            const token = sessionStorage.getItem('token');
+            try {
+                let response = await fetch('http://localhost:5215/odata/PaymentType', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    let paymentTypes = await response.json();
+                    console.log('PaymentTypes:', paymentTypes);
+
+                    let paymentTypeDropdown = document.getElementById('paymentType');
+                    paymentTypeDropdown.innerHTML = '<option value="" disabled selected>Select a payment type</option>'; // Clear previous options
+                    for (let i = 0; i < paymentTypes.$values.length; i++) {
+                        let option = document.createElement('option');
+                        option.value = paymentTypes.$values[i].id;
+                        option.text = paymentTypes.$values[i].name;
+                        paymentTypeDropdown.appendChild(option);
+                    }
+
+                    // Update nice-select UI if you're using it
+                    $('#paymentType').niceSelect('update');
+
+                    paymentTypeDropdown.addEventListener('change', function () {
+                        const selectedValue = paymentTypeDropdown.options[paymentTypeDropdown.selectedIndex].text;
+                        if (selectedValue !== 'In cash') {
+                            alert('This feature will be updated soon');
+                            paymentTypeDropdown.selectedIndex = 0; // Reset to default option
+                            $('#paymentType').niceSelect('update');
+                        }
+                    });
+
+                } else {
+                    console.error('Failed to fetch payment types.');
+                }
+            } catch (error) {
+                console.error('Error fetching payment types:', error);
+            }
+        }
+
+        async function placeOrder() {
+            const token = sessionStorage.getItem('token');
+            const userId = getUserIdFromToken();
+            const addressSelect = document.getElementById('addressSelect');
+            const timeSlotSelect = document.getElementById('timeSlot');
+            const paymentTypeSelect = document.getElementById('paymentType');
+
+            const orderDetails = Array.from(document.querySelectorAll('.checkout__order__item')).map(item => {
+                return {
+                    milkId: parseInt(item.dataset.milkId),
+                    quantity: parseInt(item.querySelector('.quantity').innerText),
+                    discount: 0,
+                    price: parseFloat(item.dataset.price),
+                    total: parseInt(item.dataset.total)
+                };
+            });
+
+            const order = {
+                createAt: new Date().toISOString(),
+                updateAt: new Date().toISOString(),
+                totalAmount: parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', '')),
+                buyerId: parseInt(userId),
+                addressId: parseInt(addressSelect.value),
+                paymentTypeId: parseInt(paymentTypeSelect.value),
+                orderStatusId: 1,
+                timeSlotId: parseInt(timeSlotSelect.value),
+                orderDetails: orderDetails
+            };
+
+            console.log("Order data to be sent:", JSON.stringify(order)); // Log order data to be sent
+
+            try {
+                let response = await fetch('http://localhost:5215/odata/Order/simple', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(order)
+                });
+                if (response.ok || response.status === 500) {
+                    console.log('Order placed successfully');
+                    alert('Order placed successfully');
+                    await clearCart();
+                } else {
+                    console.error('Failed to place order');
+                    alert('Failed to place order');
+                }
+            } catch (error) {
+                console.error('Error placing order:', error);
+            }
+        }
+
+        async function clearCart() {
+            const token = sessionStorage.getItem('token');
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart/ClearCart', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    console.log('Cart cleared successfully');
+                    await updateCartTotalPrice(); // Call updateCartTotalPrice after clearing cart
+                    await updateCartCount(); // Call updateCartCount after clearing cart
+                } else {
+                    console.error('Failed to clear cart.');
+                }
+            } catch (error) {
+                console.error('Error clearing cart:', error);
             }
         }
 
@@ -309,6 +443,5 @@
             }
             return null;
         }
-
     </script>
 </body>

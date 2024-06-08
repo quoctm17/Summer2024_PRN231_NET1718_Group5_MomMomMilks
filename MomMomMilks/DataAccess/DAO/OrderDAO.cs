@@ -49,8 +49,21 @@ namespace DataAccess.DAO
 
         public async Task AddOrderAsync(Order order)
         {
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Orders.AddAsync(order);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log detailed error message and inner exception details
+                Console.WriteLine($"Error in AddOrderAsync: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                throw new Exception("An error occurred while adding the order.", ex);
+            }
         }
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
@@ -72,7 +85,8 @@ namespace DataAccess.DAO
                     .Where(o => o.BuyerId == userId)
                     .ToListAsync();
                 list = _mapper.Map<List<OrderHistoryDTO>>(l);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -89,7 +103,8 @@ namespace DataAccess.DAO
                     .Where(o => o.OrderId == orderId)
                     .ToListAsync();
                 list = _mapper.Map<List<OrderDetailHistoryDTO>>(l);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -110,7 +125,7 @@ namespace DataAccess.DAO
                     .ToListAsync();
                 return orders;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception("Error");
             }
@@ -149,7 +164,7 @@ namespace DataAccess.DAO
                 order.OrderStatusId = 3;
                 return await _context.SaveChangesAsync() > 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -174,7 +189,44 @@ namespace DataAccess.DAO
                 return false;
             }
         }
-    }
 
+        public async Task AutoAssignOrdersToShippers()
+        {
+            var currentTime = DateTime.Now;
+            var timeSlots = await _context.TimeSlots.ToListAsync();
+
+            foreach (var timeSlot in timeSlots)
+            {
+                var slotStartTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, timeSlot.StartTime.Hours, timeSlot.StartTime.Minutes, 0);
+                if (currentTime >= slotStartTime.AddHours(-1) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
+                {
+                    var orders = await _context.Orders
+                        .Where(o => o.TimeSlotId == timeSlot.Id && o.OrderStatusId == 2 && o.ShipperId == null)
+                        .Include(o => o.Address)
+                        .ToListAsync();
+
+                    foreach (var order in orders)
+                    {
+                        var districtId = order.Address.DistrictId;
+                        var availableShippers = await _context.Shippers
+                            .Where(s => s.DistrictId == districtId && s.Status == "Available")
+                            .ToListAsync();
+
+                        if (availableShippers.Any())
+                        {
+                            var shipper = availableShippers.First();
+                            order.ShipperId = shipper.Id;
+                            shipper.Status = "Shipping";
+
+                            _context.Update(order);
+                            _context.Update(shipper);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+    }
 
 }

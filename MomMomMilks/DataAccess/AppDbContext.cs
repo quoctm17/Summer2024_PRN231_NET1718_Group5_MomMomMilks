@@ -46,6 +46,9 @@ namespace DataAccess
         public DbSet<Ward> Wards { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -172,19 +175,10 @@ namespace DataAccess
                 .WithMany(c => c.Orders)
                 .HasForeignKey(or => or.OrderStatusId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-
-            builder.Entity<Report>()
-                .HasKey(r => r.Id);
-            builder.Entity<Report>()
-                .HasOne(r => r.Order)
-                .WithMany(or => or.Reports)
-                .HasForeignKey(r => r.OrderId)
-                .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Report>()
-                .HasOne(r => r.Staff)
-                .WithMany(s => s.Reports)
-                .HasForeignKey(r => r.StaffId)
+            builder.Entity<Order>()
+                .HasOne(o => o.TimeSlot)
+                .WithMany(ts => ts.Orders)
+                .HasForeignKey(o => o.TimeSlotId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -199,6 +193,24 @@ namespace DataAccess
                 .HasOne(od => od.Milk)
                 .WithMany(m => m.OrderDetails)
                 .HasForeignKey(od => od.MilkId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<OrderStatus>()
+                .HasKey(c => c.Id);
+
+
+            builder.Entity<Report>()
+                .HasKey(r => r.Id);
+            builder.Entity<Report>()
+                .HasOne(r => r.Order)
+                .WithMany(or => or.Reports)
+                .HasForeignKey(r => r.OrderId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Report>()
+                .HasOne(r => r.Staff)
+                .WithMany(s => s.Reports)
+                .HasForeignKey(r => r.StaffId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
@@ -258,6 +270,11 @@ namespace DataAccess
                 .WithOne(o => o.Schedule)
                 .HasForeignKey<Schedule>(s => s.OrderId)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Schedule>()
+                .HasOne(s => s.TimeSlot)
+                .WithMany(t => t.Schedules)
+                .HasForeignKey(s => s.TimeSlotId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             builder.Entity<Shipper>()
@@ -267,11 +284,20 @@ namespace DataAccess
                 .WithOne(au => au.Shipper)
                 .HasForeignKey<Shipper>(s => s.AppUserId)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Shipper>()
+                .HasOne(s => s.District)
+                .WithMany(d => d.Shippers)
+                .HasForeignKey(s => s.DistrictId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
 
             builder.Entity<Supplier>()
                 .HasKey(s => s.Id);
+
+
+            builder.Entity<TimeSlot>()
+                .HasKey(ts => ts.Id);
 
 
             builder.Entity<Transaction>()
@@ -282,8 +308,6 @@ namespace DataAccess
                 .HasForeignKey(t => t.OrderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<OrderStatus>()
-                .HasKey(c => c.Id);
 
             builder.Entity<Ward>()
                 .HasKey(w => w.Id);

@@ -44,6 +44,53 @@ namespace MomMomMilks.Controllers
             return Created(orderRequest.Order);
         }
 
+        [HttpPost("simple")]
+        public async Task<IActionResult> PostSimpleOrder([FromBody] OrderSimpleDto orderDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var order = new Order
+            {
+                CreateAt = orderDto.CreateAt,
+                UpdateAt = orderDto.UpdateAt,
+                TotalAmount = orderDto.TotalAmount,
+                BuyerId = orderDto.BuyerId,
+                AddressId = orderDto.AddressId,
+                PaymentTypeId = orderDto.PaymentTypeId,
+                OrderStatusId = orderDto.OrderStatusId,
+                TimeSlotId = orderDto.TimeSlotId,
+                OrderDetails = orderDto.OrderDetails.Select(od => new OrderDetail
+                {
+                    MilkId = od.MilkId,
+                    Quantity = od.Quantity,
+                    Discount = od.Discount,
+                    Price = od.Price,
+                    Total = od.Total
+                }).ToList()
+            };
+
+            try
+            {
+                await _orderService.CreateOrderAsync(order, order.OrderDetails.ToList());
+                return CreatedAtAction(nameof(Get), new { key = order.Id }, order);
+            }
+            catch (Exception ex)
+            {
+                // Log detailed error message and inner exception details
+                Console.WriteLine($"Error in PostSimpleOrder: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message, innerDetails = ex.InnerException?.Message });
+            }
+        }
+
+
+
         [EnableQuery]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get([FromODataUri] int key)
