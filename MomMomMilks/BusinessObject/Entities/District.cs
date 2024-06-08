@@ -14,7 +14,6 @@ namespace BusinessObject.Entities
         public string Longitude { get; set; }
         public ICollection<Ward> Wards { get; set; }
         public ICollection<Address> Addresses { get; set; }
+        public ICollection<Shipper> Shippers { get; set; }
     }
-
-
 }

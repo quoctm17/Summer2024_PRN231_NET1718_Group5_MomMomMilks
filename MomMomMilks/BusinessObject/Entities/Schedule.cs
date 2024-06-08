@@ -10,9 +10,10 @@ namespace BusinessObject.Entities
     {
         public int ShipperId { get; set; }
         public int OrderId { get; set; }
+        public int TimeSlotId { get; set; }
 
         public Shipper Shipper { get; set; }
         public Order Order { get; set; }
-        public string TimeSlot { get; set; }
+        public TimeSlot TimeSlot { get; set; }
     }
 }

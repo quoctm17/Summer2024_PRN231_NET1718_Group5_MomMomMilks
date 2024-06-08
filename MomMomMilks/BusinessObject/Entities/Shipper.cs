@@ -10,10 +10,10 @@ namespace BusinessObject.Entities
     {
         public int Id { get; set; }
         public string Status { get; set; }
-
         public int AppUserId { get; set; }
+        public int DistrictId { get; set; }
         public AppUser AppUser { get; set; }
-
+        public District District { get; set; }
         public ICollection<Schedule> Schedules { get; set; }
     }
 }
