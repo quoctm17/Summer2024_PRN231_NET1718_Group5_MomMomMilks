@@ -26,6 +26,7 @@ builder.Services.AddScoped<FE.Services.MilkService>();
 builder.Services.AddScoped<FE.Services.CategoryService>();
 builder.Services.AddScoped<FE.Services.AccountService>();
 builder.Services.AddScoped<FE.Services.OrderService>();
+builder.Services.AddScoped<FE.Services.BatchService>();
 
 
 var app = builder.Build();
