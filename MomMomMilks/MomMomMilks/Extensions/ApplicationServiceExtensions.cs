@@ -29,6 +29,8 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IMilkRepository, MilkRepository>();
             services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IPaymentTypeRepository, PaymentTypeRepository>();
+            services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWardRepository, WardRepository>();
 
@@ -42,6 +44,8 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IMilkService, MilkService>();
             services.AddScoped<IOrderDetailsService, OrderDetailsService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPaymentTypeService, PaymentTypeService>();
+            services.AddScoped<ITimeSlotService, TimeSlotService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IWardService, WardService>();
 

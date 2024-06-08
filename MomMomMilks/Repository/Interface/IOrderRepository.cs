@@ -20,5 +20,6 @@ namespace Repository.Interface
         Task<ShipperOrderDetailDTO> GetShipperOrderDetailAsync(int shipperId, int orderId);
         Task<bool> ConfirmShippedAsync(int shipperId, int orderId);
         Task<bool> ConfirmCancelledAsync(int shipperId, int orderId);
+        Task AutoAssignOrdersToShippers();
     }
 }
