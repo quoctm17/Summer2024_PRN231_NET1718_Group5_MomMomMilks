@@ -14,8 +14,12 @@ namespace FE.Pages.Admin.BatchManagement
             _batchService = batchService;
         }
         public List<Batch> Batches{ get; set; }
-        public async Task OnGet()
+        public async Task OnGet(string message)
         {
+            if (!string.IsNullOrEmpty(message) && message.Equals("deleted", StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["Message"] = "Deleted Successfully!";
+            }
             Batches = await _batchService.GetAllBatches();
         }
     }

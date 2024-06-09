@@ -1,4 +1,6 @@
-﻿using BusinessObject.Entities;
+﻿using AutoMapper;
+using BusinessObject.Entities;
+using DataTransfer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -11,10 +13,12 @@ namespace MomMomMilks.Controllers
     public class BatchesController : ODataController
     {
         private readonly IBatchService _batchService;
+        private readonly IMapper _mapper;
 
-        public BatchesController(IBatchService batchService)
+        public BatchesController(IBatchService batchService, IMapper mapper)
         {
             _batchService = batchService;
+            _mapper = mapper;
         }
 
         [EnableQuery]
@@ -30,25 +34,27 @@ namespace MomMomMilks.Controllers
             return Ok(await _batchService.GetSingleBatch(id));
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Batch batch)
+        public async Task<IActionResult> Post([FromBody] CreateBatchDTO batchDTO)
         {
+            var batch = _mapper.Map<Batch>(batchDTO);
             var result = await _batchService.CreateBatch(batch);
             if(!result) return BadRequest();
-            return Ok();
+            return Ok(result);
         }
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Batch batch)
+        public async Task<IActionResult> Put([FromBody] UpdateBatchDTO batchDTO)
         {
+            var batch = _mapper.Map<Batch>(batchDTO);
             var result = await _batchService.UpdateBatch(batch);
             if (!result) return BadRequest();
-            return Ok();
+            return Ok(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _batchService.DeleteBatch(id);
             if (!result) return BadRequest();
-            return Ok();
+            return Ok(result);
         }
     }
 }

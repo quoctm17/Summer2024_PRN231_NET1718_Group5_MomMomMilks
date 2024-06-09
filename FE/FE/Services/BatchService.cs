@@ -27,5 +27,48 @@ namespace FE.Services
                 return new List<Batch>();
             }
         }
+        public async Task<Batch> GetSingleBatch(int id)
+        {
+            var response = await _httpClient.GetAsync($"odata/Batches/" + id);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Batch>(json);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public async Task<bool> CreateBatch(Batch batch)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"odata/Batches", batch);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(json);
+            }
+            return false;
+        }
+        public async Task<bool> UpdateBatch(Batch batch)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"odata/Batches", batch);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(json);
+            }
+            return false;
+        }
+        public async Task<bool> DeleteBatch(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"odata/Batches/" + id);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(json);
+            }
+            return false;
+        }
     }
 }
