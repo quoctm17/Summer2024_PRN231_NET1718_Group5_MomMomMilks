@@ -1,0 +1,98 @@
+﻿@page
+@model FE.Pages.Admin.BatchManagement.CreateModel
+@{
+}
+<h1 class="text-center">Create new batch</h1>
+<form method="post" class="p-4" id="createBatchForm">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <div class="mb-3">
+        <label for="importedDate" class="form-label">Imported Date: </label>
+        <input type="datetime-local" class="form-control" required id="importedDate" asp-for="Batch.ImportDate" />
+        <span class="text-danger" asp-validation-for="Batch.ImportDate"></span>
+    </div>
+    <div class="mb-3">
+        <label for="expiredDate" class="form-label">Expired Date: </label>
+        <input type="date" class="form-control" required id="expiredDate" asp-for="Batch.ExpiredDate" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span class="text-danger" asp-validation-for="Batch.ExpiredDate"></span>
+    </div>
+    <div class="mb-3">
+        <label for="importedPrice" class="form-label">Imported Price: </label>
+        <input type="number" class="form-control" required id="importedPrice" asp-for="Batch.ImportedPrice"/>
+        <span class="text-danger" asp-validation-for="Batch.ImportedPrice"></span>
+    </div>
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity: </label>
+        <input type="number" class="form-control" required id="quantity" asp-for="Batch.Quantity"/>
+        <span class="text-danger" asp-validation-for="Batch.Quantity"></span>
+    </div>
+    <div class="mb-3">
+        <label for="milkId" class="form-label">Milk: </label>
+        <select class="form-control" id="milkId" asp-for="Batch.MilkId" onchange="executeFunction()">
+            @foreach(var milk in Model.Milks)
+            {
+                <option value="@milk.Id">@milk.Name</option>
+            }
+        </select>
+        <p class="text-warning" id="currentMilkPrice">Milk price: </p>
+        <span class="text-danger" asp-validation-for="Batch.MilkId"></span>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary mt-3">Create</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        var currentMilkPrice = 0;
+        getInitialMilkPrice();
+        function getInitialMilkPrice() {
+            var milkId = document.getElementById('milkId').value;
+            // your code here, could be an HTTP request using fetch or XMLHttpRequest
+            // where you use the milkId as part of the request
+            fetch('http://localhost:5215/odata/milk/' + milkId, { method: 'GET' }) // replace it with your api endpoint
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('currentMilkPrice').innerHTML = 'Current Milk Price: ' + data.price + ' VNĐ';
+                    currentMilkPrice = data.price;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+            function executeFunction() {
+                var milkId = document.getElementById('milkId').value;
+                // your code here, could be an HTTP request using fetch or XMLHttpRequest
+                // where you use the milkId as part of the request
+                fetch('http://localhost:5215/odata/milk/' + milkId, { method: 'GET' }) // replace it with your api endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('currentMilkPrice').innerHTML = 'Current Milk Price: ' + data.price + ' VNĐ';
+                        currentMilkPrice = data.price;
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+        var form = document.getElementById('createBatchForm');
+
+        var importedPriceField = document.getElementById('importedPrice');
+        var milkPriceParagraph = document.getElementById('currentMilkPrice');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var milkPrice = parseFloat(milkPriceParagraph.innerText.split(': ')[1]);
+
+            var importedPrice = parseFloat(importedPriceField.value);
+
+            if (importedPrice < milkPrice) {
+                form.submit();
+            } else {
+                var userResponse = window.confirm("The milk's current price is under imported price. Are you sure?");
+                if (userResponse) {
+                    form.submit();
+                }
+            }
+        });
+    </script>
+}
