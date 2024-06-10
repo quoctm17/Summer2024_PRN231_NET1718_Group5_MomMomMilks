@@ -47,6 +47,7 @@ namespace MomMomMilks.Extensions
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Manager"));
             });
             return services;
         }

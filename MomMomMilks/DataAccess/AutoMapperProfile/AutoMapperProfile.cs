@@ -2,6 +2,7 @@
 using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using DataTransfer.Manager;
 using DataTransfer.Shipper;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,12 @@ namespace DataAccess.AutoMapperProfile
                 .ForMember(dest => dest.BuyerName, opt => opt.MapFrom(src => src.Buyer.UserName))
                 .ForMember(dest => dest.BuyerEmail, opt => opt.MapFrom(src => src.Buyer.Email))
                 .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => src.PaymentType.Name))
-                .ForMember(dest => dest.ScheduleTimeSlot, opt => opt.MapFrom(src => src.Schedule.TimeSlot.Name))
+                .ForMember(dest => dest.ScheduleTimeSlot, opt => opt.MapFrom(src => src.TimeSlot.Name))
+                .ForMember(dest => dest.OrderStatusName, opt => opt.MapFrom(src => src.OrderStatus.Name));
+            CreateMap<Order, ManagerOrderDTO>()
+                .ForMember(dest => dest.BuyerName, opt => opt.MapFrom(src => src.Buyer.UserName))
+                .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => src.PaymentType.Name))
+                .ForMember(dest => dest.ScheduleTimeSlot, opt => opt.MapFrom(src => src.TimeSlot.Name))
                 .ForMember(dest => dest.OrderStatusName, opt => opt.MapFrom(src => src.OrderStatus.Name));
             CreateMap<Order, ShipperOrderDetailDTO>()
                 .ForMember(dest => dest.BuyerName, opt => opt.MapFrom(src => src.Buyer.UserName))
@@ -53,6 +59,13 @@ namespace DataAccess.AutoMapperProfile
                 .ForMember(dest => dest.PaymentTypeName, opt => opt.MapFrom(src => src.PaymentType.Name))
                 .ForMember(dest => dest.ScheduleTimeSlot, opt => opt.MapFrom(src => src.Schedule.TimeSlot))
                 .ForMember(dest => dest.OrderStatusName, opt => opt.MapFrom(src => src.OrderStatus.Name));
+            CreateMap<Address, AddressDTO>()
+                .ForMember(dest => dest.WardName, opt => opt.MapFrom(src => src.Ward.Name))
+                .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name))
+                .ReverseMap();
+            CreateMap<Shipper, ManagerShipperDTO>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.AppUser.UserName))
+                .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name));
         }
     }
 }

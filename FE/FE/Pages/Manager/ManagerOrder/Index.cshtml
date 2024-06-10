@@ -1,0 +1,194 @@
+﻿@page
+@model FE.Pages.Manager.ManagerOrder.IndexModel
+@{
+}
+
+
+<div class="card mb-4">
+	<div class="card-header">
+		<i class="fas fa-table me-1"></i>
+		Order Management
+	</div>
+	<div class="card-body">
+		<table class="table" id="orderTable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Created Date</th>
+					<th>Updated Date</th>
+					<th>Total</th>
+					<th>Buyer</th>
+					<th>Timeslot</th>
+					<th>Payment Type</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th>Id</th>
+					<th>Created Date</th>
+					<th>Updated Date</th>
+					<th>Total</th>
+					<th>Buyer</th>
+					<th>Timeslot</th>
+					<th>Payment Type</th>
+					<th>Status</th>
+				</tr>
+			</tfoot>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="modal fade" id="assignModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Assign Order To Shipper</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form id="assignOrderForm">
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="updateId" class="form-label">Id: </label>
+						<input type="text" class="form-control" disabled id="updateId">
+					</div>
+					<div class="mb-3">
+						<label for="updateShipperId" class="form-label">Shipper: </label>
+						<select id="updateShipperId" class="form-control">
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+					<button type="button" class="btn btn-primary" id="assignShipper">Assign</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+	<div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true" style=" width: 400px; height:200px;">
+		<div class="toast-header">
+			<strong class="me-auto fs-2">Notification</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body fs-3 text-white" id="errorToastContent">
+		</div>
+	</div>
+</div>
+@section Scripts {
+	@{
+	@using Helpers;
+	@using Models;
+
+		var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+		string token = null;
+		if (user != null)
+		{
+			token = user.Token;
+		}
+	}
+	<script>
+		$(document).ready(function () {
+			GetUnassignedOrders();
+			const toastLiveExample = document.getElementById('errorToast');
+			const toastContent = document.getElementById('errorToastContent');
+			const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+			function ShowErrorToast(message = 'Something went wrong') {
+
+				toastContent.innerHTML = `<strong> ${message} </strong>`;
+				toastBootstrap.show();
+			}
+			function GetUnassignedOrders() {
+				$('#orderTable tbody').html("");
+				$.ajax({
+					url: "http://localhost:5215/odata/Order/ManagerOrders",
+					type: 'get',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': 'Bearer ' + '@token'
+					},
+					success: function (result, status, xhr) {
+						$.each(result['$values'], function (index, value) {
+							var appendElement = $("<tr>");
+							appendElement.append($("<td>").html(value['id']));
+							appendElement.append($("<td>").html(value['createAt']));
+							appendElement.append($("<td>").html(value['updateAt']));
+							appendElement.append($("<td>").html(value['totalAmount']));
+							appendElement.append($("<td>").html(value['buyerName']));
+							appendElement.append($("<td>").html(value['scheduleTimeSlot']));
+							appendElement.append($("<td>").html(value['paymentTypeName']));
+							appendElement.append($("<td>").html(value['orderStatusName']));
+							appendElement.append($("<td>").html('<button class=\'btn btn-primary assigned\'>Assigned</button>'));
+							$("#orderTable tbody").append(appendElement);
+						});
+					},
+					error: function (xhr, status, error) {
+						console.log(xhr);
+					}
+				});
+			}
+
+			$('#orderTable').on('click', "button.assigned", function () {
+				var orderId = $(this).parents("tr").find("td:nth-child(1)").text();
+				$.ajax({
+					url: "http://localhost:5215/odata/Shippers/available",
+					type: 'get',
+					contentType: 'application/json',
+					headers: {
+						'Authorization': 'Bearer ' + '@token'
+					},
+					success: function (result, status, xhr) {
+						if (result) {
+							$('#updateShipperId').html("");
+							$.each(result['$values'], function (index, value) {
+								$('#updateShipperId').append($('<option>', {
+									value: value.id,
+									text: value.districtName + ' - Name: ' + value.name + ' - Month Deliveries: ' + value.monthlyDeliveries
+								}));
+							});
+							$("#updateId").val(orderId);
+							$('#assignModal').modal('show');
+						} else {
+							ShowErrorToast("No shipper found!");
+							document.getElementById('assignShipper').disabled = true;
+						}
+
+					},
+					error: function (xhr, status, error) {
+						ShowErrorToast();
+					}
+				});
+			});
+			document.getElementById('assignShipper').addEventListener('click', function () {
+				var orderId = $('#updateId').val();
+				var shipperId = $('#updateShipperId').val();
+				if (!orderId || !shipperId) {
+					ShowErrorToast("Please fill in all fields");
+				} else {
+					$.ajax({
+						url: `http://localhost:5215/odata/order/ManagerOrders/Assign/${shipperId}/${orderId}`,
+						type: 'put',
+						data: null,
+						processData: false,
+						contentType: "application/json",
+						headers: {
+							'Authorization': 'Bearer ' + '@token'
+						},
+						success: function (result, status, xhr) {
+							GetUnassignedOrders();
+							$('#assignModal').modal('hide');
+						},
+						error: function (xhr, status, error) {
+							ShowErrorToast();
+						}
+					});
+				}
+			});
+		});
+	</script>
+}

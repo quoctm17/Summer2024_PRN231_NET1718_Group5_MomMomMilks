@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using DataTransfer.Manager;
 using DataTransfer.Shipper;
 using Repository.Interface;
 using Service.Interfaces;
@@ -86,6 +87,16 @@ namespace Service.Services
         public async Task AutoAssignOrdersToShippers()
         {
             await _orderRepository.AutoAssignOrdersToShippers();
+        }
+
+        public async Task<bool> ManagerAssignOrder(int shipperId, int orderId)
+        {
+            return await _orderRepository.ManagerAssignOrder(orderId, shipperId);
+        }
+
+        public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
+        {
+            return await _orderRepository.GetUnassignedOrders();
         }
     }
 }
