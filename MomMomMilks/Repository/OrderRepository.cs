@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Entities;
 using DataAccess.DAO;
 using DataTransfer;
+using DataTransfer.Manager;
 using DataTransfer.Shipper;
 using Repository.Interface;
 
@@ -75,6 +76,16 @@ namespace Repository
         public async Task AutoAssignOrdersToShippers()
         {
             await OrderDAO.Instance.AutoAssignOrdersToShippers();
+        }
+
+        public async Task<bool> ManagerAssignOrder(int shipperId, int orderId)
+        {
+            return await OrderDAO.Instance.ManagerAssignOrder(orderId, shipperId);
+        }
+
+        public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
+        {
+            return await OrderDAO.Instance.GetUnassignedOrders();
         }
     }
 }

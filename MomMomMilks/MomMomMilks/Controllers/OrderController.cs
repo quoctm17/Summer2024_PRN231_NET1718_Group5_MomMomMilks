@@ -135,6 +135,13 @@ namespace MomMomMilks.Controllers
             return Ok(result);
         }
         [EnableQuery]
+        [HttpGet("ManagerOrders")]
+        public async Task<IActionResult> GetUnassignedOrders()
+        {
+            var result = await _orderService.GetUnassignedOrders();
+            return Ok(result);
+        }
+        [EnableQuery]
         [HttpGet("ShipperOrders({orderId})")]
         [Authorize]
         public async Task<IActionResult> GetShipperOrder([FromODataUri] int orderId)
@@ -157,6 +164,13 @@ namespace MomMomMilks.Controllers
         {
             var userId = User.GetUserId();
             var result = await _orderService.ConfirmCancelled(userId, orderId);
+            return Ok(result);
+        }
+        [HttpPut("ManagerOrders/Assign/{shipperId}/{orderId}")]
+        [Authorize(Policy = "RequireManagerRole")]
+        public async Task<IActionResult> ManagerAssignOrder([FromODataUri] int orderId, [FromODataUri] int shipperId)
+        {
+            var result = await _orderService.ManagerAssignOrder(orderId, shipperId);
             return Ok(result);
         }
     }

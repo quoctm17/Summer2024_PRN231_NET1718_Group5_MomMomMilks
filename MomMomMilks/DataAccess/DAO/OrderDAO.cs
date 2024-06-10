@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using DataTransfer.Manager;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAO
@@ -43,6 +44,27 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
             return orderDTO;
+        }
+
+        public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
+        {
+            List<ManagerOrderDTO> result = null;
+            try
+            {
+                var orders = await _context.Orders
+                    .Include(x => x.PaymentType)
+                    .Include(x => x.Buyer)
+                    .Include(x => x.OrderStatus)
+                    .Include(x => x.TimeSlot)
+                    .Where(x => x.ShipperId == null)
+                    .ToListAsync();
+                result = _mapper.Map<List<ManagerOrderDTO>>(orders);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
         }
 
         public async Task AddOrderAsync(Order order)
@@ -235,6 +257,20 @@ namespace DataAccess.DAO
 
                     await _context.SaveChangesAsync();
                 }
+            }
+        }
+
+        public async Task<bool> ManagerAssignOrder(int orderId, int shipperId)
+        {
+            try
+            {
+                var existedOrder = await _context.Orders.FindAsync(orderId);
+                existedOrder.ShipperId = shipperId;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

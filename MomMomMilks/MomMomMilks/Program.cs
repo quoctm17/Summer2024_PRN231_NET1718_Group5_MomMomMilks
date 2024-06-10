@@ -35,6 +35,7 @@ modelBuilder.EntitySet<Order>("Orders");
 modelBuilder.EntitySet<TimeSlot>("TimeSlots");
 modelBuilder.EntitySet<Ward>("Wards");
 modelBuilder.EntitySet<Batch>("Batches");
+modelBuilder.EntitySet<Shipper>("Shippers");
 
 var edmModel = modelBuilder.GetEdmModel();
 builder.Services.AddControllers()
