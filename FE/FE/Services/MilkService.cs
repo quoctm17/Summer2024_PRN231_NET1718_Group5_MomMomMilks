@@ -28,6 +28,19 @@ namespace FE.Services
                 return new List<Milk>();
             }
         }
+        public async Task<List<Milk>> GetMilksByNameAsync(string name)
+        {
+            var response = await _httpClient.GetAsync($"/odata/Milk?$filter=contains(name,'{name}')");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<Milk>>(json);
+            }
+            else
+            {
+                return new List<Milk>();
+            }
+        }
         public async Task<Milk> GetMilkByIdAsync(int milkId)
         {
             var response = await _httpClient.GetAsync($"odata/Milk/{milkId}");
@@ -39,6 +52,22 @@ namespace FE.Services
             else
             {
                 return new Milk();
+            }
+        }
+        public async Task<IEnumerable<Milk>> GetPaginatedMilks(int currentPage, int pageSize = 3)
+        {
+            var url = $"/odata/Milk?$orderby=Id&$skip={(currentPage - 1) * pageSize}&$top={pageSize}";
+
+            var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var milks = JsonConvert.DeserializeObject<IEnumerable<Milk>>(json);
+                return milks;
+            }
+            else
+            {
+                return Enumerable.Empty<Milk>();
             }
         }
     }
