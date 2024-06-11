@@ -35,6 +35,9 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IWardRepository, WardRepository>();
             services.AddScoped<IBatchRepository, BatchRepository>();
             services.AddScoped<IShipperRepository, ShipperRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddScoped<IBrandRepository, BrandRepository>();
+            services.AddScoped<IMilkAgeRepository, MilkAgeRepository>();
 
 
             // Services
@@ -52,6 +55,9 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IWardService, WardService>();
             services.AddScoped<IBatchService, BatchService>();
             services.AddScoped<IShipperService, ShipperService>();
+            services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<IMilkAgeService, MilkAgeService>();
 
 
             return services;

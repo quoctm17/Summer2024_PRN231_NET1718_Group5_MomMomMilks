@@ -66,6 +66,9 @@ namespace DataAccess.AutoMapperProfile
             CreateMap<Shipper, ManagerShipperDTO>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.AppUser.UserName))
                 .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name));
+            CreateMap<Supplier, SupplierDTO>().ReverseMap();
+            CreateMap<Brand, BrandDTO>().ReverseMap();
+            CreateMap<MilkAge, MilkAgeDTO>().ReverseMap();
         }
     }
 }
