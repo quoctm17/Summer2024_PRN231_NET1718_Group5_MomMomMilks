@@ -48,11 +48,12 @@ namespace DataAccess
         public DbSet<Address> Addresses { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Batch> Batches{ get; set; }
 
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer(GetConnectionString());
+            => optionsBuilder.UseSqlServer("server=(local);Database=MomMomMilksDb;uid=sa;pwd=12345;TrustServerCertificate=true");
 
         private string GetConnectionString()
         {

@@ -32,9 +32,15 @@ namespace FE.Pages
                 {
                     HttpContext.Session.SetObjectAsJson("user", account);
                     HttpContext.Session.SetString("token", account.Token);
-
-                    // Return a script to set the token in sessionStorage
-                    var script = $"<script>sessionStorage.setItem('token', '{account.Token}'); window.location.href = '/index';</script>";
+                    if(account.Role == "Admin")
+                    {
+                        return RedirectToPage("/admin/index");
+                    } else if(account.Role == "Manager")
+                    {
+						return RedirectToPage("/manager/managerorder/index");
+					}
+					// Return a script to set the token in sessionStorage
+					var script = $"<script>sessionStorage.setItem('token', '{account.Token}'); window.location.href = '/index';</script>";
                     return Content(script, "text/html");
                 }
                 else

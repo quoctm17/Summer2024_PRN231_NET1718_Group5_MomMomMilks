@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Entities;
 using DataAccess.DAO;
 using DataTransfer;
+using DataTransfer.Manager;
 using DataTransfer.Shipper;
 using Repository.Interface;
 
@@ -52,12 +53,12 @@ namespace Repository
             return await OrderDAO.Instance.GetDetailHistory(orderId);
         }
 
-        public async Task<List<ShipperOrderDTO>> GetShipperAssignedOrderAsync(int shipperId)
+        public async Task<List<Order>> GetShipperAssignedOrderAsync(int shipperId)
         {
             return await OrderDAO.Instance.GetShipperAssignedOrder(shipperId);
         }
 
-        public async Task<ShipperOrderDetailDTO> GetShipperOrderDetailAsync(int shipperId, int orderId)
+        public async Task<Order> GetShipperOrderDetailAsync(int shipperId, int orderId)
         {
             return await OrderDAO.Instance.GetShipperOrderDetail(shipperId, orderId);
         }
@@ -75,6 +76,16 @@ namespace Repository
         public async Task AutoAssignOrdersToShippers()
         {
             await OrderDAO.Instance.AutoAssignOrdersToShippers();
+        }
+
+        public async Task<bool> ManagerAssignOrder(int shipperId, int orderId)
+        {
+            return await OrderDAO.Instance.ManagerAssignOrder(orderId, shipperId);
+        }
+
+        public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
+        {
+            return await OrderDAO.Instance.GetUnassignedOrders();
         }
     }
 }

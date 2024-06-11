@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using BusinessObject.Entities;
 using DataTransfer;
-using DataTransfer.Shipper;
+using DataTransfer.Manager;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAO
@@ -45,6 +44,27 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
             return orderDTO;
+        }
+
+        public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
+        {
+            List<ManagerOrderDTO> result = null;
+            try
+            {
+                var orders = await _context.Orders
+                    .Include(x => x.PaymentType)
+                    .Include(x => x.Buyer)
+                    .Include(x => x.OrderStatus)
+                    .Include(x => x.TimeSlot)
+                    .Where(x => x.ShipperId == null)
+                    .ToListAsync();
+                result = _mapper.Map<List<ManagerOrderDTO>>(orders);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
         }
 
         public async Task AddOrderAsync(Order order)
@@ -111,7 +131,7 @@ namespace DataAccess.DAO
             return list;
         }
 
-        public async Task<List<ShipperOrderDTO>> GetShipperAssignedOrder(int shipperId)
+        public async Task<List<Order>> GetShipperAssignedOrder(int shipperId)
         {
             try
             {
@@ -121,7 +141,12 @@ namespace DataAccess.DAO
                     throw new Exception("Do not find Shipper");
                 }
                 var orders = await _context.Orders.Where(x => x.ShipperId == shipper.Id)
-                    .ProjectTo<ShipperOrderDTO>(_mapper.ConfigurationProvider)
+                    .Include(x => x.Address)
+                    .Include(x => x.Buyer)
+                    .Include(x => x.PaymentType)
+                    .Include(x => x.Schedule)
+                    .Include(x => x.OrderStatus)
+                    .Include(x => x.TimeSlot)
                     .ToListAsync();
                 return orders;
             }
@@ -130,7 +155,7 @@ namespace DataAccess.DAO
                 throw new Exception("Error");
             }
         }
-        public async Task<ShipperOrderDetailDTO> GetShipperOrderDetail(int shipperId, int orderId)
+        public async Task<Order> GetShipperOrderDetail(int shipperId, int orderId)
         {
             try
             {
@@ -140,7 +165,14 @@ namespace DataAccess.DAO
                     throw new Exception("Do not find Shipper");
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
-                    .ProjectTo<ShipperOrderDetailDTO>(_mapper.ConfigurationProvider)
+                    .Include(x => x.Address)
+                    .Include(x => x.Buyer)
+                    .Include(x => x.PaymentType)
+                    .Include(x => x.Schedule)
+                    .Include(x => x.OrderStatus)
+                    .Include(x => x.OrderDetails)
+                    .ThenInclude(x => x.Milk)
+                    .Include(x => x.TimeSlot)
                     .FirstOrDefaultAsync();
                 return order;
             }
@@ -225,6 +257,20 @@ namespace DataAccess.DAO
 
                     await _context.SaveChangesAsync();
                 }
+            }
+        }
+
+        public async Task<bool> ManagerAssignOrder(int orderId, int shipperId)
+        {
+            try
+            {
+                var existedOrder = await _context.Orders.FindAsync(orderId);
+                existedOrder.ShipperId = shipperId;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

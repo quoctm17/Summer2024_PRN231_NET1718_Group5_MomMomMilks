@@ -185,6 +185,36 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.Batch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ImportDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("ImportedPrice")
+                        .HasColumnType("real");
+
+                    b.Property<int>("MilkId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilkId");
+
+                    b.ToTable("Batches");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Brand", b =>
                 {
                     b.Property<int>("Id")
@@ -906,6 +936,17 @@ namespace DataAccess.Migrations
                     b.Navigation("AppRole");
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.Batch", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.Milk", "Milk")
+                        .WithMany()
+                        .HasForeignKey("MilkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milk");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Cart", b =>

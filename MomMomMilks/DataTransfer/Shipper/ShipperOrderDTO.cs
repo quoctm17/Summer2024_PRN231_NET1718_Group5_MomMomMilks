@@ -13,5 +13,6 @@ namespace DataTransfer.Shipper
         public string PaymentTypeName { get; set; }
         public string OrderStatusName { get; set; }
         public string ScheduleTimeSlot { get; set; }
+        public AddressDTO Address{ get; set; }
     }
 }

@@ -17,7 +17,8 @@ namespace FE.Pages.Shipper
         public List<ShipperOrder> ShipperOrders { get; set; }
         public async Task OnGet()
         {
-            ShipperOrders = await _orderService.GetShipperOrders();
+            var result = await _orderService.GetShipperOrders();
+            ShipperOrders = result;
         }
     }
 }

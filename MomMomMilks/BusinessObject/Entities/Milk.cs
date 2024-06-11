@@ -25,6 +25,7 @@ namespace BusinessObject.Entities
         public Brand Brand { get; set; }
         public MilkAge MilkAge { get; set; }
         public Supplier Supplier { get; set; }
+        //public ICollection<Batch> Batches { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();

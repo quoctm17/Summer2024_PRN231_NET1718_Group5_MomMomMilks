@@ -36,17 +36,17 @@
                     <p class="fw-normal mb-1">@order.ScheduleTimeSlot</p>
                 </td>
                 <td>
-                    @if(order.OrderStatusName == "Chờ Giao")
+                    @if(order.OrderStatusName == "To Pay")
                     {
                         <span class="badge badge-warning rounded-pill d-inline">
                             @order.OrderStatusName
                         </span>
-                    } else if(order.OrderStatusName == "Đang Giao")
+                    } else if(order.OrderStatusName == "To Ship")
                     {
                         <span class="badge badge-info rounded-pill d-inline">
                             @order.OrderStatusName
                         </span>
-                    } else if(order.OrderStatusName == "Đã Giao")
+                    } else if(order.OrderStatusName == "Completed")
                     {
                         <span class="badge badge-success rounded-pill d-inline">
                             @order.OrderStatusName

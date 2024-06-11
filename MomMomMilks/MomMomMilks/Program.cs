@@ -34,6 +34,11 @@ modelBuilder.EntitySet<District>("Districts");
 modelBuilder.EntitySet<Order>("Orders");
 modelBuilder.EntitySet<TimeSlot>("TimeSlots");
 modelBuilder.EntitySet<Ward>("Wards");
+modelBuilder.EntitySet<Batch>("Batches");
+modelBuilder.EntitySet<Shipper>("Shippers");
+modelBuilder.EntitySet<Supplier>("Suppliers");
+modelBuilder.EntitySet<Brand>("Brands");
+modelBuilder.EntitySet<MilkAge>("MilkAges");
 
 var edmModel = modelBuilder.GetEdmModel();
 builder.Services.AddControllers()
@@ -119,6 +124,7 @@ try
     await Seed.SupplierSeed(context);
     await Seed.CategorySeed(context);
     await Seed.MilkSeed(context);
+    await Seed.MilkBatchSeed(context);
     await Seed.SeedDistrictsAndWards(context);
     await Seed.SeedUser(userManager, roleManager);
     await Seed.SeedAddress(context);

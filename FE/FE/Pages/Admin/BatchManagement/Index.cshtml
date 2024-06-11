@@ -1,0 +1,82 @@
+﻿@page
+@model FE.Pages.Admin.BatchManagement.IndexModel
+@{
+    var message = TempData["Message"];
+}
+@if(Model.Batches.Count > 0)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Batch Management
+        </div>
+        @if (message != null)
+        {
+            <div>
+                <span class="alert alert-success">@message</span>
+            </div>
+        }
+        <div class="p-4">
+            <a class="btn btn-success"
+               href="/admin/batchmanagement/create">
+                Create new batch
+            </a>
+        </div>
+        
+        <div class="card-body">
+            <table class="table" id="batchTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Imported Date</th>
+                        <th>Expired Date</th>
+                        <th>Imported Price</th>
+                        <th>Quantity</th>
+                        <th>Milk</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Id</th>
+                        <th>Imported Date</th>
+                        <th>Expired Date</th>
+                        <th>Imported Price</th>
+                        <th>Quantity</th>
+                        <th>Milk</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
+                <tbody class="font-weight-light">
+                    @foreach(var batch in Model.Batches)
+                    {
+                        if(batch != null)
+                        {
+                            <tr>
+                                <th>@batch.Id</th>
+                                <th>@batch.ImportDate</th>
+                                <th>@batch.ExpiredDate</th>
+                                <th>@batch.ImportedPrice vnd</th>
+                                <th>@batch.Quantity</th>
+                                <th>@batch.Milk.Name</th>
+                                <th>
+                                    <a class="btn btn-primary" href="/admin/batchmanagement/details?id=@batch.Id">Details</a>
+                                </th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#batchTable').DataTable();
+            
+        });
+    </script>
+}
