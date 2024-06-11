@@ -3,6 +3,7 @@ using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
 using DataTransfer.Manager;
+using DataTransfer.MilkCRUD;
 using DataTransfer.Shipper;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace DataAccess.AutoMapperProfile
                 .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.Name))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier.Name))
+                .ForMember(dest => dest.MilkAge, opt => opt.MapFrom(src => $"From {src.MilkAge.Min} to {src.MilkAge.Max}"))
                 .ReverseMap();
 
             CreateMap<RegisterDTO, AppUser>();
@@ -69,6 +71,9 @@ namespace DataAccess.AutoMapperProfile
             CreateMap<Supplier, SupplierDTO>().ReverseMap();
             CreateMap<Brand, BrandDTO>().ReverseMap();
             CreateMap<MilkAge, MilkAgeDTO>().ReverseMap();
+            CreateMap<Milk, ReadMilkDTO>().ReverseMap();
+            CreateMap<Milk, CreateMilkDTO>().ReverseMap();
+            CreateMap<Milk, UpdateMilkDTO>().ReverseMap();
         }
     }
 }

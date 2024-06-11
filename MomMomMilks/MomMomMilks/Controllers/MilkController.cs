@@ -1,4 +1,7 @@
+using AutoMapper;
 using BusinessObject.Entities;
+using DataTransfer;
+using DataTransfer.MilkCRUD;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
@@ -16,10 +19,13 @@ namespace MomMomMilks.Controllers
     public class MilkController : ODataController
     {
         private readonly IMilkService _milkService;
-        public MilkController(IMilkService milkService)
+		private readonly IMapper _mapper;
+
+		public MilkController(IMilkService milkService, IMapper mapper)
         {
             _milkService = milkService;
-        }
+			_mapper = mapper;
+		}
 
         [EnableQuery]
         [HttpGet]
@@ -39,5 +45,25 @@ namespace MomMomMilks.Controllers
             }
             return Ok(milk);
         }
-    }
+		[HttpPost]
+		public async Task<IActionResult> Post([FromBody] CreateMilkDTO milkDto)
+		{
+			var milk = _mapper.Map<Milk>(milkDto);
+			await _milkService.AddMilkAsync(milk);
+			return Ok();
+		}
+		[HttpPut]
+		public async Task<IActionResult> Put([FromBody] UpdateMilkDTO milkDto)
+		{
+			var milk = _mapper.Map<Milk>(milkDto);
+			await _milkService.UpdateMilkAsync(milk);
+			return Ok();
+		}
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			await _milkService.DeleteMilkAsync(id);
+			return Ok();
+		}
+	}
 }
