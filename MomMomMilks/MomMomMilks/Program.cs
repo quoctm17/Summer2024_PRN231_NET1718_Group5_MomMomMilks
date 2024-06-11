@@ -36,6 +36,9 @@ modelBuilder.EntitySet<TimeSlot>("TimeSlots");
 modelBuilder.EntitySet<Ward>("Wards");
 modelBuilder.EntitySet<Batch>("Batches");
 modelBuilder.EntitySet<Shipper>("Shippers");
+modelBuilder.EntitySet<Supplier>("Suppliers");
+modelBuilder.EntitySet<Brand>("Brands");
+modelBuilder.EntitySet<MilkAge>("MilkAges");
 
 var edmModel = modelBuilder.GetEdmModel();
 builder.Services.AddControllers()
