@@ -35,7 +35,12 @@ namespace DataAccess.DAO
             List<MilkDTO> milk = null;
             try
             {
-                var l = await _context.Milks.Include(m => m.Brand).Include(m => m.Supplier).Include(m => m.Category).ToListAsync();
+                var l = await _context.Milks
+                    .Include(m => m.Brand)
+                    .Include(m => m.Supplier)
+                    .Include(m => m.Category)
+                    .Include(m => m.MilkAge)
+                    .ToListAsync();
                 milk = _mapper.Map<List<MilkDTO>>(l);
             }
             catch (Exception ex)
