@@ -1,6 +1,6 @@
 ﻿using BusinessObject.Entities;
 
-namespace DataTransfer
+namespace DataTransfer.AddressDTOs
 {
     public class AddressDTO
     {

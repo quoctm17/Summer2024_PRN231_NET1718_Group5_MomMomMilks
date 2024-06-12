@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataTransfer.AddressDTOs;
 
 namespace DataTransfer.Shipper
 {

@@ -46,29 +46,29 @@
                     <h5>@account.UserName</h5>
                 }
             </div>
-            <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action rounded">Thông tin tài khoản</a>
-                    <a href="/Customer/OrderHistory?userId="  class="list-group-item list-group-item-action rounded">Đơn mua</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">Sổ Địa Chỉ</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">Coupon Của Tôi</a>
-            </div>
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action rounded">User Information</a>
+                    <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
+                    <a href="#" class="list-group-item list-group-item-action rounded">My Address</a>
+                    <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+                </div>
         </div>
         <!-- Main Content -->
         <div class="col-lg-10 col-md-9 main-content pt-4">
-            <h3 class="mb-4">Chi Tiết Đơn Hàng</h3>
+            <h3 class="mb-4">Order Detail</h3>
             <div class="text-center mt-4">
                 @if (Model.OrderDetailHistory != null && Model.OrderDetailHistory.Any())
                 {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Sản Phẩm</th>
-                                <th>Đặt Vào</th>
-                                <th>Sửa Vào</th>
-                                <th>Số Lượng</th>
-                                <th>Giá Tiền</th>
-                                <th>Giảm Giá</th>
-                                <th>Tổng Tiền</th>
+                                <th>Product</th>
+                                <th>Place At</th>
+                                <th>Updated At</th>
+                                <th>Amount</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Total Amount</th>
                             </tr>
                         </thead>
                         <tbody>

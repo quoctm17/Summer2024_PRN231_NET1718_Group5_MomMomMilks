@@ -1,0 +1,163 @@
+﻿@page
+@model FE.Pages.Customer.NewUserAddressModel
+@{
+    ViewData["Title"] = "Add new Address";
+}
+
+<style>
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        height: fit-content;
+    }
+
+    .main-content {
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+    }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
+            <div class="text-center mb-4">
+                @{
+                                    @using Helpers
+                                    @using Models
+                    var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                }
+                @if (account != null)
+                {
+                    <h5>@account.UserName</h5>
+                }
+                else
+                {
+                    <script>
+                        window.location.href = '/Login';
+                    </script>
+                }
+            </div>
+            <div class="list-group list-group-flush">
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">User Information</a>
+                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">My Address</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-lg-10 col-md-9 main-content pt-4">
+            <h2 class="mb-4">My Addresses</h2>
+            <form method="post">
+                <div class="form-group">
+                    <label class="control-label">House Number<span> *</span></label>
+                    <input id="houseNumber" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Street<span> *</span></label>
+                    <input id="street" class="form-control" />
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <p>District<span> *</span></p>
+                        <select id="districtId" class="form-control" required>
+                            <option value="" selected>Select your District</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <p>Ward<span> *</span></p>
+                        <select id="wardId" class="form-control" required>
+                            <option value="" selected>Select your Ward</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input id="createAddress" type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        loadDistrict();
+        document.getElementById('districtId').addEventListener('change', function () {
+            loadWard(this.value);
+        });
+        document.getElementById('createAddress').addEventListener('click', createAddress);
+    });
+
+    const token = sessionStorage.getItem('token');
+
+    async function createAddress(event) {
+        event.preventDefault();
+        // Add create address logic here
+    }
+
+    async function loadDistrict() {
+        try {
+            const response = await fetch('http://localhost:5215/odata/Districts', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log('District data:', data);
+            let districtSelect = document.getElementById('districtId');
+            districtSelect.innerHTML = '<option value="" selected>Select your District</option>'; // Clear previous options
+            for (let i = 0; i < data.$values.length; i++) {
+                let district = data.$values[i];
+                let option = document.createElement('option');
+                option.value = district.id;
+                option.text = `${district.name}`;
+                districtSelect.appendChild(option);
+            }
+
+            $('#addressSelect').niceSelect('update');
+        } catch (error) {
+            console.error('Error loading districts:', error);
+        }
+    }
+
+    async function loadWard(districtId) {
+        const wardSelect = document.getElementById('wardId');
+        wardSelect.innerHTML = '<option value="" selected>Select your Ward</option>'; // Clear previous options
+        if (!districtId) return;
+        try {
+            const response = await fetch(`http://localhost:5215/odata/Wards?$filter=districtId eq ${districtId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log('Ward data:', data);
+            data.value.forEach(ward => {
+                const option = document.createElement('option');
+                option.value = ward.id;
+                option.text = ward.name;
+                wardSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading wards:', error);
+        }
+    }
+</script>
