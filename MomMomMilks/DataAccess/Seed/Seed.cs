@@ -302,12 +302,12 @@ namespace DataAccess.Seed
 
             var list = new List<OrderStatus>
             {
-                new OrderStatus{Name="To Pay"},
-                new OrderStatus{Name="To Ship"},
-                new OrderStatus{Name="To Receive"},
+                new OrderStatus{Name="Paying"},
+                new OrderStatus{Name="Shipping"},
+                new OrderStatus{Name="Receiving"},
                 new OrderStatus{Name="Completed"},
                 new OrderStatus{Name="Cancelled"},
-                new OrderStatus{Name="Return Refund"}
+                new OrderStatus{Name="Refunding"}
             };
 
             foreach (var i in list)
