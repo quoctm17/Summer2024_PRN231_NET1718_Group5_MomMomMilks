@@ -1,5 +1,8 @@
 ﻿using FE.Models;
 using FE.Pages;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace FE.Services
 {
@@ -33,6 +36,40 @@ namespace FE.Services
 
             var user = await response.Content.ReadFromJsonAsync<User>();
             return user;
+        }
+
+        public async Task<User> GetUserAsync(int userId)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"odata/User?$filter=Id eq {userId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    using (JsonDocument document = JsonDocument.Parse(json))
+                    {
+                        var root = document.RootElement;
+                        var users = root.GetProperty("$values");
+
+                        if (users.GetArrayLength() > 0)
+                        {
+                            var userJson = users[0].GetRawText();
+                            var user = JsonConvert.DeserializeObject<User>(userJson);
+                            return user;
+                        }
+                    }
+                }
+                else
+                {
+                    throw new HttpRequestException($"Failed to retrieve user. Status code: {response.StatusCode}");
+                }
+                return null;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

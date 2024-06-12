@@ -51,32 +51,32 @@
                 }
             </div>
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action rounded">Thông tin tài khoản</a>
-                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Đơn mua</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">Sổ Địa Chỉ</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">Coupon Của Tôi</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">User Information</a>
+                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">My Address</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
             </div>
         </div>
         <!-- Main Content -->
         <div class="col-lg-10 col-md-9 main-content pt-4">
             <ul class="nav nav-tabs mb-4">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Tất cả</a>
+                    <a class="nav-link active" href="#">All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Thanh Toán</a>
+                    <a class="nav-link" href="#">Paid</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Chờ Giao</a>
+                    <a class="nav-link" href="#">Waiting For Shipping</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Đang Giao</a>
+                    <a class="nav-link" href="#">Shipping</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Đã Giao</a>
+                    <a class="nav-link" href="#">Completed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Đã Hủy</a>
+                    <a class="nav-link" href="#">Cancelled</a>
                 </li>
             </ul>
             <div class="text-center mt-4">
@@ -85,13 +85,13 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Đơn Hàng</th>
-                                <th>Đặt Vào</th>
-                                <th>Sửa Vào</th>
-                                <th>Tổng Tiền</th>
-                                <th>Phương thức thanh toán</th>
+                                <th>Order</th>
+                                <th>Created Date</th>
+                                <th>Updated Date</th>
+                                <th>Total Amount</th>
+                                <th>Payment Method</th>
                                 <th>Shipper</th>
-                                <th>Trạng Thái</th>
+                                <th>Status</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -106,7 +106,7 @@
                                     <td>@order.PaymentType</td>
                                     <td>@order.Shipper</td>
                                     <td>@order.OrderStatus</td>
-                                    <td><a asp-page="/Customer/OrderDetail" asp-route-id="@order.Id" class="site-btn">Xem</a></td>
+                                    <td><a asp-page="/Customer/OrderDetail" asp-route-id="@order.Id" class="site-btn">View</a></td>
                                 </tr>
                             }
                         </tbody>
@@ -114,9 +114,9 @@
                 }
                 else
                 {
-                    <p>Đặt hàng và trải nghiệm <span class="text-danger">Giao Siêu Tốc 1h</span></p>
-                    <button class="btn btn-warning">Bắt Đầu Mua Sắm</button>
-                    <button class="btn btn-outline-danger">Vào Xem Giỏ Hàng</button>
+                    <p>Place order and enjoy <span class="text-danger">Fast Shipping</span></p>
+                    <button class="btn btn-warning">Start buying</button>
+                    <button class="btn btn-outline-danger">View Your Cart</button>
                 }
             </div>
         </div>
