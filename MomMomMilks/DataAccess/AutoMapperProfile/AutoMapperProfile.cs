@@ -71,6 +71,7 @@ namespace DataAccess.AutoMapperProfile
             CreateMap<Supplier, SupplierDTO>().ReverseMap();
             CreateMap<Brand, BrandDTO>().ReverseMap();
             CreateMap<MilkAge, MilkAgeDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<Milk, ReadMilkDTO>().ReverseMap();
             CreateMap<Milk, CreateMilkDTO>().ReverseMap();
             CreateMap<Milk, UpdateMilkDTO>().ReverseMap();

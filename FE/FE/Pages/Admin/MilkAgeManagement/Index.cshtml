@@ -1,0 +1,237 @@
+﻿@page
+@model FE.Pages.Admin.MilkAgeManagement.IndexModel
+@{
+}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Milk Age Management
+    </div>
+    <div class="p-4">
+        <button class="btn btn-success" id="btnCreateMilkAge">
+            Create new Milk Age
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table" id="milkAgeTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Id</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody class="font-weight-light">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Milk Age</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Min: </label>
+                        <input type="number" class="form-control" min="0" id="createMin">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createMax" class="form-label">Max: </label>
+                        <input type="number" class="form-control" min="0" id="createMax">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="createMilkAge">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Milk Age</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="updateForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="updateId" class="form-label">Id: </label>
+                        <input type="text" class="form-control" disabled id="updateId">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateMin" class="form-label">Min: </label>
+                        <input type="number" class="form-control" min="0" id="updateMin">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateMax" class="form-label">Max: </label>
+                        <input type="number" class="form-control" min="0" id="updateMax">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="updateMilkAge">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+    <div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true" style=" width: 400px; height:200px;">
+        <div class="toast-header">
+            <strong class="me-auto fs-2">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body fs-3 text-white" id="errorToastContent">
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+    @using Helpers;
+    @using Models;
+
+        var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+        string token = null;
+        if (user != null)
+        {
+            token = user.Token;
+        }
+    }
+    <script>
+        $(document).ready(function () {
+            const toastLiveExample = document.getElementById('errorToast');
+            const toastContent = document.getElementById('errorToastContent');
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+            function ShowErrorToast(message = 'Something went wrong') {
+
+                toastContent.innerHTML = `<strong> ${message} </strong>`;
+                toastBootstrap.show();
+            }
+            var milkAgeTable;
+            GetMilkAges();
+            function GetMilkAges() {
+                milkAgeTable = $('#milkAgeTable').DataTable({
+                    ajax: {
+                        url: 'http://localhost:5215/odata/MilkAges',
+                        dataSrc: '$values'
+                    },
+                    columns: [
+                        { data: 'id' },
+                        { data: 'min' },
+                        { data: 'max' },
+                        {
+                            data: null,
+                            defaultContent: '<button class="btn btn-primary edit">Edit</button>',
+                            orderable: false
+                        }
+                    ]
+                });
+            }
+            $('#milkAgeTable').on('click', "button.edit", function () {
+                var milkAgeId = $(this).parents("tr").find("td:nth-child(1)").text();
+                $.ajax({
+                    url: `http://localhost:5215/odata/MilkAges/${milkAgeId}`,
+                    type: 'get',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + '@token'
+                    },
+                    success: function (result, status, xhr) {
+                        $('#updateId').val(result['id']);
+                        $('#updateMin').val(result['min']);
+                        $('#updateMax').val(result['max']);
+                    },
+                    error: function (xhr, status, error) {
+                        ShowErrorToast();
+                    }
+                });
+                $('#updateModal').modal('show');
+            });
+            document.getElementById('btnCreateMilkAge').addEventListener('click', function () {
+                $('#exampleModal').modal('show');
+            });
+            var addedMilkAge = {};
+            document.getElementById('createMilkAge').addEventListener('click', function () {
+                addedMilkAge = {
+                    min: $("#createMin").val(),
+                    max: $("#createMax").val(),
+                };
+                if (!addedMilkAge.min || !addedMilkAge.max) {
+                    ShowErrorToast("Please fill in all fields");
+                } else {
+                    $.ajax({
+                        url: "http://localhost:5215/odata/MilkAges",
+                        type: 'post',
+                        data: JSON.stringify(addedMilkAge),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            document.getElementById("createForm").reset();
+                            milkAgeTable.ajax.reload(null, false);
+                            $('#exampleModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            ShowErrorToast();
+                        }
+                    });
+                }
+            });
+            var updateMilkAge = {};
+            document.getElementById('updateMilkAge').addEventListener('click', function () {
+                updateMilkAge = {
+                    id: $("#updateId").val(),
+                    min: $("#updateMin").val(),
+                    max: $("#updateMax").val(),
+                };
+                if (!updateMilkAge.id || !updateMilkAge.min || !updateMilkAge.max) {
+                    ShowErrorToast("Please fill in all fields");
+                } else {
+                    $.ajax({
+                        url: `http://localhost:5215/odata/MilkAges`,
+                        type: 'put',
+                        data: JSON.stringify(updateMilkAge),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            milkAgeTable.ajax.reload(null, false); 
+                            $('#updateModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            ShowErrorToast();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+

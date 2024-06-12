@@ -1,4 +1,6 @@
-﻿using BusinessObject.Entities;
+﻿using AutoMapper;
+using BusinessObject.Entities;
+using DataTransfer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
@@ -14,10 +16,12 @@ namespace MomMomMilks.Controllers
     public class CategoryController : ODataController
     {
         private readonly ICategoryService _categoryService;
+        private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
             _categoryService = categoryService;
+            _mapper = mapper;
         }
 
         [EnableQuery]
@@ -41,33 +45,18 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Category category)
+        public async Task<IActionResult> Post([FromBody] CategoryDTO create)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+            var category = _mapper.Map<Category>(create);
             await _categoryService.AddCategoryAsync(category);
             return Created(category);
         }
 
         [HttpPut("{key}")]
-        public async Task<IActionResult> Put([FromODataUri] int key, [FromBody] Category update)
+        public async Task<IActionResult> Put([FromODataUri] int key, [FromBody] CategoryDTO update)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var existingCategory = await _categoryService.GetCategoryByIdAsync(key);
-            if (existingCategory == null)
-            {
-                return NotFound();
-            }
-
-            update.Id = existingCategory.Id;
-            await _categoryService.UpdateCategoryAsync(update);
+            var category = _mapper.Map<Category>(update);
+            await _categoryService.UpdateCategoryAsync(category);
 
             return Updated(update);
         }
