@@ -2,6 +2,7 @@
 using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using DataTransfer.AddressDTOs;
 using DataTransfer.Manager;
 using DataTransfer.MilkCRUD;
 using DataTransfer.Shipper;
@@ -65,6 +66,7 @@ namespace DataAccess.AutoMapperProfile
                 .ForMember(dest => dest.WardName, opt => opt.MapFrom(src => src.Ward.Name))
                 .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name))
                 .ReverseMap();
+            CreateMap<Address, AddressCRUD>().ReverseMap();
             CreateMap<Shipper, ManagerShipperDTO>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.AppUser.UserName))
                 .ForMember(dest => dest.DistrictName, opt => opt.MapFrom(src => src.District.Name));
