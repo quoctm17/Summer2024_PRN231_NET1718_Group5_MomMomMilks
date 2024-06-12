@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Logging;
+using DataTransfer.AddressDTOs;
 
 namespace MomMomMilks.Controllers
 {
@@ -57,11 +58,23 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAddress([FromBody] Address address)
+        public async Task<IActionResult> AddAddress([FromBody] AddressCRUD address)
         {
             try
             {
-                await _addressService.AddAddressAsync(address);
+                var add = new Address
+                {
+                    Id = address.Id,
+                    UserId = address.UserId,
+                    HouseNumber = address.HouseNumber,
+                    WardId = address.WardId,
+                    DistrictId = address.DistrictId,
+                    Latitude = address.Latitude,
+                    Longitude = address.Longitude,
+                    Street = address.Street
+                };
+
+                await _addressService.AddAddressAsync(add);
                 return Created(address);
             }
             catch (Exception ex)
@@ -72,7 +85,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPut("{addressId}")]
-        public async Task<IActionResult> UpdateAddress(int addressId, [FromBody] Address address)
+        public async Task<IActionResult> UpdateAddress(int addressId, [FromBody] AddressCRUD address)
         {
             try
             {
@@ -81,7 +94,18 @@ namespace MomMomMilks.Controllers
                     return BadRequest("Address ID mismatch");
                 }
 
-                await _addressService.UpdateAddressAsync(address);
+                var add = await _addressService.GetAddressByIdAsync(addressId);
+                if(add != null)
+                {
+                    add.HouseNumber = address.HouseNumber;
+                    add.Street = address.Street;
+                    add.WardId = address.WardId;
+                    add.DistrictId = address.DistrictId;
+                    add.Latitude = address.Latitude;
+                    add.Longitude = address.Longitude;
+                }
+
+                await _addressService.UpdateAddressAsync(add);
                 return NoContent();
             }
             catch (Exception ex)

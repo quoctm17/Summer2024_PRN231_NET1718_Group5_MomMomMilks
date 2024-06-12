@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataTransfer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -108,7 +109,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUser(int userId, [FromBody] AppUser user)
+        public async Task<IActionResult> UpdateUser(int userId, [FromBody] UserDetailDTO user)
         {
             try
             {
@@ -123,8 +124,19 @@ namespace MomMomMilks.Controllers
                     return BadRequest("User ID mismatch");
                 }
 
-                await _userService.UpdateUser(user);
-                return NoContent();
+                var userDetail = await _userService.GetUserById(userId);
+                if (userDetail != null)
+                {
+                    userDetail.UserName = user.Name;
+                    userDetail.Email = user.Email;
+                    userDetail.PhoneNumber = user.PhoneNumber;
+                    userDetail.NormalizedEmail = user.Email.ToUpper();
+                    userDetail.NormalizedUserName = user.Name.ToUpper();
+                    await _userService.UpdateUser(userDetail);
+                    return Ok("Updated Successfully");
+                }
+
+                return NotFound();
             }
             catch (Exception ex)
             {
