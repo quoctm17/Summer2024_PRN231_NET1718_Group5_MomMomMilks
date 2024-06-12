@@ -1,0 +1,144 @@
+﻿@page
+@model FE.Pages.Customer.UserInformationModel
+@{
+    ViewData["Title"] = "User Information";
+}
+
+<style>
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        height: fit-content;
+    }
+
+    .main-content {
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+    }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
+            <div class="text-center mb-4">
+                @{
+                                @using Helpers
+                                @using Models
+                    var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                }
+                @if (account != null)
+                {
+                    <h5>@account.UserName</h5>
+                }
+                else
+                {
+                    <script>
+                        window.location.href = '/Login';
+                    </script>
+                }
+            </div>
+            <div class="list-group list-group-flush">
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">User Information</a>
+                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">My Address</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-lg-10 col-md-9 main-content pt-4">
+            <h2 class="mb-4">My Information</h2>
+            <form method="post">
+                <table class="table">
+                    <tbody>
+                        <input asp-for="@Model.User.Id" type="hidden" />
+                        <tr>
+                            <td><b>Email</b></td>
+                            <td><input id="userEmail" asp-for="@Model.User.Email" class="form-control" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Full Name</b></td>
+                            <td><input id="userName" asp-for="@Model.User.UserName" class="form-control" /></td>
+                        </tr>
+                        <tr>
+                            <td><b>Phone Number</b></td>
+                            <td><input id="userPhone" asp-for="@Model.User.PhoneNumber" class="form-control" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="submit" id="editProfile" class="site-btn" value="Edit Profile" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('editProfile').addEventListener('click', editProfile);
+    });
+
+    async function editProfile(){
+        const token = sessionStorage.getItem('token');
+        const id = getUserIdFromToken();
+        const email = document.getElementById("userEmail").value;
+        const name = document.getElementById("userName").value;
+        const phoneNumber = document.getElementById("userPhone").value;
+
+        console.log("Token:", token);
+        console.log("User ID:", id);
+        console.log("Email:", name);
+        console.log("User Name:", email);
+        console.log("Phone Number:", phoneNumber);
+
+        const user = {
+            id: parseInt(id),
+            name: name,
+            email: email,
+            phoneNumber: phoneNumber
+        }
+
+        console.log("User data to be sent:", JSON.stringify(user));
+
+        try {
+            let response = await fetch(`http://localhost:5215/odata/User/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+            if (response.ok || response.status === 500) {
+                console.log('User updated successfully');
+                alert('User updated successfully');
+            } else {
+                console.error('Failed to update user');
+                alert('Failed to update user');
+            }
+        } catch (error) {
+            console.error('Error update user:', error);
+        }
+    }
+
+    function getUserIdFromToken() {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.nameid;
+        }
+        return null;
+    }
+
+</script>
