@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataTransfer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Service.Interfaces
 {
     public interface ICouponService
     {
-        Task<List<Coupon>> GetAllCouponsAsync();
+        Task<List<CouponDTO>> GetAllCouponsAsync();
         Task<Coupon> GetCouponByIdAsync(int couponId);
         Task AddCouponAsync(Coupon coupon);
         Task UpdateCouponAsync(Coupon coupon);
