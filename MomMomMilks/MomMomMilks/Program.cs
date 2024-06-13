@@ -11,6 +11,7 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Service.Services;
+using Service.Helpers;
 
 
 var builder = WebApplication.CreateBuilder(args);

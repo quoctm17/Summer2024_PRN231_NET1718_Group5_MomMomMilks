@@ -52,7 +52,7 @@ namespace DataAccess.DAO
 
         public async Task<Milk> GetByIdAsync(int milkId)
         {
-            return await _context.Milks.FindAsync(milkId);
+            return await _context.Milks.FirstOrDefaultAsync(x => x.Id == milkId);
         }
 
         public async Task<MilkDTO> GetMilkByIdAsync(int milkId)

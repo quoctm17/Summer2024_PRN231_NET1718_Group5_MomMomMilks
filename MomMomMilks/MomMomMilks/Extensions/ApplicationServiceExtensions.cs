@@ -60,6 +60,7 @@ namespace MomMomMilks.Extensions
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IMilkAgeService, MilkAgeService>();
+            services.AddScoped<IImageService, ImageService>();
 
 
             return services;
