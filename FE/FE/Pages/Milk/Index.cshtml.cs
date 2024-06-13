@@ -50,5 +50,19 @@ namespace FE.Pages.Milk
             Categories = await _categoryService.GetCategoriesAsync();
             return Page();
         }
+        public async Task<IActionResult> OnPostFilter(int categoryId)
+        {
+            if (categoryId == null)
+            {
+                Milks = await _milkService.GetMilksAsync();
+            }
+            else
+            {
+                Milks = (List<Models.Milk>)await _milkService.GetMilkByCategoryAsync(categoryId);
+            }
+            Count = Milks.Count;
+            Categories = await _categoryService.GetCategoriesAsync();
+            return Page();
+        }
     }
 }

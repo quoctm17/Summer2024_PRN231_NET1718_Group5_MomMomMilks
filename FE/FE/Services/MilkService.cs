@@ -70,5 +70,22 @@ namespace FE.Services
                 return Enumerable.Empty<Milk>();
             }
         }
+
+        public async Task<IEnumerable<Milk>> GetMilkByCategoryAsync(int categoryId)
+        {
+            var url = $"/odata/Milk?$filter=CategoryId eq " + categoryId;
+
+            var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var milks = JsonConvert.DeserializeObject<IEnumerable<Milk>>(json);
+                return milks;
+            }
+            else
+            {
+                return Enumerable.Empty<Milk>();
+            }
+        }
     }
 }

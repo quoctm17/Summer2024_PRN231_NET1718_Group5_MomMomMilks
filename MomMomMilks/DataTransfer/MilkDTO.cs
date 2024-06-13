@@ -18,6 +18,7 @@ namespace DataTransfer
         public string PreserveInstructions { get; set; }
         public string Brand { get; set; }
         public string Category { get; set; }
+        public int CategoryId { get; set; }
         public string MilkAge { get; set; }
         public string Supplier { get; set; }
         public string ImageUrl { get; set; }

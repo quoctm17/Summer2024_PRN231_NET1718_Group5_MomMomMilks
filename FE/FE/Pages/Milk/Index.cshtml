@@ -28,7 +28,10 @@
                         <ul>
                             @foreach (var category in Model.Categories)
                             {
-                            <li><a href="#">@category.Name</a></li>
+                                <form method="post" asp-page-handler="Filter" id="form-@category.Id">
+                                    <input type="hidden" name="categoryId" value="@category.Id" />
+                                <li><a href="javascript:void(0);" onclick="submitForm('@category.Id')">@category.Name</a></li>
+                                </form>
                             }
                         </ul>
                     </div>
@@ -86,7 +89,10 @@
                             <ul>
                                 @foreach (var category in Model.Categories)
                                 {
-                                    <li><a href="#">@category.Name</a></li>
+                                    <form method="post" asp-page-handler="Filter" id="form-@category.Id">
+                                        <input type="hidden" name="categoryId" value="@category.Id" />
+                                    <li><a href="javascript:void(0);" onclick="submitForm('@category.Id')">@category.Name</a></li>
+                                    </form>
                                 }
                             </ul>
                         </div>
@@ -118,7 +124,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div id="listMilk" class="row">
                         @foreach (var milk in Model.Milks)
                         {
                             <div class="col-lg-3 col-md-4 col-sm-6 mix milk">
@@ -177,6 +183,10 @@
                 $("#searchForm").submit();
             });
         });
+
+        function submitForm(categoryId) {
+            document.getElementById('form-' + categoryId).submit();
+        }
         
         async function updateCartCount() {
             try {
@@ -206,5 +216,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             updateCartCount(); // Update the number of products in the cart when the page reloads
         });
+
     </script>
 </body>
