@@ -11,7 +11,7 @@ namespace DataAccess.Seed
         {
             if (!await _context.Districts.AnyAsync())
             {
-                var districtData = await File.ReadAllTextAsync("../DataAccess/Seed/District.json");
+                var districtData = await File.ReadAllTextAsync("../DataAccess/Seed/DistrictSeed.json");
                 var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var districts = JsonSerializer.Deserialize<List<District>>(districtData, jsonOptions);
 
@@ -25,7 +25,7 @@ namespace DataAccess.Seed
 
             if (!await _context.Wards.AnyAsync())
             {
-                var wardData = await File.ReadAllTextAsync("../DataAccess/Seed/Ward.json");
+                var wardData = await File.ReadAllTextAsync("../DataAccess/Seed/WardSeed.json");
                 var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var wards = JsonSerializer.Deserialize<List<Ward>>(wardData, jsonOptions);
 
@@ -146,7 +146,7 @@ namespace DataAccess.Seed
         {
             if (await _context.Addresses.AnyAsync()) return;
 
-            var addressData = await File.ReadAllTextAsync("../DataAccess/Seed/Address.json");
+            var addressData = await File.ReadAllTextAsync("../DataAccess/Seed/AddressSeed.json");
             var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var addresses = JsonSerializer.Deserialize<List<Address>>(addressData, jsonOptions);
 
