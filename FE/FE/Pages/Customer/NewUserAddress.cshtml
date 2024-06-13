@@ -24,9 +24,14 @@
         color: #333;
     }
 
-        .sidebar a:hover {
-            background-color: #ddd;
-        }
+    .sidebar a:hover {
+        background-color: #ddd;
+    }
+
+    .nice-select .list {
+        max-height: 200px; 
+        overflow-y: auto;
+    }
 </style>
 
 <div class="container-fluid">
@@ -35,8 +40,8 @@
         <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
             <div class="text-center mb-4">
                 @{
-                                    @using Helpers
-                                    @using Models
+                                        @using Helpers
+                                        @using Models
                     var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
                 }
                 @if (account != null)
@@ -93,8 +98,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        $('select').niceSelect();
         loadDistrict();
-        document.getElementById('districtId').addEventListener('change', function () {
+        $(document).on('change', '#districtId', function () {
             loadWard(this.value);
         });
         document.getElementById('createAddress').addEventListener('click', createAddress);
@@ -102,9 +108,51 @@
 
     const token = sessionStorage.getItem('token');
 
-    async function createAddress(event) {
+    async function createAddress(envent) {
         event.preventDefault();
-        // Add create address logic here
+        const userId = getUserIdFromToken();
+        const houseNumber = document.getElementById('houseNumber').value;
+        const street = document.getElementById('street').value;
+        const districtId = document.getElementById('districtId');
+        const wardId = document.getElementById('wardId');
+        
+        const selectedWard = document.querySelector('#wardId option:checked');
+        const latitude = selectedWard.getAttribute('data-latitude');
+        console.log(latitude);
+        const longitude = selectedWard.getAttribute('data-longitude');
+
+        const address = {
+            userId: parseInt(userId),
+            houseNumber: houseNumber,
+            street: street,
+            districtId: parseInt(districtId.value),
+            wardId: parseInt(wardId.value),
+            latitude: latitude,
+            longitude: longitude
+        };
+
+        console.log("Address data to be sent:", JSON.stringify(address));
+
+        try {
+            let response = await fetch(`http://localhost:5215/odata/Address`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(address)
+            });
+            if (response.ok || response.status === 500) {
+                console.log('Address created successfully');
+                alert('Address created successfully');
+                window.location.href = './UserAddress';
+            } else {
+                console.error('Failed to create address');
+                alert('Failed to create address');
+            }
+        } catch (error) {
+            console.error('Error create address:', error);
+        }
     }
 
     async function loadDistrict() {
@@ -128,8 +176,7 @@
                 option.text = `${district.name}`;
                 districtSelect.appendChild(option);
             }
-
-            $('#addressSelect').niceSelect('update');
+            $('#districtId').niceSelect('update');
         } catch (error) {
             console.error('Error loading districts:', error);
         }
@@ -150,14 +197,29 @@
             }
             const data = await response.json();
             console.log('Ward data:', data);
-            data.value.forEach(ward => {
-                const option = document.createElement('option');
+            let wardSelect = document.getElementById('wardId');
+            wardSelect.innerHTML = '<option value="" selected>Select your Ward</option>'; // Clear previous options
+            for (let i = 0; i < data.$values.length; i++) {
+                let ward = data.$values[i];
+                let option = document.createElement('option');
                 option.value = ward.id;
-                option.text = ward.name;
+                option.text = `${ward.name}`;
+                option.setAttribute('data-latitude', ward.latitude); 
+                option.setAttribute('data-longitude', ward.longitude); 
                 wardSelect.appendChild(option);
-            });
+            }
+            $('#wardId').niceSelect('update');
         } catch (error) {
             console.error('Error loading wards:', error);
         }
+    }
+
+    function getUserIdFromToken() {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.nameid;
+        }
+        return null;
     }
 </script>
