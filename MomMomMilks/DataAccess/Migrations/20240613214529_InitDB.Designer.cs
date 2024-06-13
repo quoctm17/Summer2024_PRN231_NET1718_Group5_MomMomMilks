@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240606103352_AddDistrictandWard_UpdateSeedforAddress")]
-    partial class AddDistrictandWard_UpdateSeedforAddress
+    [Migration("20240613214529_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -186,6 +186,36 @@ namespace DataAccess.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.Batch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ImportDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("ImportedPrice")
+                        .HasColumnType("real");
+
+                    b.Property<int>("MilkId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilkId");
+
+                    b.ToTable("Batches");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Brand", b =>
@@ -469,6 +499,36 @@ namespace DataAccess.Migrations
                     b.ToTable("MilkAges");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.MilkImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MilkId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isMain")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilkId")
+                        .IsUnique();
+
+                    b.ToTable("MilkImages");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -492,13 +552,16 @@ namespace DataAccess.Migrations
                     b.Property<int>("PaymentTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShipperId")
+                    b.Property<int?>("ShipperId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimeSlotId")
                         .HasColumnType("int");
 
                     b.Property<float>("TotalAmount")
                         .HasColumnType("real");
 
-                    b.Property<int>("TransactionId")
+                    b.Property<int?>("TransactionId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateAt")
@@ -515,6 +578,8 @@ namespace DataAccess.Migrations
                     b.HasIndex("PaymentTypeId");
 
                     b.HasIndex("ShipperId");
+
+                    b.HasIndex("TimeSlotId");
 
                     b.ToTable("Orders");
                 });
@@ -633,14 +698,15 @@ namespace DataAccess.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimeSlot")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TimeSlotId")
+                        .HasColumnType("int");
 
                     b.HasKey("ShipperId", "OrderId");
 
                     b.HasIndex("OrderId")
                         .IsUnique();
+
+                    b.HasIndex("TimeSlotId");
 
                     b.ToTable("Schedules");
                 });
@@ -656,6 +722,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("DistrictId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -664,6 +733,8 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("AppUserId")
                         .IsUnique();
+
+                    b.HasIndex("DistrictId");
 
                     b.ToTable("Shippers");
                 });
@@ -683,6 +754,29 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.TimeSlot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TimeSlots");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Transaction", b =>
@@ -710,7 +804,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Ward", b =>
@@ -877,6 +971,17 @@ namespace DataAccess.Migrations
                     b.Navigation("AppUser");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.Batch", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.Milk", "Milk")
+                        .WithMany()
+                        .HasForeignKey("MilkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milk");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Cart", b =>
                 {
                     b.HasOne("BusinessObject.Entities.AppUser", "User")
@@ -980,6 +1085,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.MilkImage", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.Milk", "Milk")
+                        .WithOne("MilkImage")
+                        .HasForeignKey("BusinessObject.Entities.MilkImage", "MilkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milk");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Order", b =>
                 {
                     b.HasOne("BusinessObject.Entities.Address", "Address")
@@ -1008,8 +1124,12 @@ namespace DataAccess.Migrations
 
                     b.HasOne("BusinessObject.Entities.AppUser", "Shipper")
                         .WithMany()
-                        .HasForeignKey("ShipperId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ShipperId");
+
+                    b.HasOne("BusinessObject.Entities.TimeSlot", "TimeSlot")
+                        .WithMany("Orders")
+                        .HasForeignKey("TimeSlotId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -1021,6 +1141,8 @@ namespace DataAccess.Migrations
                     b.Navigation("PaymentType");
 
                     b.Navigation("Shipper");
+
+                    b.Navigation("TimeSlot");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.OrderDetail", b =>
@@ -1075,9 +1197,17 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Entities.TimeSlot", "TimeSlot")
+                        .WithMany("Schedules")
+                        .HasForeignKey("TimeSlotId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Order");
 
                     b.Navigation("Shipper");
+
+                    b.Navigation("TimeSlot");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Shipper", b =>
@@ -1088,7 +1218,15 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Entities.District", "District")
+                        .WithMany("Shippers")
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
+
+                    b.Navigation("District");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Transaction", b =>
@@ -1202,6 +1340,8 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("Addresses");
 
+                    b.Navigation("Shippers");
+
                     b.Navigation("Wards");
                 });
 
@@ -1210,6 +1350,9 @@ namespace DataAccess.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("MilkImage")
+                        .IsRequired();
 
                     b.Navigation("OrderDetails");
                 });
@@ -1251,6 +1394,13 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("BusinessObject.Entities.Supplier", b =>
                 {
                     b.Navigation("Milks");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.TimeSlot", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Ward", b =>
