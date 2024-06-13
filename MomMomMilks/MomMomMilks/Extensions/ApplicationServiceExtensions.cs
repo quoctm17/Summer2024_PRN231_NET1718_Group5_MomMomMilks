@@ -4,6 +4,7 @@ using Service.Interfaces;
 using Service.Services;
 using Service;
 using Service.Interface;
+using Service.Helpers;
 
 namespace MomMomMilks.Extensions
 {
@@ -12,6 +13,7 @@ namespace MomMomMilks.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
 
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
             //Add services to container
             services.AddScoped<ITokenService, TokenService>();

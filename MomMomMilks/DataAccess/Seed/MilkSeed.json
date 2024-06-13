@@ -11,7 +11,10 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 2,
-    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/jiaxqnzxjnbscmebhxud"
+    "MilkImage": {
+      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/jiaxqnzxjnbscmebhxud",
+      "isMain": true 
+    }
   },
   {
     "Name": "Sữa Friso Gold số 4 1400g",
@@ -25,7 +28,10 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 4,
-    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd"
+    "MilkImage": {
+      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd",
+      "isMain": true
+    }
   },
   {
     "Name": "Sữa Abbott Grow 4 900g",
@@ -39,7 +45,10 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 3,
-    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/djsumnqp3dettvvzjxq4"
+    "MilkImage": {
+      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/djsumnqp3dettvvzjxq4",
+      "isMain": true
+    }
   },
   {
     "Name": "Sản phẩm dinh dưỡng Friso Gold Pro 4",
@@ -53,7 +62,10 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 8,
-    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/o7hkndosqfkgnwrojtkw"
+    "MilkImage": {
+      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/o7hkndosqfkgnwrojtkw",
+      "isMain": true
+    }
   },
   {
     "Name": "Sữa bầu Friso Mum Gold 900g hương cam",
@@ -67,6 +79,9 @@
     "CategoryId": 4,
     "MilkAgeId": 6,
     "SupplierId": 4,
-    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/yjqx4gpdxcfgifkezuwg"
+    "MilkImage": {
+      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/yjqx4gpdxcfgifkezuwg",
+      "isMain": true
+    }
   }
 ]

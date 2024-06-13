@@ -49,6 +49,8 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
 
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
