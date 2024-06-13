@@ -312,6 +312,11 @@ namespace DataAccess
 
             builder.Entity<Ward>()
                 .HasKey(w => w.Id);
+
+            builder.Entity<Milk>()
+                .HasOne(x => x.MilkImage)
+                .WithOne(x => x.Milk)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
