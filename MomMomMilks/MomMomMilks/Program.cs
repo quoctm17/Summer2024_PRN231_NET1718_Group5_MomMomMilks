@@ -41,6 +41,7 @@ modelBuilder.EntitySet<Supplier>("Suppliers");
 modelBuilder.EntitySet<Brand>("Brands");
 modelBuilder.EntitySet<MilkAge>("MilkAges");
 modelBuilder.EntitySet<Category>("Category");
+modelBuilder.EntitySet<Coupon>("Coupon");
 
 var edmModel = modelBuilder.GetEdmModel();
 builder.Services.AddControllers()

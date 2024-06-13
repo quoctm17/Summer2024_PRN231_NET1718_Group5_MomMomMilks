@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataAccess.AutoMapperProfile;
+using DataTransfer;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAO
@@ -30,9 +31,10 @@ namespace DataAccess.DAO
             }
         }
 
-        public async Task<List<Coupon>> GetAllCouponsAsync()
+        public async Task<List<CouponDTO>> GetAllCouponsAsync()
         {
-            return await _context.Coupons.ToListAsync();
+            var coupons = await _context.Coupons.ToListAsync();
+            return _mapper.Map<List<CouponDTO>>(coupons);
         }
 
         public async Task<Coupon> GetCouponByIdAsync(int couponId)

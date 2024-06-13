@@ -32,6 +32,8 @@ namespace DataAccess.AutoMapperProfile
                 .ReverseMap();
             CreateMap<Batch, CreateBatchDTO>()
                 .ReverseMap();
+            CreateMap<Coupon, CouponDTO>()
+                .ReverseMap();
             CreateMap<Batch, UpdateBatchDTO>()
                 .ReverseMap();
             CreateMap<Order, OrderHistoryDTO>()

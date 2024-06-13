@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataTransfer;
 using Repository.Interface;
 using Service.Interfaces;
 using System;
@@ -18,7 +19,7 @@ namespace Service.Services
             _couponRepository = couponRepository;
         }
 
-        public async Task<List<Coupon>> GetAllCouponsAsync()
+        public async Task<List<CouponDTO>> GetAllCouponsAsync()
         {
             return await _couponRepository.GetAllCouponsAsync();
         }

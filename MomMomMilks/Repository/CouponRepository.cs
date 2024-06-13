@@ -1,12 +1,13 @@
 ﻿
 using BusinessObject.Entities;
 using DataAccess.DAO;
+using DataTransfer;
 using Repository.Interface;
 namespace Repository
 {
     public class CouponRepository : ICouponRepository
     {
-        public async Task<List<Coupon>> GetAllCouponsAsync()
+        public async Task<List<CouponDTO>> GetAllCouponsAsync()
         {
             return await CouponDAO.Instance.GetAllCouponsAsync();
         }
