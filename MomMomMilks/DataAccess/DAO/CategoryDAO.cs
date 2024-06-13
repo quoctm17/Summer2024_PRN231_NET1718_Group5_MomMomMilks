@@ -35,7 +35,7 @@ public class CategoryDAO
 
     public async Task<Category> GetCategoryByIdAsync(int categoryId)
     {
-        return await _context.Categories.FindAsync(categoryId);
+        return await _context.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);
     }
 
     public async Task AddCategoryAsync(Category category)
