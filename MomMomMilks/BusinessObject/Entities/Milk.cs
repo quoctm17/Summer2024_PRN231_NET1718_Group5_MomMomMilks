@@ -16,7 +16,6 @@ namespace BusinessObject.Entities
         public string UserManual { get; set; }
         public string Warning { get; set; }
         public string PreserveInstructions { get; set; }
-        public string ImageUrl { get; set; }
         public int BrandId { get; set; }
         public int CategoryId { get; set; }
         public int MilkAgeId { get; set; }

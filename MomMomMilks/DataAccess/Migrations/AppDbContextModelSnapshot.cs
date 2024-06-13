@@ -519,7 +519,7 @@ namespace DataAccess.Migrations
                     b.HasIndex("MilkId")
                         .IsUnique();
 
-                    b.ToTable("MilkImage");
+                    b.ToTable("MilkImages");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Order", b =>
@@ -1083,7 +1083,7 @@ namespace DataAccess.Migrations
                     b.HasOne("BusinessObject.Entities.Milk", "Milk")
                         .WithOne("MilkImage")
                         .HasForeignKey("BusinessObject.Entities.MilkImage", "MilkId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Milk");

@@ -13,7 +13,8 @@
     "SupplierId": 2,
     "MilkImage": {
       "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/jiaxqnzxjnbscmebhxud",
-      "isMain": true 
+      "PublicId": "abc",
+      "isMain": true
     }
   },
   {
@@ -30,6 +31,7 @@
     "SupplierId": 4,
     "MilkImage": {
       "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd",
+      "PublicId": "abc",
       "isMain": true
     }
   },
@@ -47,6 +49,7 @@
     "SupplierId": 3,
     "MilkImage": {
       "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/djsumnqp3dettvvzjxq4",
+      "PublicId": "abc",
       "isMain": true
     }
   },
@@ -64,6 +67,7 @@
     "SupplierId": 8,
     "MilkImage": {
       "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/o7hkndosqfkgnwrojtkw",
+      "PublicId": "abc",
       "isMain": true
     }
   },
@@ -81,6 +85,7 @@
     "SupplierId": 4,
     "MilkImage": {
       "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/yjqx4gpdxcfgifkezuwg",
+      "PublicId": "abc",
       "isMain": true
     }
   }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240608162426_UpdateBatchTables")]
-    partial class UpdateBatchTables
+    [Migration("20240613214957_removeImageUrlinMilk")]
+    partial class removeImageUrlinMilk
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -435,10 +435,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("MilkAgeId")
                         .HasColumnType("int");
 
@@ -497,6 +493,36 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MilkAges");
+                });
+
+            modelBuilder.Entity("BusinessObject.Entities.MilkImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MilkId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isMain")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilkId")
+                        .IsUnique();
+
+                    b.ToTable("MilkImages");
                 });
 
             modelBuilder.Entity("BusinessObject.Entities.Order", b =>
@@ -1055,6 +1081,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("BusinessObject.Entities.MilkImage", b =>
+                {
+                    b.HasOne("BusinessObject.Entities.Milk", "Milk")
+                        .WithOne("MilkImage")
+                        .HasForeignKey("BusinessObject.Entities.MilkImage", "MilkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milk");
+                });
+
             modelBuilder.Entity("BusinessObject.Entities.Order", b =>
                 {
                     b.HasOne("BusinessObject.Entities.Address", "Address")
@@ -1309,6 +1346,9 @@ namespace DataAccess.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("MilkImage")
+                        .IsRequired();
 
                     b.Navigation("OrderDetails");
                 });

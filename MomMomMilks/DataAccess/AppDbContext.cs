@@ -32,6 +32,7 @@ namespace DataAccess
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<CouponUsageHistory> CouponUsageHistories { get; set; }
         public DbSet<Milk> Milks { get; set; }
+        public DbSet<MilkImage> MilkImages { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
@@ -313,10 +314,10 @@ namespace DataAccess
             builder.Entity<Ward>()
                 .HasKey(w => w.Id);
 
-            builder.Entity<Milk>()
+            /*builder.Entity<Milk>()
                 .HasOne(x => x.MilkImage)
                 .WithOne(x => x.Milk)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction);*/
         }
     }
 }
