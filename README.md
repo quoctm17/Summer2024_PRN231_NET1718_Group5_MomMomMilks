@@ -70,7 +70,7 @@ Before you begin, ensure you have met the following requirements:
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/MomMomMilks.git
+    git clone https://github.com/quoctm17/Summer2024_PRN231_NET1718_Group5_MomMomMilks.git
     ```
 
 2. **Navigate to the backend project directory and restore dependencies:**
@@ -94,24 +94,24 @@ Before you begin, ensure you have met the following requirements:
 1. **Run the backend:**
 
     ```bash
-    cd MomMomMilks/BE
+    cd MomMomMilks
     dotnet run
     ```
 
 2. **API Documentation:**
-   - Navigate to `https://localhost:5001/swagger` to view the API documentation.
+   - Navigate to `http://localhost:5215/swagger` to view the API documentation.
 
 ### Frontend
 
 1. **Run the frontend:**
 
     ```bash
-    cd MomMomMilks/FE
+    cd FE
     dotnet run
     ```
 
 2. **Access the application:**
-   - Navigate to `https://localhost:5000` to access the frontend application.
+   - Navigate to `http://localhost:5101` to access the frontend application.
 
 ## 🤝 Contributing
 
