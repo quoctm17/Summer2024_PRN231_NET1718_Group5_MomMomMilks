@@ -33,7 +33,7 @@ namespace DataAccess.DAO
 
         public async Task<List<CouponDTO>> GetAllCouponsAsync()
         {
-            var coupons = await _context.Coupons.ToListAsync();
+            var coupons = await _context.Coupons.Where(c => c.Status == 1).ToListAsync();
             return _mapper.Map<List<CouponDTO>>(coupons);
         }
 
@@ -66,12 +66,12 @@ namespace DataAccess.DAO
 
         public async Task UpdateCouponExpiryDate()
         {
-            var expiredCoupons = await _context.Coupons.Where(c => c.EpiryDate < DateTime.Now).ToListAsync();
+            /*var expiredCoupons = await _context.Coupons.Where(c => c.EpiryDate < DateTime.Now).ToListAsync();
             foreach (var coupon in expiredCoupons)
             {
                 coupon.Status = 0;
             }
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();*/
         }
     }
 }
