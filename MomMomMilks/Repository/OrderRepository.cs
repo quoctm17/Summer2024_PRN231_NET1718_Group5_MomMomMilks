@@ -44,7 +44,7 @@ namespace Repository
             return await OrderDAO.Instance.GetOrderByIdAsync(orderId);
         }
 
-        public async Task<List<OrderHistoryDTO>> GetAllOrderHistoryAsync(int userId)
+        public async Task<List<Order>> GetAllOrderHistoryAsync(int userId)
         {
             return await OrderDAO.Instance.GetAllOrderHistory(userId);
         }
@@ -86,6 +86,10 @@ namespace Repository
         public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
         {
             return await OrderDAO.Instance.GetUnassignedOrders();
+        }
+        public async Task<List<OrderStatus>> GetAllStatus()
+        {
+            return await OrderDAO.Instance.GetAllStatus();
         }
     }
 }

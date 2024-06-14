@@ -16,5 +16,7 @@ namespace Service.Interfaces
         Task AddUser(AppUser user);
         Task UpdateUser(AppUser user);
         Task DeleteUser(int userId);
+        Task CancelOrder(int orderId);
+        Task RefundOrder(int orderId);
     }
 }

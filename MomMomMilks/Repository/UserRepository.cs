@@ -36,5 +36,13 @@ namespace Repository
         {
             await UserDAO.Instance.DeleteUser(userId);
         }
+        public async Task CancelOrder(int orderId)
+        {
+            await UserDAO.Instance.CancelOrder(orderId);
+        }
+        public async Task RefundOrder(int orderId)
+        {
+            await UserDAO.Instance.RefundOrder(orderId);
+        }
     }
 }

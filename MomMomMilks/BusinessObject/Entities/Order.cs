@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BusinessObject.Entities
@@ -28,6 +29,7 @@ namespace BusinessObject.Entities
         public TimeSlot TimeSlot { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
         public ICollection <Report> Reports { get; set; }
+        [JsonIgnore]
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<CouponUsageHistory> CouponUsageHistories { get; set; }
 

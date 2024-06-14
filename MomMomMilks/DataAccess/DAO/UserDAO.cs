@@ -114,5 +114,51 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task CancelOrder(int orderId)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            try
+            {
+                if(order != null)
+                {
+                    if(order.OrderStatusId == 2)
+                    {
+                        order.OrderStatusId = 5;
+                        _context.Orders.Update(order);
+                        await _context.SaveChangesAsync();
+                    }
+                    else if(order.OrderStatusId == 1)
+                    {
+                        order.OrderStatusId = 6;
+                        _context.Orders.Update(order);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task RefundOrder(int orderId)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            try
+            {
+                if(order != null)
+                {
+                    if(order.OrderStatusId == 6)
+                    {
+                        order.OrderStatusId = 5;
+                        _context.Orders.Update(order);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
