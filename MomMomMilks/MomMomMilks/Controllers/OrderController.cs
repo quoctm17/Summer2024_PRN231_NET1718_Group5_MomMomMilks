@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using CloudinaryDotNet.Actions;
 using DataTransfer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -103,19 +104,45 @@ namespace MomMomMilks.Controllers
             return Ok(order);
         }
         [EnableQuery]
+        [HttpGet("OrderStatus")]
+        public async Task<IActionResult> GetStatus()
+        {
+            var orderStatus = await _orderService.GetAllStatus();
+            if (orderStatus == null)
+            {
+                return NotFound();
+            }
+            return Ok(orderStatus);
+        }
+
+        [EnableQuery]
         [HttpGet("OrderHistory({userId})")]
-        public async Task<IActionResult> GetOrderHistoryByUserId([FromODataUri] int userId)
+        public async Task<IActionResult> GetOrderHistoryByUserId([FromRoute] int userId)
         {
             var orderHistory = await _orderService.GetAllOrderHistory(userId);
             if (orderHistory == null)
             {
                 return NotFound();
             }
-            return Ok(orderHistory);
+            var orderHistoryDTOs = orderHistory.Select(order => new OrderHistoryDTO
+            {
+                Id = order.Id,
+                CreateAt = order.CreateAt,
+                UpdateAt = order.UpdateAt,
+                TotalAmount = order.TotalAmount,
+                BuyerId = order.BuyerId,
+                AddressId = order.AddressId,
+                PaymentType = order.PaymentType.Name,
+                TransactionId = order.TransactionId,
+                Shipper = order.Shipper.UserName,
+                OrderStatusId = order.OrderStatusId
+            }).ToList();
+
+            return Ok(orderHistoryDTOs);
         }
         [EnableQuery]
         [HttpGet("OrderDetail({orderId})")]
-        public async Task<IActionResult> GetOrderDetailHistory([FromODataUri] int orderId)
+        public async Task<IActionResult> GetOrderDetailHistory([FromRoute] int orderId)
         {
             var orderDetail = await _orderService.GetDetailHistory(orderId);
             if(orderDetail == null)

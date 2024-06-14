@@ -35,8 +35,8 @@
         <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
             <div class="text-center mb-4">
                 @{
-                    @using Helpers
-                    @using Models
+                                                            @using Helpers
+                                                            @using Models
                     var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
                 }
                 @if (account != null)
@@ -80,8 +80,6 @@
                 </li>
             </ul>
             <div class="text-center mt-4">
-                @if (Model.OrderHistories != null && Model.OrderHistories.Any())
-                {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -95,30 +93,158 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach (var order in Model.OrderHistories)
-                            {
-                                <tr>
-                                    <td>@order.Id</td>
-                                    <td>@order.CreateAt.ToString("dd/MM/yyyy")</td>
-                                    <td>@order.UpdateAt.ToString("dd/MM/yyyy")</td>
-                                    <td>@order.TotalAmount</td>
-                                    <td>@order.PaymentType</td>
-                                    <td>@order.Shipper</td>
-                                    <td>@order.OrderStatus</td>
-                                    <td><a asp-page="/Customer/OrderDetail" asp-route-id="@order.Id" class="site-btn">View</a></td>
-                                </tr>
-                            }
+                        <tbody id="orderTableBody">
+                            <!-- Rows will be dynamically added here -->
                         </tbody>
                     </table>
-                }
-                else
-                {
-                    <p>Place order and enjoy <span class="text-danger">Fast Shipping</span></p>
+                    @* <p>Place order and enjoy <span class="text-danger">Fast Shipping</span></p>
                     <button class="btn btn-warning">Start buying</button>
-                    <button class="btn btn-outline-danger">View Your Cart</button>
-                }
+                    <button class="btn btn-outline-danger">View Your Cart</button> *@
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+        loadOrder(userId);
+    });
+
+    const token = sessionStorage.getItem('token');
+    const userId = getUserIdFromToken();
+
+    async function loadOrder(userId) {
+        try {
+            let response = await fetch(`http://localhost:5215/odata/Order/OrderHistory(${userId})`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch orders');
+            }
+
+            let data = await response.json();
+            console.log('API response:', data);
+            const orders = data.value || data.$values || [];
+
+            if (!Array.isArray(orders)) {
+                throw new Error('Orders data is not an array');
+            }
+
+            const ordersList = document.getElementById('orderTableBody');
+            let sequenceNumber = 1;
+
+            for (const order of orders) {
+                const createDate = new Date(order.createAt).toLocaleDateString('en-GB');
+                const updateDate = new Date(order.updateAt).toLocaleDateString('en-GB');
+
+                // Get status asynchronously and wait for it to resolve
+                const statusNamePromise = getOrderStatus(order.orderStatusId);
+                const statusName = await statusNamePromise;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${sequenceNumber}</td>
+                    <td>${createDate}</td>
+                    <td>${updateDate}</td>
+                    <td>${order.totalAmount}</td>
+                    <td>${order.paymentType}</td>
+                    <td>${order.shipper}</td>
+                    <td>${statusName}</td>
+                    <td>${await getActionButtons(order)}</td>
+                `;
+                ordersList.appendChild(tr);
+                sequenceNumber++;
+            }
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    }
+
+
+    async function getOrderStatus(orderStatusId) {
+        try {
+            const response = await fetch(`http://localhost:5215/odata/Order/OrderStatus?$filter=id eq ${orderStatusId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch status: ${response.status} - ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('API response:', data);
+
+            // Assuming $values is an array of status objects, return the first item
+            if (data.$values && data.$values.length > 0) {
+                return data.$values[0].name;
+            } else {
+                throw new Error('Empty response or invalid data format');
+            }
+        } catch (error) {
+            console.error('Error fetching status:', error);
+            throw error; // Re-throw the error to be caught by the caller
+        }
+    }
+
+
+    function getActionButtons(order) {
+        const normalizedStatusId = order.orderStatusId;
+        console.log(`Order ID: ${order.id}, Order Status ID: ${normalizedStatusId}`);
+
+        switch (normalizedStatusId) {
+            case 2: // Shipping
+            case 1: // Paying
+                console.log(`Order ID: ${order.id} - Adding cancel button`);
+                return `
+                    <a href="/Customer/OrderDetail?id=${order.id}" class="site-btn">View</a>
+                    <button onclick="cancelOrder(${order.id})" class="site-btn mt-3">Cancel</button>
+                `;
+            default:
+                console.log(`Order ID: ${order.id} - View only`);
+                return `<a href="/Customer/OrderDetail?id=${order.id}" class="site-btn">View</a>`;
+        }
+    }
+
+
+    async function cancelOrder(orderId) {
+        if (!confirm('Are you sure you want to cancel this order?')) {
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:5215/odata/User/cancel/${orderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                window.location.href = `/Customer/OrderHistory?userId=${userId}`;
+                console.log('Order canceled successfully');
+                alert('Order canceled successfully');
+            } else {
+                console.error('Failed to cancel order');
+                alert('Failed to cancel order');
+            }
+        } catch (error) {
+            console.error('Error canceling order:', error);
+        }
+    }
+
+    function getUserIdFromToken() {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.nameid;
+        }
+        return null;
+    }
+</script>

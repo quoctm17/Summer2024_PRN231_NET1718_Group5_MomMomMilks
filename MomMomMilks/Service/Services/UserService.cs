@@ -48,5 +48,13 @@ namespace Service.Services
         {
             await _userRepository.DeleteUser(userId);
         }
+        public async Task CancelOrder(int orderId)
+        {
+            await _userRepository.CancelOrder(orderId);
+        }
+        public async Task RefundOrder(int orderId)
+        {
+            await _userRepository.RefundOrder(orderId);
+        }
     }
 }

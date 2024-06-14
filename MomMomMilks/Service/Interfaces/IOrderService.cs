@@ -15,7 +15,7 @@ namespace Service.Interfaces
         Task<List<OrderDTO>> GetAllOrders();
         Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
         Task<Order> GetOrderAsync(int orderId);
-        Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId);
+        Task<List<Order>> GetAllOrderHistory(int userId);
         Task<List<ManagerOrderDTO>> GetUnassignedOrders();
         Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId);
         Task<List<ShipperOrderDTO>> GetShipperOrders(int shipperId);
@@ -24,5 +24,6 @@ namespace Service.Interfaces
         Task<bool> ConfirmCancelled(int shipperId, int orderId);
         Task<bool> ManagerAssignOrder(int shipperId, int orderId);
         Task AutoAssignOrdersToShippers();
+        Task<List<OrderStatus>> GetAllStatus();
     }
 }

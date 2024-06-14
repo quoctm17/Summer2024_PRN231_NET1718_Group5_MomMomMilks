@@ -91,12 +91,28 @@ namespace DataAccess.DAO
             return await _context.Orders.Include(o => o.OrderDetails).FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
-        public async Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId)
+        public async Task<List<OrderStatus>> GetAllStatus()
         {
-            List<OrderHistoryDTO> list = null;
+            List<OrderStatus> list = null;
             try
             {
-                var l = await _context.Orders
+                list = await _context.OrderStatuses
+                    .Include(o => o.Orders)
+                    .ThenInclude(o => o.OrderDetails)
+                    .ToListAsync();
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return list;
+        }
+
+        public async Task<List<Order>> GetAllOrderHistory(int userId)
+        {
+            List<Order> list = null;
+            try
+            {
+                list = await _context.Orders
                     .Include(o => o.OrderDetails)
                     .ThenInclude(o => o.Milk)
                     .Include(o => o.PaymentType)
@@ -104,7 +120,6 @@ namespace DataAccess.DAO
                     .Include(o => o.OrderStatus)
                     .Where(o => o.BuyerId == userId)
                     .ToListAsync();
-                list = _mapper.Map<List<OrderHistoryDTO>>(l);
             }
             catch (Exception ex)
             {

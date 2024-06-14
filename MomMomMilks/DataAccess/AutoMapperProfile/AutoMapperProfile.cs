@@ -37,7 +37,7 @@ namespace DataAccess.AutoMapperProfile
             CreateMap<Order, OrderHistoryDTO>()
                 .ForMember(dest => dest.Shipper, opt => opt.MapFrom(src => src.Shipper.UserName))
                 .ForMember(dest => dest.PaymentType, opt => opt.MapFrom(src => src.PaymentType.Name))
-                .ForMember(dest => dest.OrderStatus, opt => opt.MapFrom(src => src.OrderStatus.Name))
+                .ForMember(dest => dest.OrderStatusId, opt => opt.MapFrom(src => src.OrderStatusId))
                 .ReverseMap();
             CreateMap<OrderDetail, OrderDetailHistoryDTO>()
                 .ForMember(dest => dest.MilkName, opt => opt.MapFrom(src => src.Milk.Name))

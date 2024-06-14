@@ -145,6 +145,32 @@ namespace MomMomMilks.Controllers
             }
         }
 
+        [HttpPut("cancel/{orderId}")]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            try
+            {
+                await _userService.CancelOrder(orderId);
+                return Ok("Cancel order successfully");
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("refund/{orderId}")]
+        public async Task<IActionResult> Refund(int orderId)
+        {
+            try
+            {
+                await _userService.RefundOrder(orderId);
+                return Ok("Refund order successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(int userId)
         {

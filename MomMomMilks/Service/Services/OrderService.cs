@@ -53,7 +53,7 @@ namespace Service.Services
             return _orderRepository.GetAllOrdersAsync();
         }
 
-        public async Task<List<OrderHistoryDTO>> GetAllOrderHistory(int userId)
+        public async Task<List<Order>> GetAllOrderHistory(int userId)
         {
             return await _orderRepository.GetAllOrderHistoryAsync(userId);
         }
@@ -97,6 +97,10 @@ namespace Service.Services
         public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
         {
             return await _orderRepository.GetUnassignedOrders();
+        }
+        public async Task<List<OrderStatus>> GetAllStatus()
+        {
+            return await _orderRepository.GetAllStatus();
         }
     }
 }
