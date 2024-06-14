@@ -189,12 +189,12 @@ namespace DataAccess.Seed
 
             var list = new List<MilkAge>
             {
-                new MilkAge {Min = 0, Max = 2},
-                new MilkAge {Min = 1, Max = 10},
-                new MilkAge {Min = 6, Max = 12},
-                new MilkAge {Min = 12, Max = 18},
-                new MilkAge {Min = 18, Max = 30},
-                new MilkAge {Min = 30, Max = 60}
+                new MilkAge {Min = 0, Max = 12, Unit="Tháng Tuổi"},
+                new MilkAge {Min = 1, Max = 10, Unit= "Tuổi"},
+                new MilkAge {Min = 6, Max = 12, Unit = "Tuổi"},
+                new MilkAge {Min = 12, Max = 18, Unit = "Tuổi"},
+                new MilkAge {Min = 18, Max = 30, Unit = "Tuổi"},
+                new MilkAge {Min = 30, Max = 60, Unit = "Tuổi"}
             };
 
             foreach (var i in list)

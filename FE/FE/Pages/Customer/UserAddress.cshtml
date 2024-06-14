@@ -83,6 +83,30 @@
 
     const token = sessionStorage.getItem('token');
 
+    async function deleteAddress(addressId) {
+        if (!confirm('Are you sure you want to delete this address?')) {
+            return; 
+        }
+        try {
+            const response = await fetch(`http://localhost:5215/odata/Address/${addressId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                window.location.reload(true);
+                console.log('Address deleted successfully');
+                alert('Address deleted successfully');
+            } else {
+                console.error('Failed to delete address');
+                alert('Failed to delete address');
+            }
+        } catch (error) {
+            console.error('Error deleting address:', error);
+        }
+    }
+
     async function getUserAddress() {
         const userId = getUserIdFromToken();
 
@@ -107,9 +131,8 @@
                 tr.innerHTML = `<td>${sequenceNumber}</td>
                                     <td>${address.houseNumber} ${address.street}, ${wardName}, ${districtName}</td>
                                     <td>
-                                        <a href="">View</a> |
-                                        <a href="">Update</a> |
-                                        <a href=""">Delete</a>
+                                        <a href="/Customer/UserAddressEdit?id=${address.id}">Update</a> |
+                                        <a href="" onclick="deleteAddress('${address.id}')">Delete</a>
                                     </td>`;
                 addressList.appendChild(tr);
                 sequenceNumber++;

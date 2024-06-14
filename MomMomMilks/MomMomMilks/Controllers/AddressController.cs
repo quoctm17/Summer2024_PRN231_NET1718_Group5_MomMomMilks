@@ -106,7 +106,7 @@ namespace MomMomMilks.Controllers
                 }
 
                 await _addressService.UpdateAddressAsync(add);
-                return NoContent();
+                return Ok("Update successfully");
             }
             catch (Exception ex)
             {
