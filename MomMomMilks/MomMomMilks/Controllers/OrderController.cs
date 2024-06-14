@@ -134,7 +134,7 @@ namespace MomMomMilks.Controllers
                 AddressId = order.AddressId,
                 PaymentType = order.PaymentType.Name,
                 TransactionId = order.TransactionId,
-                Shipper = order.Shipper.UserName,
+                Shipper = order.Shipper != null ? order.Shipper.UserName : null,
                 OrderStatusId = order.OrderStatusId
             }).ToList();
 
