@@ -12,6 +12,7 @@ namespace BusinessObject.Entities
         public int Id { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
+        public DateTime OrderDate { get; set; }
         public float TotalAmount { get; set; }
         public int BuyerId { get; set; }
         public int AddressId { get; set; }

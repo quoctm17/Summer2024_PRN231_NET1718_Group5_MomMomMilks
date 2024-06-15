@@ -153,7 +153,7 @@
         async function loadCart() {
             const token = sessionStorage.getItem('token');
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk', {
+                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk($expand=MilkImage)', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -167,7 +167,7 @@
                     let cartItemsHtml = cartItems.map(item => `
                 <tr>
                     <td class="shopping__cart__item">
-                        <img class="shopping__cart__item__image" src="${item.Milk.ImageUrl}" alt="${item.Milk.Name}">
+                        <img class="shopping__cart__item__image" src="${item.Milk.MilkImage.Url}" alt="${item.Milk.Name}">
                     </td>
                     <td class="shopping__cart__item">
                         <h5>${item.Milk.Name}</h5>

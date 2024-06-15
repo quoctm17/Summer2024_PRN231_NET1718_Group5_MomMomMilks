@@ -26,21 +26,9 @@ namespace Service.Services
 
         public async Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails)
         {
-            try
-            {
-                await _orderRepository.AddOrderAsync(order, orderDetails);
-            }
-            catch (Exception ex)
-            {
-                // Log detailed error message and inner exception details
-                Console.WriteLine($"Error in CreateOrderAsync: {ex.Message}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-                }
-                throw new Exception("An error occurred while creating the order.", ex);
-            }
+            await _orderRepository.AddOrderAsync(order, orderDetails);
         }
+
 
         public async Task<Order> GetOrderAsync(int orderId)
         {

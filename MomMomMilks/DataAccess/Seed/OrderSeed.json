@@ -2,6 +2,7 @@
   {
     "CreateAt": "2023-05-01T10:00:00",
     "UpdateAt": "2023-05-02T12:00:00",
+    "OrderDate": "2023-05-02T12:00:00",
     "TotalAmount": 99.99,
     "BuyerId": 1,
     "AddressId": 1,
@@ -14,6 +15,7 @@
   {
     "CreateAt": "2023-05-01T10:00:00",
     "UpdateAt": "2023-05-02T12:00:00",
+    "OrderDate": "2023-05-02T12:00:00",
     "TotalAmount": 99.99,
     "BuyerId": 1,
     "AddressId": 2,
@@ -26,6 +28,7 @@
   {
     "CreateAt": "2023-05-01T10:00:00",
     "UpdateAt": "2023-05-02T12:00:00",
+    "OrderDate": "2023-05-02T12:00:00",
     "TotalAmount": 99.99,
     "BuyerId": 1,
     "AddressId": 3,
@@ -38,6 +41,7 @@
   {
     "CreateAt": "2023-06-01T10:00:00",
     "UpdateAt": "2023-06-02T12:00:00",
+    "OrderDate": "2023-05-02T12:00:00",
     "TotalAmount": 120.50,
     "BuyerId": 1,
     "AddressId": 1,
@@ -50,6 +54,7 @@
   {
     "CreateAt": "2023-06-05T10:00:00",
     "UpdateAt": "2023-06-06T12:00:00",
+    "OrderDate": "2023-05-02T12:00:00",
     "TotalAmount": 150.00,
     "BuyerId": 1,
     "AddressId": 2,

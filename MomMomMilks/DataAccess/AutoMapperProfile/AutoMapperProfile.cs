@@ -23,6 +23,8 @@ namespace DataAccess.AutoMapperProfile
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier.Name))
                 .ForMember(dest => dest.MilkAge, opt => opt.MapFrom(src => $"From {src.MilkAge.Min} to {src.MilkAge.Max}"))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.MilkImage.Url))
+
                 .ReverseMap();
 
             CreateMap<RegisterDTO, AppUser>();
