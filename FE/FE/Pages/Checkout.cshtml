@@ -88,8 +88,8 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
-                                        <p>User Name<span>*</span></p>
-                                        <input type="text" id="firstName" name="firstName" required readonly>
+                                        <p>Select Date<span>*</span></p>
+                                        <input type="date" id="orderDate" name="orderDate" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -111,20 +111,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="checkout__input">
-                                        <p>Phone<span>*</span></p>
-                                        <input type="text" id="phone" name="phone" required readonly>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="checkout__input">
-                                        <p>Email<span>*</span></p>
-                                        <input type="text" id="email" name="email" required readonly>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Hidden fields for UserName, Phone, and Email -->
+                            <input type="hidden" id="firstName" name="firstName" required>
+                            <input type="hidden" id="phone" name="phone" required>
+                            <input type="hidden" id="email" name="email" required>
+
                             <div class="checkout__input">
                                 <p>Order notes</p>
                                 <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="orderNotes">
@@ -191,12 +182,12 @@
 
                     let cartItems = cart.$values || [];
                     let orderItemsHtml = cartItems.map(item => `
-                            <li class="checkout__order__item row" data-milk-id="${item.Milk.Id}" data-quantity="${item.Quantity}" data-price="${item.Milk.Price}" data-total="${item.Milk.Price * item.Quantity}">
-                                <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
-                                <div class="col-lg-2 quantity">${item.Quantity}</div>
-                                <div class="col-lg-4 text-right item-price">${formatCurrency(item.Milk.Price)} đ</div>
-                            </li>
-                        `).join('');
+                                <li class="checkout__order__item row" data-milk-id="${item.Milk.Id}" data-quantity="${item.Quantity}" data-price="${item.Milk.Price}" data-total="${item.Milk.Price * item.Quantity}">
+                                    <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
+                                    <div class="col-lg-2 quantity">${item.Quantity}</div>
+                                    <div class="col-lg-4 text-right item-price">${formatCurrency(item.Milk.Price)} đ</div>
+                                </li>
+                            `).join('');
                     document.getElementById('order-items').innerHTML = orderItemsHtml;
                     updateOrderTotal(cartItems);
                 } else {
@@ -206,7 +197,6 @@
                 console.error('Error fetching cart data:', error);
             }
         }
-
 
         async function loadTimeSlots() {
             const token = sessionStorage.getItem('token');
@@ -221,35 +211,40 @@
                     console.log('TimeSlots:', timeSlots);
 
                     let timeSlotDropdown = document.getElementById('timeSlot');
-                    timeSlotDropdown.innerHTML = '<option value="" disabled selected>Select a time slot</option>'; // Clear previous options
+                    timeSlotDropdown.innerHTML = '<option value="" disabled selected>Select a time slot</option>';
 
-                    let currentTime = new Date();
-                    console.log('Current Time:', currentTime);
+                    // Date validation logic
+                    const orderDateInput = document.getElementById('orderDate');
+                    orderDateInput.addEventListener('change', function () {
+                        const selectedDate = new Date(orderDateInput.value);
+                        const currentTime = new Date();
 
-                    for (let i = 0; i < timeSlots.$values.length; i++) {
-                        let timeSlot = timeSlots.$values[i];
-                        let startTime = new Date();
-                        let [hours, minutes, seconds] = timeSlot.startTime.split(':').map(Number);
-                        startTime.setHours(hours, minutes, seconds, 0);
+                        timeSlotDropdown.innerHTML = '<option value="" disabled selected>Select a time slot</option>';
 
-                        // Decrease 1 hour
-                        startTime.setHours(startTime.getHours() - 1);
-                        console.log(`Start Time for ${timeSlot.name}:`, startTime);
+                        for (let i = 0; i < timeSlots.$values.length; i++) {
+                            let timeSlot = timeSlots.$values[i];
+                            let startTime = new Date(selectedDate);
+                            let [hours, minutes, seconds] = timeSlot.startTime.split(':').map(Number);
+                            startTime.setHours(hours, minutes, seconds, 0);
 
-                        let option = document.createElement('option');
-                        option.value = timeSlot.id;
-                        option.text = `${timeSlot.name} (${timeSlot.startTime} - ${timeSlot.endTime})`;
+                            // Decrease 1 hour
+                            startTime.setHours(startTime.getHours() - 1);
+                            console.log(`Start Time for ${timeSlot.name}:`, startTime);
 
-                        // Disable the option if the current time is greater than or equal to the start time
-                        if (currentTime >= startTime) {
-                            option.disabled = true;
+                            let option = document.createElement('option');
+                            option.value = timeSlot.id;
+                            option.text = `${timeSlot.name} (${timeSlot.startTime} - ${timeSlot.endTime})`;
+
+                            // Disable the option if the current time is greater than or equal to the start time
+                            if (selectedDate.toDateString() === currentTime.toDateString() && currentTime >= startTime) {
+                                option.disabled = true;
+                            }
+
+                            timeSlotDropdown.appendChild(option);
                         }
 
-                        timeSlotDropdown.appendChild(option);
-                    }
-
-                    // Update nice-select UI
-                    $('#timeSlot').niceSelect('update');
+                        $('#timeSlot').niceSelect('update');
+                    });
                 } else {
                     console.error('Failed to fetch time slots.');
                 }
@@ -348,6 +343,7 @@
             const addressSelect = document.getElementById('addressSelect');
             const timeSlotSelect = document.getElementById('timeSlot');
             const paymentTypeSelect = document.getElementById('paymentType');
+            const orderDateInput = document.getElementById('orderDate');
 
             const orderDetails = Array.from(document.querySelectorAll('.checkout__order__item')).map(item => {
                 return {
@@ -362,6 +358,7 @@
             const order = {
                 createAt: new Date().toISOString(),
                 updateAt: new Date().toISOString(),
+                orderDate: new Date(orderDateInput.value).toISOString(),
                 totalAmount: parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', '')),
                 buyerId: parseInt(userId),
                 addressId: parseInt(addressSelect.value),

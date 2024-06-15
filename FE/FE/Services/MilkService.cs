@@ -87,5 +87,17 @@ namespace FE.Services
                 return Enumerable.Empty<Milk>();
             }
         }
+
+        public async Task<int> GetTotalQuantityByMilkIdAsync(int milkId)
+        {
+            var response = await _httpClient.GetAsync($"odata/Batches/TotalQuantityByMilk/{milkId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<int>(json);
+            }
+            return 0;
+        }
+
     }
 }

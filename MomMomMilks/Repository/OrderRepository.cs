@@ -16,19 +16,24 @@ namespace Repository
 
         public async Task AddOrderAsync(Order order, List<OrderDetail> orderDetails)
         {
+
             try
             {
+                Console.WriteLine("Start AddOrderAsync in OrderRepository");
                 await OrderDAO.Instance.AddOrderAsync(order);
+                Console.WriteLine("Order added in OrderRepository");
 
                 foreach (var detail in orderDetails)
                 {
-                    detail.OrderId = order.Id; // Set OrderId for each detail
+                    detail.OrderId = order.Id;
+                    await HandleBatchQuantity(detail);
                     await OrderDetailsDAO.Instance.AddOrderDetailAsync(detail);
+                    Console.WriteLine($"OrderDetail added: {detail.Id}");
                 }
+
             }
             catch (Exception ex)
             {
-                // Log detailed error message and inner exception details
                 Console.WriteLine($"Error in AddOrderAsync: {ex.Message}");
                 if (ex.InnerException != null)
                 {
@@ -38,6 +43,30 @@ namespace Repository
             }
         }
 
+        private async Task HandleBatchQuantity(OrderDetail detail)
+        {
+            var remainingQuantity = detail.Quantity;
+            var batches = await BatchDAO.Instance.GetBatchesByMilkId(detail.MilkId);
+
+            foreach (var batch in batches)
+            {
+                if (remainingQuantity <= 0)
+                {
+                    break;
+                }
+
+                var batchQuantityToDeduct = Math.Min(batch.Quantity, remainingQuantity);
+                batch.Quantity -= batchQuantityToDeduct;
+                remainingQuantity -= batchQuantityToDeduct;
+
+                await BatchDAO.Instance.UpdateBatch(batch);
+            }
+
+            if (remainingQuantity > 0)
+            {
+                throw new Exception("Not enough stock available to fulfill the order.");
+            }
+        }
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {

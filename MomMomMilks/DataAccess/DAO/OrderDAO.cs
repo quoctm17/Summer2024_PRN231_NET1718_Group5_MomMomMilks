@@ -71,12 +71,13 @@ namespace DataAccess.DAO
         {
             try
             {
+                Console.WriteLine("Start AddOrderAsync");
                 await _context.Orders.AddAsync(order);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("Order added successfully");
             }
             catch (Exception ex)
             {
-                // Log detailed error message and inner exception details
                 Console.WriteLine($"Error in AddOrderAsync: {ex.Message}");
                 if (ex.InnerException != null)
                 {
@@ -85,6 +86,7 @@ namespace DataAccess.DAO
                 throw new Exception("An error occurred while adding the order.", ex);
             }
         }
+
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {

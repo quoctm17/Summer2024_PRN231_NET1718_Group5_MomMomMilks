@@ -31,6 +31,7 @@ public class CartDAO
         return await _context.Carts
                              .Include(c => c.CartItems)
                              .ThenInclude(ci => ci.Milk)
+                             .ThenInclude(m => m.MilkImage)
                              .AsNoTracking()
                              .FirstOrDefaultAsync(c => c.UserId == userId);
     }
@@ -90,4 +91,31 @@ public class CartDAO
         _context.CartItems.RemoveRange(cartItems);
         await _context.SaveChangesAsync();
     }
+
+    public async Task SaveCartAsync(int userId, List<CartItem> cartItems)
+    {
+        var cart = await GetCartByUserIdAsync(userId);
+        if (cart != null)
+        {
+            await ClearCartAsync(cart.Id);
+            foreach (var item in cartItems)
+            {
+                item.CartId = cart.Id;
+                await _context.CartItems.AddAsync(item);
+            }
+            _context.Carts.Update(cart);
+        }
+        else
+        {
+            cart = new Cart
+            {
+                UserId = userId,
+                CartItems = cartItems
+            };
+            await _context.Carts.AddAsync(cart);
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
 }

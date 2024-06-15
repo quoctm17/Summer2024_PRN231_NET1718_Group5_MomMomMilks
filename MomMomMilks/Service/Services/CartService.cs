@@ -50,5 +50,11 @@ namespace Service
         {
             await _cartRepository.ClearCartAsync(userId);
         }
+
+        public async Task SaveCartAsync(int userId, List<CartItem> cartItems)
+        {
+            await _cartRepository.SaveCartAsync(userId, cartItems);
+        }
+
     }
 }
