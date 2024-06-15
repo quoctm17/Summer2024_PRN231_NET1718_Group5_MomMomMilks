@@ -23,6 +23,10 @@ namespace Service.Services
         {
             return await _couponRepository.GetAllCouponsAsync();
         }
+        public async Task<List<CouponUsageDTO>> GetAllCouponUsagesAsync()
+        {
+            return await _couponRepository.GetAllCouponUsagesAsync();
+        }
 
         public async Task<Coupon> GetCouponByIdAsync(int couponId)
         {
@@ -32,6 +36,10 @@ namespace Service.Services
         public async Task AddCouponAsync(Coupon coupon)
         {
             await _couponRepository.AddCouponAsync(coupon);
+        }
+        public async Task AddOrderCouponAsync(string code, int orderId)
+        {
+            await _couponRepository.AddOrderCouponAsync(code, orderId);
         }
 
         public async Task UpdateCouponAsync(Coupon coupon)

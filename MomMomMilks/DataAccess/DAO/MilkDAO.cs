@@ -41,6 +41,7 @@ namespace DataAccess.DAO
                     .Include(m => m.Category)
                     .Include(m => m.MilkAge)
                     .Include(m => m.MilkImage)
+                    
                     .ToListAsync();
                 milk = _mapper.Map<List<MilkDTO>>(l);
             }

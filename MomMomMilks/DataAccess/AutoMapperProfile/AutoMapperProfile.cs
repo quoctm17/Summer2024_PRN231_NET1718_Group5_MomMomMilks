@@ -22,7 +22,7 @@ namespace DataAccess.AutoMapperProfile
                 .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand.Name))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier.Name))
-                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.MilkImage.Url))
+                .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.MilkImage.Url))
                 .ForMember(dest => dest.MilkAge, opt => opt.MapFrom(src => $"From {src.MilkAge.Min} to {src.MilkAge.Max}"))
                 .ReverseMap();
 
@@ -34,6 +34,8 @@ namespace DataAccess.AutoMapperProfile
             CreateMap<Batch, CreateBatchDTO>()
                 .ReverseMap();
             CreateMap<Coupon, CouponDTO>()
+                .ReverseMap();
+            CreateMap<CouponUsageHistory, CouponUsageDTO>()
                 .ReverseMap();
             CreateMap<Batch, UpdateBatchDTO>()
                 .ReverseMap();

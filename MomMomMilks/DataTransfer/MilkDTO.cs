@@ -24,6 +24,6 @@ namespace DataTransfer
         public int MilkAgeId { get; set; }
         public int SupplierId { get; set; }
         public string Supplier { get; set; }
-        public string ImageUrl { get; set; }
+        public string Url { get; set; }
     }
 }

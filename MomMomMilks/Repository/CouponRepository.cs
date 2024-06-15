@@ -11,10 +11,19 @@ namespace Repository
         {
             return await CouponDAO.Instance.GetAllCouponsAsync();
         }
+        public async Task<List<CouponUsageDTO>> GetAllCouponUsagesAsync()
+        {
+            return await CouponDAO.Instance.GetAllCouponUsagesAsync();
+        }
 
         public async Task<Coupon> GetCouponByIdAsync(int couponId)
         {
             return await CouponDAO.Instance.GetCouponByIdAsync(couponId);
+        }
+
+        public async Task AddOrderCouponAsync(string code, int orderId)
+        {
+            await CouponDAO.Instance.AddOrderCouponAsync(code, orderId);
         }
 
         public async Task AddCouponAsync(Coupon coupon)
