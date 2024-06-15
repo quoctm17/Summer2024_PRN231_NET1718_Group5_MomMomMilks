@@ -14,5 +14,6 @@ namespace Repository.Interface
         Task UpdateCartItemAsync(int userId, int milkId, int quantity);
         Task RemoveCartItemAsync(int userId, int cartItemId);
         Task ClearCartAsync(int userId);
+        Task SaveCartAsync(int userId, List<CartItem> cartItems);
     }
 }

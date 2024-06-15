@@ -7,6 +7,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using BusinessObject.Entities;
+using Microsoft.AspNetCore.Authorization;
+using DataTransfer;
 
 namespace MomMomMilks.Controllers
 {
@@ -30,17 +33,31 @@ namespace MomMomMilks.Controllers
             try
             {
                 var userId = GetUserIdFromToken();
-                if (userId == null)
-                {
-                    return Unauthorized("User not logged in");
-                }
+                //if (userId == null)
+                //{
+                //    return Unauthorized("User not logged in");
+                //}
 
-                var cart = await _cartService.GetCartByUserIdAsync(userId.Value);
+                var cart = await _cartService.GetCartByUserIdAsync(1);
                 if (cart == null)
                 {
                     return NotFound();
                 }
-                return Ok(cart.CartItems);
+
+                var cartItems = cart.CartItems.Select(item => new
+                {
+                    MilkId = item.MilkId,
+                    Quantity = item.Quantity,
+                    Milk = new
+                    {
+                        item.Milk.Id,
+                        item.Milk.Name,
+                        item.Milk.Price,
+                        item.Milk.MilkImage.Url
+                    }
+                });
+
+                return Ok(cartItems);
             }
             catch (Exception ex)
             {
@@ -48,6 +65,7 @@ namespace MomMomMilks.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
 
         [HttpPost]
         [Route("AddItem")]
@@ -115,6 +133,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost("ClearCart")]
+        [Authorize]
         public async Task<IActionResult> ClearCart()
         {
             try
@@ -134,6 +153,37 @@ namespace MomMomMilks.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+
+        [HttpPost("SaveCart")]
+        [Authorize]
+        public async Task<IActionResult> SaveCart([FromBody] List<CartItemDTO> cartItems)
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                var cartItemEntities = cartItems.Select(item => new CartItem
+                {
+                    MilkId = item.MilkId,
+                    Quantity = item.Quantity
+                }).ToList();
+
+                await _cartService.SaveCartAsync(userId.Value, cartItemEntities);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while saving cart.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
 
         private int? GetUserIdFromToken()
         {
