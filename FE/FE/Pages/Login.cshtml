@@ -89,6 +89,59 @@
     <script src="vendor/countdowntime/countdowntime.js"></script>
     <script src="js/main.js"></script>
 
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/Login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ Email: email, Password: password })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    sessionStorage.setItem('token', result.Token);
+
+                    // Fetch the cart from the backend
+                    const cartResponse = await fetch('http://localhost:5215/odata/Cart', {
+                        headers: {
+                            'Authorization': `Bearer ${result.Token}`
+                        }
+                    });
+
+                    if (cartResponse.ok) {
+                        const cartItems = await cartResponse.json();
+                        const formattedCartItems = cartItems.map(item => ({
+                            id: item.MilkId,
+                            name: item.Milk.Name,
+                            price: item.Milk.Price,
+                            imageUrl: item.Milk.ImageUrl,
+                            quantity: item.Quantity
+                        }));
+                        localStorage.setItem('cart', JSON.stringify(formattedCartItems));
+                    } else {
+                        console.error('Failed to fetch cart.');
+                    }
+
+                    window.location.href = '/index';
+                } else {
+                    const errorText = await response.text();
+                    console.error('Login failed:', errorText);
+                    alert('Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
+                alert('An error occurred during the login process.');
+            }
+        });
+    </script>
 
 </body>
 </html>

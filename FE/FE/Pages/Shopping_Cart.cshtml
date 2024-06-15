@@ -109,15 +109,16 @@
                 <div class="col-lg-12">
                     <div class="shoping__cart__btns">
                         <a href="/" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
-                        <a href="#" class="primary-btn cart-btn cart-btn-right" onclick="loadCart()">
+                        <a id="save-cart-btn" href="#" class="primary-btn cart-btn cart-btn-right">
                             <span class="icon_loading"></span>
-                            Update Cart
+                            Save Cart
                         </a>
                         <a href="#" class="primary-btn cart-btn cart-btn-right" style="margin-left: 10px;" onclick="clearCart()">
                             <span class="icon_trash_alt"></span>
                             Clear Cart
                         </a>
                     </div>
+
                 </div>
                 <div class="col-lg-6">
                     <div class="shoping__continue">
@@ -147,60 +148,90 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            loadCart();
+            loadCartFromLocalStorage();
+
+            const saveCartBtn = document.getElementById('save-cart-btn');
+            if (saveCartBtn) {
+                saveCartBtn.addEventListener('click', saveCart);
+            }
         });
 
-        async function loadCart() {
+        function loadCartFromLocalStorage() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            renderCartItems(cart);
+        }
+
+        function renderCartItems(cartItems) {
+            let cartItemsHtml = cartItems.map(item => `
+        <tr>
+            <td class="shopping__cart__item">
+                <img class="shopping__cart__item__image" src="${item.imageUrl}" alt="${item.name}">
+            </td>
+            <td class="shopping__cart__item">
+                <h5>${item.name}</h5>
+            </td>
+            <td class="shopping__cart__price">
+                ${formatCurrency(item.price)} đ
+            </td>
+            <td class="shopping__cart__quantity">
+                <div class="quantity">
+                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                    <div class="pro-qty">
+                        <input type="text" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)">
+                    </div>
+                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                </div>
+            </td>
+            <td class="shopping__cart__total">
+                ${formatCurrency(item.price * item.quantity)} đ
+            </td>
+            <td class="shopping__cart__item__close">
+                <span class="icon_close" onclick="confirmRemoveFromCart(${item.id})"></span>
+            </td>
+        </tr>
+    `).join('');
+            document.getElementById('cart-items').innerHTML = cartItemsHtml;
+            updateCartTotal(cartItems);
+        }
+
+
+        async function saveCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const token = sessionStorage.getItem('token');
+
+            if (cart.length === 0) {
+                alert('Your cart is empty.');
+                return;
+            }
+
+            // Convert the cart items to the expected format
+            const cartItems = cart.map(item => ({
+                MilkId: item.id,
+                Quantity: item.quantity
+            }));
+
             try {
-                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk($expand=MilkImage)', {
+                let response = await fetch('http://localhost:5215/odata/Cart/SaveCart', {
+                    method: 'POST',
                     headers: {
+                        'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
-                    }
+                    },
+                    body: JSON.stringify(cartItems)
                 });
+
                 if (response.ok) {
-                    let cart = await response.json();
-                    console.log('API response:', cart);
-
-                    let cartItems = cart.$values || [];
-
-                    let cartItemsHtml = cartItems.map(item => `
-                <tr>
-                    <td class="shopping__cart__item">
-                        <img class="shopping__cart__item__image" src="${item.Milk.MilkImage.Url}" alt="${item.Milk.Name}">
-                    </td>
-                    <td class="shopping__cart__item">
-                        <h5>${item.Milk.Name}</h5>
-                    </td>
-                    <td class="shopping__cart__price">
-                        ${formatCurrency(item.Milk.Price)} đ
-                    </td>
-                    <td class="shopping__cart__quantity">
-                        <div class="quantity">
-                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity - 1})">-</button>
-                            <div class="pro-qty">
-                                <input type="text" value="${item.Quantity}" onchange="updateQuantity(${item.MilkId}, this.value)">
-                            </div>
-                            <button class="quantity-btn" onclick="updateQuantity(${item.MilkId}, ${item.Quantity + 1})">+</button>
-                        </div>
-                    </td>
-                    <td class="shopping__cart__total">
-                        ${formatCurrency(item.Milk.Price * item.Quantity)} đ
-                    </td>
-                    <td class="shopping__cart__item__close">
-                        <span class="icon_close" onclick="confirmRemoveFromCart(${item.Id})"></span>
-                    </td>
-                </tr>
-            `).join('');
-                    document.getElementById('cart-items').innerHTML = cartItemsHtml;
-                    updateCartTotal(cartItems);
+                    alert('Cart saved successfully!');
                 } else {
-                    console.error('Failed to fetch cart data.');
+                    console.error('Failed to save cart.');
+                    alert('Failed to save cart.');
                 }
             } catch (error) {
-                console.error('Error fetching cart data:', error);
+                console.error('Error saving cart:', error);
+                alert('Error saving cart.');
             }
         }
+
 
         function formatCurrency(amount) {
             return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -208,53 +239,33 @@
 
         async function updateQuantity(id, quantity) {
             if (quantity < 1) quantity = 1;
-            const token = sessionStorage.getItem('token');
-            try {
-                let response = await fetch(`http://localhost:5215/odata/Cart/UpdateItem?milkId=${id}&quantity=${quantity}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    loadCart();
-                    updateCartCount();
-                } else {
-                    console.error('Failed to update item quantity.');
-                }
-            } catch (error) {
-                console.error('Error updating item quantity:', error);
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity = quantity;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCartFromLocalStorage();
+                updateCartCount();
             }
         }
 
-        function confirmRemoveFromCart(cartItemId) {
+        function confirmRemoveFromCart(id) {
             if (confirm("Are you sure you want to remove this item from the cart?")) {
-                removeFromCart(cartItemId);
+                removeFromCart(id);
             }
         }
 
-        async function removeFromCart(cartItemId) {
-            const token = sessionStorage.getItem('token');
-            try {
-                let response = await fetch(`http://localhost:5215/odata/Cart/${cartItemId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    loadCart();
-                    updateCartCount();
-                } else {
-                    console.error('Failed to remove item from cart.');
-                }
-            } catch (error) {
-                console.error('Error removing item from cart:', error);
-            }
+        function removeFromCart(id) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartFromLocalStorage();
+            updateCartCount();
         }
 
         async function clearCart() {
             const token = sessionStorage.getItem('token');
+
             try {
                 let response = await fetch('http://localhost:5215/odata/Cart/ClearCart', {
                     method: 'POST',
@@ -262,8 +273,10 @@
                         'Authorization': `Bearer ${token}`
                     }
                 });
+
                 if (response.ok) {
-                    loadCart();
+                    localStorage.removeItem('cart');
+                    loadCartFromLocalStorage();
                     updateCartCount();
                 } else {
                     console.error('Failed to clear cart.');
@@ -273,36 +286,21 @@
             }
         }
 
+
+
         function updateCartTotal(cartItems) {
-            var subtotal = cartItems.reduce((sum, item) => sum + (item.Milk.Price * item.Quantity), 0);
+            var subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             document.getElementById('subtotal').innerText = `${formatCurrency(subtotal)} đ`;
             document.getElementById('total').innerText = `${formatCurrency(subtotal)} đ`;
         }
 
-        async function updateCartCount() {
-            const token = sessionStorage.getItem('token');
-            try {
-                let response = await fetch('http://localhost:5215/odata/Cart', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    let cart = await response.json();
-                    if (cart.$values) {
-                        cart = cart.$values;
-                    }
-                    let count = cart.reduce((sum, item) => sum + item.Quantity, 0);
-                    document.getElementById('cart-count').innerText = count;
-                } else {
-                    console.error('Failed to fetch cart count.');
-                }
-            } catch (error) {
-                console.error('Error fetching cart count:', error);
-            }
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = count;
         }
-
     </script>
+
 
     <style>
         .quantity {
@@ -368,10 +366,8 @@
             .icon_close:hover {
                 color: red;
             }
-
     </style>
 
 </body>
 
 </html>
-

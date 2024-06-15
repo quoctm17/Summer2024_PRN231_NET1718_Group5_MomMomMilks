@@ -44,10 +44,6 @@
                     <div class="hero__search">
                         <div class="hero__search__form">
                             <form action="#">
-                                @* <div class="hero__search__categories">
-                                        All Categories
-                                        <span class="arrow_carrot-down"></span>
-                                    </div> *@
                                 <input type="text" placeholder="What do you need?">
                                 <button type="submit" class="site-btn">SEARCH</button>
                             </form>
@@ -162,92 +158,27 @@
     </div>
     <!-- Banner End -->
 
-
     <script>
-        async function addToCart(id) {
-            const token = sessionStorage.getItem('token');
-            try {
-                let response = await fetch(`http://localhost:5215/odata/Cart/AddItem?milkId=${id}&quantity=1`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    alert('Added to cart successfully!');
-                    updateCartCount();
-                    updateCartTotalPrice();
-                } else {
-                    alert('Failed to add to cart.');
-                }
-            } catch (error) {
-                console.error('Error adding to cart:', error);
-                alert('Error adding to cart.');
+        async function addToCart(id, name, price, imageUrl) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, imageUrl, quantity: 1 });
             }
-        }
-
-        async function updateCartCount() {
-            const token = sessionStorage.getItem('token');
-            try {
-                let response = await fetch('http://localhost:5215/odata/Cart', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    let cart = await response.json();
-                    let cartItems = cart.$values || [];
-                    if (Array.isArray(cartItems)) {
-                        let count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                        document.getElementById('cart-count').innerText = count;
-                    } else {
-                        console.error('Cart items is not an array:', cartItems);
-                    }
-                } else {
-                    console.error('Failed to fetch cart count.');
-                }
-            } catch (error) {
-                console.error('Error fetching cart count:', error);
-            }
-        }
-
-        async function updateCartTotalPrice() {
-            const token = sessionStorage.getItem('token');
-            try {
-                let response = await fetch('http://localhost:5215/odata/Cart', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    let cart = await response.json();
-                    let cartItems = cart.$values || [];
-                    let totalPrice = cartItems.reduce((sum, item) => sum + (item.milk.price * item.quantity), 0);
-                    let cartTotalElement = document.getElementById('cart-total');
-                    if (cartTotalElement) {
-                        cartTotalElement.innerText = `${formatCurrency(totalPrice)} đ`;
-                    } else {
-                        console.error('Element with ID "cart-total" not found.');
-                    }
-                } else {
-                    console.error('Failed to fetch cart total price.');
-                }
-            } catch (error) {
-
-                console.error('Error fetching cart total price:', error);
-            }
-        }
-
-        function formatCurrency(amount) {
-            return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Added to cart successfully!');
+            updateCartCount();
+            updateCartTotalPrice();
         }
 
         document.addEventListener('DOMContentLoaded', function () {
             updateCartCount();
             updateCartTotalPrice();
         });
+
     </script>
 
 </body>
-
 </html>

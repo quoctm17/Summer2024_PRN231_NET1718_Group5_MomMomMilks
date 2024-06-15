@@ -65,5 +65,10 @@ namespace Repository
                 await CartDAO.Instance.ClearCartAsync(cart.Id);
             }
         }
+
+        public async Task SaveCartAsync(int userId, List<CartItem> cartItems)
+        {
+            await CartDAO.Instance.SaveCartAsync(userId, cartItems);
+        }
     }
 }
