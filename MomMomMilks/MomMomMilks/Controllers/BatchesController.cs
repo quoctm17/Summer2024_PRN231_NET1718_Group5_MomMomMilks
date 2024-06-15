@@ -56,5 +56,12 @@ namespace MomMomMilks.Controllers
             if (!result) return BadRequest();
             return Ok(result);
         }
+
+        [HttpGet("TotalQuantityByMilk/{milkId}")]
+        public async Task<IActionResult> GetTotalQuantityByMilkId(int milkId)
+        {
+            var totalQuantity = await _batchService.GetTotalQuantityByMilkId(milkId);
+            return Ok(totalQuantity);
+        }
     }
 }

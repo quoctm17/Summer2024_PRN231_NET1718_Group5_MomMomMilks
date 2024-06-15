@@ -34,12 +34,13 @@ namespace DataAccess.DAO
         {
             try
             {
+                Console.WriteLine("Start AddOrderDetailAsync");
                 await _context.OrderDetails.AddAsync(orderDetail);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("OrderDetail added successfully");
             }
             catch (Exception ex)
             {
-                // Log detailed error message and inner exception details
                 Console.WriteLine($"Error in AddOrderDetailAsync: {ex.Message}");
                 if (ex.InnerException != null)
                 {
@@ -48,7 +49,6 @@ namespace DataAccess.DAO
                 throw new Exception("An error occurred while adding the order detail.", ex);
             }
         }
-
 
 
         public async Task<List<OrderDetail>> GetOrderDetailsByOrderIdAsync(int orderId)

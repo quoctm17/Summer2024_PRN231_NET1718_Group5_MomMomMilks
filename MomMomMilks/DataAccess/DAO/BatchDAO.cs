@@ -66,6 +66,22 @@ namespace DataAccess.DAO
             }
         }
 
+        public async Task<List<Batch>> GetBatchesByMilkId(int milkId)
+        {
+            return await _context.Batches
+                                 .Where(b => b.MilkId == milkId && b.Quantity > 0)
+                                 .OrderBy(b => b.ExpiredDate)
+                                 .ToListAsync();
+        }
+
+        public async Task<int> GetTotalQuantityByMilkId(int milkId)
+        {
+            return await _context.Batches
+                                 .Where(b => b.MilkId == milkId)
+                                 .SumAsync(b => b.Quantity);
+        }
+
+
         public async Task<bool> CreateBatch(Batch batch)
         {
             try

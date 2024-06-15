@@ -32,6 +32,11 @@ namespace Service.Services
             return await _batchRepository.GetSingleBatch(id);
         }
 
+        public async Task<int> GetTotalQuantityByMilkId(int milkId)
+        {
+            return await _batchRepository.GetTotalQuantityByMilkId(milkId);
+        }
+
         public async Task<bool> UpdateBatch(Batch batch)
         {
             return await _batchRepository.UpdateBatch(batch);

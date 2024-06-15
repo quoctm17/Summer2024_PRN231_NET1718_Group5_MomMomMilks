@@ -26,6 +26,11 @@ namespace Repository
             return await BatchDAO.Instance.GetSingleBatch(id);
         }
 
+        public async Task<int> GetTotalQuantityByMilkId(int milkId)
+        {
+            return await BatchDAO.Instance.GetTotalQuantityByMilkId(milkId);
+        }
+
         public async Task<bool> UpdateBatch(Batch batch)
         {
             return await BatchDAO.Instance.UpdateBatch(batch);

@@ -57,6 +57,7 @@ namespace MomMomMilks.Controllers
             {
                 CreateAt = orderDto.CreateAt,
                 UpdateAt = orderDto.UpdateAt,
+                OrderDate = orderDto.OrderDate,
                 TotalAmount = orderDto.TotalAmount,
                 BuyerId = orderDto.BuyerId,
                 AddressId = orderDto.AddressId,
@@ -75,12 +76,13 @@ namespace MomMomMilks.Controllers
 
             try
             {
+                Console.WriteLine("Start PostSimpleOrder");
                 await _orderService.CreateOrderAsync(order, order.OrderDetails.ToList());
+                Console.WriteLine("Order created successfully");
                 return CreatedAtAction(nameof(Get), new { key = order.Id }, order);
             }
             catch (Exception ex)
             {
-                // Log detailed error message and inner exception details
                 Console.WriteLine($"Error in PostSimpleOrder: {ex.Message}");
                 if (ex.InnerException != null)
                 {
@@ -89,8 +91,6 @@ namespace MomMomMilks.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message, innerDetails = ex.InnerException?.Message });
             }
         }
-
-
 
         [EnableQuery]
         [HttpGet("{key}")]
