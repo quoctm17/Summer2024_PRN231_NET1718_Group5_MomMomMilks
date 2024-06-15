@@ -19,11 +19,11 @@ namespace MomMomMilks.Extensions
 
         private async void UpdateCouponExpiryDate(object? state)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            /*using (var scope = _serviceProvider.CreateScope())
             {
                 var couponService = scope.ServiceProvider.GetRequiredService<ICouponService>();
                 await couponService.UpdateCouponExpiryDate();
-            }
+            }*/
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

@@ -33,8 +33,13 @@ namespace DataAccess.DAO
 
         public async Task<List<CouponDTO>> GetAllCouponsAsync()
         {
-            var coupons = await _context.Coupons.ToListAsync();
+            var coupons = await _context.Coupons.Where(c => c.Status == 1).ToListAsync();
             return _mapper.Map<List<CouponDTO>>(coupons);
+        }
+        public async Task<List<CouponUsageDTO>> GetAllCouponUsagesAsync()
+        {
+            var coupons = await _context.CouponUsageHistories.ToListAsync();
+            return _mapper.Map<List<CouponUsageDTO>>(coupons);
         }
 
         public async Task<Coupon> GetCouponByIdAsync(int couponId)
@@ -45,6 +50,17 @@ namespace DataAccess.DAO
         public async Task AddCouponAsync(Coupon coupon)
         {
             await _context.Coupons.AddAsync(coupon);
+            await _context.SaveChangesAsync();
+        }
+        public async Task AddOrderCouponAsync(string code, int orderId)
+        {
+            var coupon = await _context.Coupons.Where(c => c.Code == code).FirstOrDefaultAsync();
+            var useCoupon = new CouponUsageHistory()
+            {
+                OrderId = orderId,
+                CouponId = coupon.Id
+            };
+            await _context.CouponUsageHistories.AddAsync(useCoupon);
             await _context.SaveChangesAsync();
         }
 
@@ -66,12 +82,12 @@ namespace DataAccess.DAO
 
         public async Task UpdateCouponExpiryDate()
         {
-            var expiredCoupons = await _context.Coupons.Where(c => c.EpiryDate < DateTime.Now).ToListAsync();
+            /*var expiredCoupons = await _context.Coupons.Where(c => c.EpiryDate < DateTime.Now).ToListAsync();
             foreach (var coupon in expiredCoupons)
             {
                 coupon.Status = 0;
             }
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();*/
         }
     }
 }
