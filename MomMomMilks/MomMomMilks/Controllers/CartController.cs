@@ -33,12 +33,12 @@ namespace MomMomMilks.Controllers
             try
             {
                 var userId = GetUserIdFromToken();
-                //if (userId == null)
-                //{
-                //    return Unauthorized("User not logged in");
-                //}
+                if (userId == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
 
-                var cart = await _cartService.GetCartByUserIdAsync(1);
+                var cart = await _cartService.GetCartByUserIdAsync(userId.Value);
                 if (cart == null)
                 {
                     return NotFound();
