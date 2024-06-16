@@ -3,9 +3,11 @@ using BusinessObject.Entities;
 using DataTransfer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-
+using MomMomMilks.EmailService;
 using Service.Interfaces;
+using System.Text;
 
 namespace MomMomMilks.Controllers
 {
@@ -16,13 +18,15 @@ namespace MomMomMilks.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
         public AccountController(UserManager<AppUser> userManager, 
-            ITokenService tokenService, IMapper mapper)
+            ITokenService tokenService, IMapper mapper, IEmailService emailService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _mapper = mapper;
+            _emailService = emailService;
         }
         [HttpPost("login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDto)
@@ -79,6 +83,44 @@ namespace MomMomMilks.Controllers
             }
 
 
+        }
+
+        [HttpPost("ForgotPassword/{email}")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await _emailService.SendAsync("autoemail62@gmail.com", 
+                    email, "Reset Password Confirmation", 
+                    $"Please enter this code to reset your password: {code}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok();
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(resetPasswordDTO.Email);
+                var result = await _userManager.ResetPasswordAsync(user, resetPasswordDTO.Code, resetPasswordDTO.Password);
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Password reset failed: " + result.Errors.FirstOrDefault()?.Description);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
         }
         private async Task<bool> UserExist(string username)
         {

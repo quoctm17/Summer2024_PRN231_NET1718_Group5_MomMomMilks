@@ -29,6 +29,19 @@ namespace FE.Services
             return user;
         }
 
+        public async Task ForgotPasswordAsync(string email)
+        {
+            await _client.PostAsync("api/Account/ForgotPassword/" + email, null);
+        }
+        public async Task<bool> ResetPasswordAsync(ResetPassword resetPassword)
+        {
+            var response = await _client.PostAsJsonAsync("api/Account/ResetPassword", resetPassword);
+            if(!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+            return true;
+        }
         public async Task<User> RegisterAsync(RegisterModel register)
         {
             var response = await _client.PostAsJsonAsync("api/Account/register", register);

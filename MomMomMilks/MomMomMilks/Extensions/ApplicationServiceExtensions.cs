@@ -5,6 +5,8 @@ using Service.Services;
 using Service;
 using Service.Interface;
 using Service.Helpers;
+using MomMomMilks.EmailService.Settings;
+using MomMomMilks.EmailService;
 
 namespace MomMomMilks.Extensions
 {
@@ -61,7 +63,9 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IMilkAgeService, MilkAgeService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<IEmailService, MomMomMilks.EmailService.EmailService>();
 
+            services.Configure<SendInBlue>(config.GetSection("SendInBlue"));
 
             return services;
         }
