@@ -40,7 +40,6 @@ namespace DataAccess.DAO
                     .Include(m => m.Supplier)
                     .Include(m => m.Category)
                     .Include(m => m.MilkAge)
-                    .Include(m => m.MilkImage)
                     .ToListAsync();
                 milk = _mapper.Map<List<MilkDTO>>(l);
             }
@@ -63,7 +62,6 @@ namespace DataAccess.DAO
                 .Include(m => m.Brand)
                 .Include(m => m.Supplier)
                 .Include(m => m.MilkAge)
-                .Include(m => m.MilkImage)
                 .Where(m => m.Id == milkId).FirstOrDefaultAsync());
         }
 

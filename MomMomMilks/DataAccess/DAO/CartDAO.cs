@@ -31,7 +31,6 @@ public class CartDAO
         return await _context.Carts
                              .Include(c => c.CartItems)
                              .ThenInclude(ci => ci.Milk)
-                             .ThenInclude(m => m.MilkImage)
                              .AsNoTracking()
                              .FirstOrDefaultAsync(c => c.UserId == userId);
     }

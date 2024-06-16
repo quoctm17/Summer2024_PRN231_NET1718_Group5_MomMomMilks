@@ -53,7 +53,7 @@ namespace MomMomMilks.Controllers
                         item.Milk.Id,
                         item.Milk.Name,
                         item.Milk.Price,
-                        item.Milk.MilkImage.Url
+                        item.Milk.ImageUrl
                     }
                 });
 
