@@ -11,11 +11,7 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 2,
-    "MilkImage": {
-      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/jiaxqnzxjnbscmebhxud",
-      "PublicId": "abc",
-      "isMain": true
-    }
+    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/jiaxqnzxjnbscmebhxud"
   },
   {
     "Name": "Sữa Friso Gold số 4 1400g",
@@ -29,11 +25,7 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 4,
-    "MilkImage": {
-      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd",
-      "PublicId": "abc",
-      "isMain": true
-    }
+    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd"
   },
   {
     "Name": "Sữa Abbott Grow 4 900g",
@@ -47,11 +39,7 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 3,
-    "MilkImage": {
-      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/djsumnqp3dettvvzjxq4",
-      "PublicId": "abc",
-      "isMain": true
-    }
+    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd"
   },
   {
     "Name": "Sản phẩm dinh dưỡng Friso Gold Pro 4",
@@ -65,11 +53,7 @@
     "CategoryId": 1,
     "MilkAgeId": 2,
     "SupplierId": 8,
-    "MilkImage": {
-      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/o7hkndosqfkgnwrojtkw",
-      "PublicId": "abc",
-      "isMain": true
-    }
+    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd"
   },
   {
     "Name": "Sữa bầu Friso Mum Gold 900g hương cam",
@@ -83,10 +67,6 @@
     "CategoryId": 4,
     "MilkAgeId": 6,
     "SupplierId": 4,
-    "MilkImage": {
-      "Url": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/yjqx4gpdxcfgifkezuwg",
-      "PublicId": "abc",
-      "isMain": true
-    }
+    "ImageUrl": "https://res.cloudinary.com/dlr9litcn/image/upload/f_auto,q_auto/v1/MomMomMilk/abvaj0da2bbs920xr1qd"
   }
 ]
