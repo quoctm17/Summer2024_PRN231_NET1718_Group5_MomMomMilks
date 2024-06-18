@@ -7,6 +7,7 @@ using Service.Interface;
 using Service.Helpers;
 using MomMomMilks.EmailService.Settings;
 using MomMomMilks.EmailService;
+using Net.payOS;
 
 namespace MomMomMilks.Extensions
 {
@@ -67,6 +68,11 @@ namespace MomMomMilks.Extensions
 
             services.Configure<SendInBlue>(config.GetSection("SendInBlue"));
 
+            //Add PayOs
+            PayOS payOS = new PayOS(config["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                                config["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                                config["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+            services.AddSingleton(payOS);
             return services;
         }
     }

@@ -70,5 +70,10 @@ namespace Repository
         {
             await CartDAO.Instance.SaveCartAsync(userId, cartItems);
         }
+
+        public async Task<bool> AddPaymentOrderCode(int cartId, long orderCode)
+        {
+            return await CartDAO.Instance.AddPaymentOrderCode(cartId, orderCode);
+        }
     }
 }
