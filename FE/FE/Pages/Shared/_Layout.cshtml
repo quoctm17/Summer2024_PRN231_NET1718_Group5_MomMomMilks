@@ -33,253 +33,430 @@
     <link rel="stylesheet" href="~/lib/datatables/datatables.min.css" asp-append-version="true" />
 
 </head>
-<body>
-    <!-- Header Section Begin -->
-    <header class="header">
-        <div class="header__top">
+@if (account != null && (account.Role == "Admin" || account.Role == "Manager"))
+{
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="/admin/index">MomMoms Admin</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Core</div>
+                            <a class="nav-link" href="/admin/index">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Layouts
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="layout-static.html">Static Navigation</a>
+                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Pages
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                        Authentication
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
+                                        </nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                        Error
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="401.html">401 Page</a>
+                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="500.html">500 Page</a>
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
+                            <div class="sb-sidenav-menu-heading">Management</div>
+                            @if (account.Role == "Admin")
+                            {
+                                <a class="nav-link" href="/admin/batchmanagement/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Batches
+                                </a>
+                                <a class="nav-link" href="/admin/SupplierManagement/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Suppliers
+                                </a>
+                                <a class="nav-link" href="/admin/BrandManagement/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Brands
+                                </a>
+                                <a class="nav-link" href="/admin/CategoryManagement/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Categories
+                                </a>
+                                <a class="nav-link" href="/admin/MilkAgeManagement/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Milk Ages
+                                </a>
+                                <a class="nav-link" href="/admin/MilkManagement/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Milk
+                                </a>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        @account.UserName
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    @RenderBody()
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="~/js/demo/chart-area-demo.js"></script>
+        <script src="~/js/demo/chart-bar-demo.js"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/bootstrap.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/jquery.nice-select.min.js"></script>
+        <script src="~/js/jquery-ui.min.js"></script>
+        <script src="~/js/jquery-3.3.1.min.js"></script>
+        <script src="~/js/jquery.slicknav.js"></script>
+        <script src="~/js/mixitup.min.js"></script>
+        <script src="~/js/owl.carousel.min.js"></script>
+        <script src="~/js/main.js"></script>
+        <script src="~/lib/datatables/datatables.min.js"></script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+}
+else
+{
+    <body>
+        <!-- Header Section Begin -->
+        <header class="header">
+            <div class="header__top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="header__top__left">
+                                <ul>
+                                    <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
+                                    <li>Free Shipping for all Order of $99</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="header__top__right">
+                                <div class="header__top__right__social">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-linkedin"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                                </div>
+                                <div class="header__top__right__language">
+                                    <img src="~/img/language.png" alt="">
+                                    <div>English</div>
+                                    <span class="arrow_carrot-down"></span>
+                                    <ul>
+                                        <li><a href="#">Spanis</a></li>
+                                        <li><a href="#">English</a></li>
+                                    </ul>
+                                </div>
+                                @if (account == null)
+                                {
+                                    <div class="header__top__right__auth">
+                                        <a href="/Login"><i class="fa fa-user"></i>Login</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="header__top__right__auth">
+                                        <div class="dropdown">
+                                            <a type="button" data-bs-toggle="dropdown" aria-expanded="">
+                                                <i class="fa fa-user"></i> Welcome, @account.UserName
+                                            </a>
+                                            <ul class="dropdown-menu">
+
+                                                <li><a class="dropdown-item" href="#">Profile Information</a></li>
+                                                <li><a href="/Customer/OrderHistory?userId=@account?.Id" class="dropdown-item">My Order</a></li>
+                                                <li><a class="dropdown-item" href="#">Log Out</a></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="header__top__left">
+                    <div class="col-lg-3">
+                        <div class="header__logo">
+                            <a href="/"><img style="max-height: 100px; padding-left: 50px" src="~/img/logo.webp" alt=""></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <nav class="header__menu" style="padding-top: 50px;">
                             <ul>
-                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                                <li>Free Shipping for all Order of $99</li>
+                                <li class="active"><a href="/">Home</a></li>
+                                <li><a href="/Milk/Index">Shop</a></li>
+                                <li>
+                                    <a href="#">Pages</a>
+                                    <ul class="header__menu__dropdown">
+                                        <li><a href="./shop_details">Shop Details</a></li>
+                                        <li><a href="./shopping_cart">Shopping Cart</a></li>
+                                        <li><a href="./checkout">Check Out</a></li>
+                                        <li><a href="./blog_details">Blog Details</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="./blog">Blog</a></li>
+                                <li><a href="./contact">Contact</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="header__cart" style="padding-top: 50px;">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li><a href="/shopping_cart"><i class="fa fa-shopping-bag"></i> <span id="cart-count">0</span></a></li>
+                            </ul>
+                            <div class="header__cart__price">Cart Total: <span id="cart-total">0.00đ</span></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="humberger__open">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+        </header>
+        <!-- Header Section End -->
+
+        <div class="container content">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <!-- Footer Section Begin -->
+        <footer class="footer spad" style="position: relative;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="footer__about">
+                            <div class="footer__about__logo">
+                                <a href="./index.html"><img src="~/img/logo.webp" alt=""></a>
+                            </div>
+                            <ul>
+                                <li>Address: 60-49 Road 11378 New York</li>
+                                <li>Phone: +65 11.188.888</li>
+                                <li>Email: hello@colorlib.com</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="header__top__right">
-                            <div class="header__top__right__social">
+                    <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
+                        <div class="footer__widget">
+                            <h6>Useful Links</h6>
+                            <ul>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">About Our Shop</a></li>
+                                <li><a href="#">Secure Shopping</a></li>
+                                <li><a href="#">Delivery information</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Our Sitemap</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="#">Who We Are</a></li>
+                                <li><a href="#">Our Services</a></li>
+                                <li><a href="#">Projects</a></li>
+                                <li><a href="#">Contact</a></li>
+                                <li><a href="#">Innovation</a></li>
+                                <li><a href="#">Testimonials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="footer__widget">
+                            <h6>Join Our Newsletter Now</h6>
+                            <p>Get E-mail updates about our latest shop and special offers.</p>
+                            <form action="#">
+                                <input type="text" placeholder="Enter your mail">
+                                <button type="submit" class="site-btn">Subscribe</button>
+                            </form>
+                            <div class="footer__widget__social">
                                 <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
                                 <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-linkedin"></i></a>
-                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                                <a href="#"><i class="fa fa-pinterest"></i></a>
                             </div>
-                            <div class="header__top__right__language">
-                                <img src="~/img/language.png" alt="">
-                                <div>English</div>
-                                <span class="arrow_carrot-down"></span>
-                                <ul>
-                                    <li><a href="#">Spanis</a></li>
-                                    <li><a href="#">English</a></li>
-                                </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="footer__copyright">
+                            <div class="footer__copyright__text">
+                                <p>
+                                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                    Copyright &copy;
+                                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                </p>
                             </div>
-                            @if (account == null)
-                            {
-                                <div class="header__top__right__auth">
-                                    <a href="/Login"><i class="fa fa-user"></i>Login</a>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="header__top__right__auth">
-                                    <div class="dropdown">
-                                        <a type="button" data-bs-toggle="dropdown" aria-expanded="">
-                                            <i class="fa fa-user"></i> Welcome, @account.UserName
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Profile Information</a></li>
-                                            <li><a href="/Customer/OrderHistory?userId=@account?.Id" class="dropdown-item">My Order</a></li>
-                                            <li><a class="dropdown-item" href="/Logout">Log Out</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            }
+                            <div class="footer__copyright__payment"><img src="~/img/payment-item.png" alt=""></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="header__logo">
-                        <a href="/"><img style="max-height: 100px; padding-left: 50px" src="~/img/logo.webp" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <nav class="header__menu" style="padding-top: 50px;">
-                        <ul>
-                            <li class="active"><a href="/">Home</a></li>
-                            <li><a href="/Milk/Index">Shop</a></li>
-                            <li>
-                                <a href="#">Pages</a>
-                                <ul class="header__menu__dropdown">
-                                    <li><a href="./shop_details">Shop Details</a></li>
-                                    <li><a href="./shopping_cart">Shopping Cart</a></li>
-                                    <li><a href="./checkout">Check Out</a></li>
-                                    <li><a href="./blog_details">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./blog">Blog</a></li>
-                            <li><a href="./contact">Contact</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3">
-                    <div class="header__cart" style="padding-top: 50px;">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="/shopping_cart"><i class="fa fa-shopping-bag"></i> <span id="cart-count">0</span></a></li>
-                        </ul>
-                        <div class="header__cart__price">Cart Total: <span id="cart-total">0.00đ</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="humberger__open">
-                <i class="fa fa-bars"></i>
-            </div>
-        </div>
-    </header>
-    <!-- Header Section End -->
+        </footer>
+        <!-- Footer Section End -->
+        <!-- Js Plugins -->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/jquery-3.3.1.min.js"></script>
+        <script src="~/js/bootstrap.min.js"></script>
+        <script src="~/js/jquery.nice-select.min.js"></script>
+        <script src="~/js/jquery-ui.min.js"></script>
+        <script src="~/js/jquery.slicknav.js"></script>
+        <script src="~/js/mixitup.min.js"></script>
+        <script src="~/js/owl.carousel.min.js"></script>
+        <script src="~/js/main.js"></script>
+        <script src="~/lib/datatables/datatables.min.js"></script>
 
-    <div class="container content">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <!-- Footer Section Begin -->
-    <footer class="footer spad" style="position: relative;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__about__logo">
-                            <a href="./index.html"><img src="~/img/logo.webp" alt=""></a>
-                        </div>
-                        <ul>
-                            <li>Address: 60-49 Road 11378 New York</li>
-                            <li>Phone: +65 11.188.888</li>
-                            <li>Email: hello@colorlib.com</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
-                    <div class="footer__widget">
-                        <h6>Useful Links</h6>
-                        <ul>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">About Our Shop</a></li>
-                            <li><a href="#">Secure Shopping</a></li>
-                            <li><a href="#">Delivery information</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Our Sitemap</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="#">Who We Are</a></li>
-                            <li><a href="#">Our Services</a></li>
-                            <li><a href="#">Projects</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">Innovation</a></li>
-                            <li><a href="#">Testimonials</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-12">
-                    <div class="footer__widget">
-                        <h6>Join Our Newsletter Now</h6>
-                        <p>Get E-mail updates about our latest shop and special offers.</p>
-                        <form action="#">
-                            <input type="text" placeholder="Enter your mail">
-                            <button type="submit" class="site-btn">Subscribe</button>
-                        </form>
-                        <div class="footer__widget__social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="footer__copyright">
-                        <div class="footer__copyright__text">
-                            <p>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            </p>
-                        </div>
-                        <div class="footer__copyright__payment"><img src="~/img/payment-item.png" alt=""></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Footer Section End -->
-    <!-- Js Plugins -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/jquery-3.3.1.min.js"></script>
-    <script src="~/js/bootstrap.min.js"></script>
-    <script src="~/js/jquery.nice-select.min.js"></script>
-    <script src="~/js/jquery-ui.min.js"></script>
-    <script src="~/js/jquery.slicknav.js"></script>
-    <script src="~/js/mixitup.min.js"></script>
-    <script src="~/js/owl.carousel.min.js"></script>
-    <script src="~/js/main.js"></script>
-    <script src="~/lib/datatables/datatables.min.js"></script>
-
-    <script>
-        async function updateCartCount() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            let count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').innerText = count;
-        }
-
-        async function updateCartTotalPrice() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            let totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            document.getElementById('cart-total').innerText = `${formatCurrency(totalPrice)} đ`;
-        }
-
-        function formatCurrency(amount) {
-            return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
-
-        document.addEventListener('DOMContentLoaded', async function () {
-            const token = sessionStorage.getItem('token');
-            if (token) {
+        <script>
+            async function updateCartCount() {
                 try {
-                    const response = await fetch('http://localhost:5215/odata/Cart', {
+                    const token = sessionStorage.getItem('token');
+                    console.log('Token:', token);
+
+                    let response = await fetch('http://localhost:5215/odata/Cart', {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
                     });
 
                     if (response.ok) {
-                        const cartResponse = await response.json();
-                        const cartItems = cartResponse.$values || [];
+                        let cart = await response.json();
+                        let cartItems = cart.$values || [];
                         if (Array.isArray(cartItems)) {
-                            const formattedCartItems = cartItems.map(item => ({
-                                id: item.milkId,
-                                name: item.milk.name,
-                                price: item.milk.price,
-                                imageUrl: item.milk.url,
-                                quantity: item.quantity
-                            }));
-                            localStorage.setItem('cart', JSON.stringify(formattedCartItems));
+                            let count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                            document.getElementById('cart-count').innerText = count;
                         } else {
                             console.error('Cart items is not an array:', cartItems);
                         }
                     } else {
-                        console.error('Failed to fetch cart.');
+                        console.error('Failed to fetch cart count.');
                     }
                 } catch (error) {
-                    console.error('Error fetching cart:', error);
+                    console.error('Error fetching cart count:', error);
                 }
             }
 
-            updateCartCount();
-            updateCartTotalPrice();
-        });
-    </script>
+            async function updateCartTotalPrice() {
+                try {
+                    const token = sessionStorage.getItem('token');
+                    console.log('Token:', token);
 
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+                    let response = await fetch('http://localhost:5215/odata/Cart', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        let cart = await response.json();
+                        let cartItems = cart.$values || [];
+                        let totalPrice = cartItems.reduce((sum, item) => sum + (item.milk.price * item.quantity), 0);
+                        let cartTotalElement = document.getElementById('cart-total');
+                        if (cartTotalElement) {
+                            cartTotalElement.innerText = `${formatCurrency(totalPrice)} đ`;
+                        } else {
+                            console.error('Element with ID "cart-total" not found.');
+                        }
+                    } else {
+                        console.error('Failed to fetch cart total price.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching cart total price:', error);
+                }
+            }
+
+            function formatCurrency(amount) {
+                return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                updateCartCount();
+                updateCartTotalPrice();
+            });
+        </script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+}
+
 </html>
