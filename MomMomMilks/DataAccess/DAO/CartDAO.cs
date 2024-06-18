@@ -116,5 +116,21 @@ public class CartDAO
 
         await _context.SaveChangesAsync();
     }
+    public async Task<bool> AddPaymentOrderCode(int cartId, long orderCode)
+    {
+        try
+        {
+            var cart = await _context.Carts.FindAsync(cartId);
+            if (cart != null)
+            {
+                cart.PaymentOrderCode = orderCode;
+            }
+            return await _context.SaveChangesAsync() > 0;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
 
 }

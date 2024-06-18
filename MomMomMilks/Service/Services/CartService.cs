@@ -56,5 +56,9 @@ namespace Service
             await _cartRepository.SaveCartAsync(userId, cartItems);
         }
 
+        public async Task<bool> AddPaymentOrderCode(int cartId, long orderCode)
+        {
+            return await _cartRepository.AddPaymentOrderCode(cartId, orderCode);
+        }
     }
 }
