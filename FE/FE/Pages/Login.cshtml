@@ -27,21 +27,21 @@
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
-                <form method="post" class="login100-form validate-form">
+                <form id="login-form" method="post" class="login100-form validate-form">
                     <span class="login100-form-title p-b-43">
                         Login
                     </span>
 
                     <div class="text-danger" asp-validation-summary="All"></div>
                     <div class="wrap-input100 validate-input">
-                        <input class="input100" type="text" asp-for="Credential.Email">
+                        <input id="Credential_Email" class="input100" type="text" asp-for="Credential.Email">
                         <span class="focus-input100"></span>
                         <span class="label-input100">Email</span>
                         <span class="text-danger" asp-validation-for="Credential.Email"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input">
-                        <input class="input100" type="password" asp-for="Credential.Password">
+                        <input id="Credential_Password" class="input100" type="password" asp-for="Credential.Password">
                         <span class="focus-input100"></span>
                         <span class="label-input100">Password</span>
                         <span class="text-danger" asp-validation-for="Credential.Password"></span>
@@ -54,7 +54,6 @@
                             </a>
                         </div>
                     </div>
-
 
                     <div class="container-login100-form-btn">
                         <button class="login100-form-btn" type="submit">
@@ -69,15 +68,10 @@
                     </div>
                 </form>
 
-                <div class="login100-more" style="background-image: url('img/bg-01.jpg');">
-                </div>
+                <div class="login100-more" style="background-image: url('img/bg-01.jpg');"></div>
             </div>
         </div>
     </div>
-
-
-
-
 
     <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="vendor/animsition/js/animsition.min.js"></script>
@@ -90,58 +84,58 @@
     <script src="js/main.js"></script>
 
     <script>
-        document.getElementById('login-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                const response = await fetch('/Login', {
-                    method: 'POST',
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = sessionStorage.getItem('token');
+            console.log('Token from sessionStorage:', token);
+            if (token) {
+                // Fetch the cart from the backend
+                fetch('http://localhost:5215/odata/Cart', {
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ Email: email, Password: password })
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    sessionStorage.setItem('token', result.Token);
-
-                    // Fetch the cart from the backend
-                    const cartResponse = await fetch('http://localhost:5215/odata/Cart', {
-                        headers: {
-                            'Authorization': `Bearer ${result.Token}`
-                        }
-                    });
-
-                    if (cartResponse.ok) {
-                        const cartItems = await cartResponse.json();
-                        const formattedCartItems = cartItems.map(item => ({
-                            id: item.MilkId,
-                            name: item.Milk.Name,
-                            price: item.Milk.Price,
-                            imageUrl: item.Milk.ImageUrl,
-                            quantity: item.Quantity
-                        }));
-                        localStorage.setItem('cart', JSON.stringify(formattedCartItems));
-                    } else {
-                        console.error('Failed to fetch cart.');
+                        'Authorization': `Bearer ${token}`
                     }
-
-                    window.location.href = '/index';
-                } else {
-                    const errorText = await response.text();
-                    console.error('Login failed:', errorText);
-                    alert('Login failed. Please check your credentials.');
-                }
-            } catch (error) {
-                console.error('An error occurred:', error);
-                alert('An error occurred during the login process.');
+                }).then(response => {
+                    console.log('Cart API response status:', response.status);
+                    return response.json();
+                })
+                    .then(cartData => {
+                        console.log('Cart data fetched from API:', cartData);
+                        const cartItems = cartData.$values || [];
+                        const formattedCartItems = cartItems.map(item => ({
+                            id: item.milkId,
+                            name: item.milk.name,
+                            price: item.milk.price,
+                            imageUrl: item.milk.imageUrl,
+                            quantity: item.quantity
+                        }));
+                        console.log('Formatted cart items:', formattedCartItems);
+                        sessionStorage.setItem('cart', JSON.stringify(formattedCartItems));
+                        updateCartCount();
+                        updateCartTotalPrice();
+                    }).catch(error => {
+                        console.error('Failed to fetch cart:', error);
+                    });
             }
         });
+
+        async function updateCartCount() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            let count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = count;
+        }
+
+        async function updateCartTotalPrice() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            let totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cart-total').innerText = `${formatCurrency(totalPrice)} đ`;
+        }
+
+        function formatCurrency(amount) {
+            return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
     </script>
+
+
+
 
 </body>
 </html>

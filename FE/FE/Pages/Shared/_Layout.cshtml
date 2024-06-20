@@ -191,61 +191,60 @@
 }
 else
 {
-    <body>
-        <!-- Header Section Begin -->
-        <header class="header">
-            <div class="header__top">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <div class="header__top__left">
+<body>
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__left">
+                            <ul>
+                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
+                                <li>Free Shipping for all Order of $99</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__right">
+                            <div class="header__top__right__social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-linkedin"></i></a>
+                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                            </div>
+                            <div class="header__top__right__language">
+                                <img src="~/img/language.png" alt="">
+                                <div>English</div>
+                                <span class="arrow_carrot-down"></span>
                                 <ul>
-                                    <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                                    <li>Free Shipping for all Order of $99</li>
+                                    <li><a href="#">Spanis</a></li>
+                                    <li><a href="#">English</a></li>
                                 </ul>
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="header__top__right">
-                                <div class="header__top__right__social">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-linkedin"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                            @if (account == null)
+                            {
+                                <div class="header__top__right__auth">
+                                    <a href="/Login"><i class="fa fa-user"></i>Login</a>
                                 </div>
-                                <div class="header__top__right__language">
-                                    <img src="~/img/language.png" alt="">
-                                    <div>English</div>
-                                    <span class="arrow_carrot-down"></span>
-                                    <ul>
-                                        <li><a href="#">Spanis</a></li>
-                                        <li><a href="#">English</a></li>
-                                    </ul>
+                            }
+                            else
+                            {
+                                <div class="header__top__right__auth">
+                                    <div class="dropdown">
+                                        <a type="button" data-bs-toggle="dropdown" aria-expanded="">
+                                            <i class="fa fa-user"></i> Welcome, @account.UserName
+                                        </a>
+                                        <ul class="dropdown-menu">
+
+                                            <li><a class="dropdown-item" href="#">Profile Information</a></li>
+                                            <li><a href="/Customer/OrderHistory?userId=@account?.Id" class="dropdown-item">My Order</a></li>
+                                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="logout()">Log Out</a></li>
+
+                                        </ul>
+                                    </div>
                                 </div>
-                                @if (account == null)
-                                {
-                                    <div class="header__top__right__auth">
-                                        <a href="/Login"><i class="fa fa-user"></i>Login</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="header__top__right__auth">
-                                        <div class="dropdown">
-                                            <a type="button" data-bs-toggle="dropdown" aria-expanded="">
-                                                <i class="fa fa-user"></i> Welcome, @account.UserName
-                                            </a>
-                                            <ul class="dropdown-menu">
-
-                                                <li><a class="dropdown-item" href="#">Profile Information</a></li>
-                                                <li><a href="/Customer/OrderHistory?userId=@account?.Id" class="dropdown-item">My Order</a></li>
-                                                <li><a class="dropdown-item" href="#">Log Out</a></li>
-
-                                            </ul>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -291,172 +290,159 @@ else
                     <i class="fa fa-bars"></i>
                 </div>
             </div>
-        </header>
-        <!-- Header Section End -->
+    </header>
+    <!-- Header Section End -->
 
-        <div class="container content">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
-        </div>
+    <div class="container content">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
-        <!-- Footer Section Begin -->
-        <footer class="footer spad" style="position: relative;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="footer__about">
-                            <div class="footer__about__logo">
-                                <a href="./index.html"><img src="~/img/logo.webp" alt=""></a>
-                            </div>
-                            <ul>
-                                <li>Address: 60-49 Road 11378 New York</li>
-                                <li>Phone: +65 11.188.888</li>
-                                <li>Email: hello@colorlib.com</li>
-                            </ul>
+    <!-- Footer Section Begin -->
+    <footer class="footer spad" style="position: relative;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__about__logo">
+                            <a href="./index.html"><img src="~/img/logo.webp" alt=""></a>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
-                        <div class="footer__widget">
-                            <h6>Useful Links</h6>
-                            <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">About Our Shop</a></li>
-                                <li><a href="#">Secure Shopping</a></li>
-                                <li><a href="#">Delivery information</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Our Sitemap</a></li>
-                            </ul>
-                            <ul>
-                                <li><a href="#">Who We Are</a></li>
-                                <li><a href="#">Our Services</a></li>
-                                <li><a href="#">Projects</a></li>
-                                <li><a href="#">Contact</a></li>
-                                <li><a href="#">Innovation</a></li>
-                                <li><a href="#">Testimonials</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-12">
-                        <div class="footer__widget">
-                            <h6>Join Our Newsletter Now</h6>
-                            <p>Get E-mail updates about our latest shop and special offers.</p>
-                            <form action="#">
-                                <input type="text" placeholder="Enter your mail">
-                                <button type="submit" class="site-btn">Subscribe</button>
-                            </form>
-                            <div class="footer__widget__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-pinterest"></i></a>
-                            </div>
-                        </div>
+                        <ul>
+                            <li>Address: 60-49 Road 11378 New York</li>
+                            <li>Phone: +65 11.188.888</li>
+                            <li>Email: hello@colorlib.com</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="footer__copyright">
-                            <div class="footer__copyright__text">
-                                <p>
-                                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                    Copyright &copy;
-                                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                </p>
-                            </div>
-                            <div class="footer__copyright__payment"><img src="~/img/payment-item.png" alt=""></div>
+                <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
+                    <div class="footer__widget">
+                        <h6>Useful Links</h6>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">About Our Shop</a></li>
+                            <li><a href="#">Secure Shopping</a></li>
+                            <li><a href="#">Delivery information</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Our Sitemap</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="#">Who We Are</a></li>
+                            <li><a href="#">Our Services</a></li>
+                            <li><a href="#">Projects</a></li>
+                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">Innovation</a></li>
+                            <li><a href="#">Testimonials</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <div class="footer__widget">
+                        <h6>Join Our Newsletter Now</h6>
+                        <p>Get E-mail updates about our latest shop and special offers.</p>
+                        <form action="#">
+                            <input type="text" placeholder="Enter your mail">
+                            <button type="submit" class="site-btn">Subscribe</button>
+                        </form>
+                        <div class="footer__widget__social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-pinterest"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!-- Footer Section End -->
-        <!-- Js Plugins -->
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/jquery-3.3.1.min.js"></script>
-        <script src="~/js/bootstrap.min.js"></script>
-        <script src="~/js/jquery.nice-select.min.js"></script>
-        <script src="~/js/jquery-ui.min.js"></script>
-        <script src="~/js/jquery.slicknav.js"></script>
-        <script src="~/js/mixitup.min.js"></script>
-        <script src="~/js/owl.carousel.min.js"></script>
-        <script src="~/js/main.js"></script>
-        <script src="~/lib/datatables/datatables.min.js"></script>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer__copyright">
+                        <div class="footer__copyright__text">
+                            <p>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </p>
+                        </div>
+                        <div class="footer__copyright__payment"><img src="~/img/payment-item.png" alt=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+    <!-- Js Plugins -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/mixitup.min.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/lib/datatables/datatables.min.js"></script>
 
-
-        <script>
-            async function updateCartCount() {
-                try {
-                    const token = sessionStorage.getItem('token');
-                    console.log('Token:', token);
-
-                    let response = await fetch('http://localhost:5215/odata/Cart', {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (response.ok) {
-                        let cart = await response.json();
-                        let cartItems = cart.$values || [];
-                        if (Array.isArray(cartItems)) {
-                            let count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                            document.getElementById('cart-count').innerText = count;
-                        } else {
-                            console.error('Cart items is not an array:', cartItems);
-                        }
-                    } else {
-                        console.error('Failed to fetch cart count.');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = sessionStorage.getItem('token');
+            if (token && !sessionStorage.getItem('cart')) {
+                fetch('http://localhost:5215/odata/Cart', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     }
-                } catch (error) {
-                    console.error('Error fetching cart count:', error);
-                }
-            }
-
-            async function updateCartTotalPrice() {
-                try {
-                    const token = sessionStorage.getItem('token');
-                    console.log('Token:', token);
-
-                    let response = await fetch('http://localhost:5215/odata/Cart', {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
+                }).then(response => response.json())
+                    .then(cartData => {
+                        const cartItems = cartData.$values || [];
+                        const formattedCartItems = cartItems.map(item => ({
+                            id: item.milkId,
+                            name: item.milk.name,
+                            price: item.milk.price,
+                            imageUrl: item.milk.imageUrl,
+                            quantity: item.quantity
+                        }));
+                        sessionStorage.setItem('cart', JSON.stringify(formattedCartItems));
+                        updateCartCount();
+                        updateCartTotalPrice();
+                    }).catch(error => {
+                        console.error('Failed to fetch cart:', error);
                     });
-
-                    if (response.ok) {
-                        let cart = await response.json();
-                        let cartItems = cart.$values || [];
-                        let totalPrice = cartItems.reduce((sum, item) => sum + (item.milk.price * item.quantity), 0);
-                        let cartTotalElement = document.getElementById('cart-total');
-                        if (cartTotalElement) {
-                            cartTotalElement.innerText = `${formatCurrency(totalPrice)} đ`;
-                        } else {
-                            console.error('Element with ID "cart-total" not found.');
-                        }
-                    } else {
-                        console.error('Failed to fetch cart total price.');
-                    }
-                } catch (error) {
-                    console.error('Error fetching cart total price:', error);
-                }
-            }
-
-            function formatCurrency(amount) {
-                return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
+            } else {
                 updateCartCount();
                 updateCartTotalPrice();
-            });
-        </script>
+            }
+        });
 
-        @await RenderSectionAsync("Scripts", required: false)
-    </body>
+
+        async function updateCartCount() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            let count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = count;
+        }
+
+        async function updateCartTotalPrice() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            let totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cart-total').innerText = `${formatCurrency(totalPrice)} đ`;
+        }
+
+        function formatCurrency(amount) {
+            return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function logout() {
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('cart');
+            window.location.href = '/logout';
+        }
+    </script>
+
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
 }
 
 </html>

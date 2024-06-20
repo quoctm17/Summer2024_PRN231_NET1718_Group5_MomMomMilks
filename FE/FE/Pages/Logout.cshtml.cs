@@ -8,7 +8,7 @@ namespace FE.Pages
         public IActionResult OnGet()
         {
             HttpContext.Session.Clear();
-            return RedirectToPage("/");
+            return RedirectToPage("/Index");
         }
     }
 }

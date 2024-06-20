@@ -160,14 +160,14 @@
 
     <script>
         async function addToCart(id, name, price, imageUrl) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             let existingItem = cart.find(item => item.id === id);
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
                 cart.push({ id, name, price, imageUrl, quantity: 1 });
             }
-            localStorage.setItem('cart', JSON.stringify(cart));
+            sessionStorage.setItem('cart', JSON.stringify(cart));
             alert('Added to cart successfully!');
             updateCartCount();
             updateCartTotalPrice();
