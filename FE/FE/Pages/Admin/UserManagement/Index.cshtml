@@ -1,0 +1,99 @@
+﻿@page
+@model FE.Pages.Admin.UserManagement.IndexModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        User Management
+    </div>
+    <div class="p-4">
+        <button class="btn btn-success" id="btnCreateUser">
+            Create new user
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table" id="userTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody class="font-weight-light">
+            </tbody>
+        </table>
+    </div>
+</div>
+@* <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Brand</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Name: </label>
+                        <input type="text" class="form-control" required id="createName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="createBrand">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Brand</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="updateForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="updateId" class="form-label">Id: </label>
+                        <input type="text" class="form-control" disabled id="updateId">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateName" class="form-label">Name: </label>
+                        <input type="text" class="form-control" required id="updateName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="updateBrand">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+    <div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true" style=" width: 400px; height:200px;">
+        <div class="toast-header">
+            <strong class="me-auto fs-2">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body fs-3 text-white" id="errorToastContent">
+        </div>
+    </div>
+</div> *@

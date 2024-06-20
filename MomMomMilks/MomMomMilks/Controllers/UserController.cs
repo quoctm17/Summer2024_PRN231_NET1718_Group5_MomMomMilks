@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataAccess.DAO;
 using DataTransfer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -88,7 +89,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] AppUser user)
+        public async Task<IActionResult> AddUser([FromBody] UserCreateDTO user)
         {
             try
             {
@@ -98,8 +99,25 @@ namespace MomMomMilks.Controllers
                     return Unauthorized("User not logged in");
                 }
 
-                await _userService.AddUser(user);
-                return Created(user);
+                var u = new AppUser
+                {
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.UserName,
+                    Status = 1,
+                    Point = 0
+                };
+                await _userService.AddUser(u);
+                var userRole = new AppUserRole
+                {
+                    UserId = u.Id,
+                    RoleId = user.Role
+                };
+                u.UserRoles = new List<AppUserRole> { userRole };
+
+                await _userService.UpdateUser(u);
+
+                return Ok(u);
             }
             catch (Exception ex)
             {
