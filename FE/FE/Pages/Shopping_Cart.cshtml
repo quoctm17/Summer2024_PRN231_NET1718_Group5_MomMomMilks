@@ -110,33 +110,28 @@
                     <div class="shoping__cart__btns">
                         <a href="/" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
                         <a id="save-cart-btn" href="#" class="primary-btn cart-btn cart-btn-right">
-                            <span class="icon_loading"></span>
+                            <span class="icon_save_alt"></span>
                             Save Cart
                         </a>
-                        <a href="#" class="primary-btn cart-btn cart-btn-right" style="margin-left: 10px;" onclick="clearCart()">
+                        <a href="#" class="primary-btn cart-btn cart-btn-right" onclick="clearCart()">
                             <span class="icon_trash_alt"></span>
                             Clear Cart
                         </a>
+                        <a id="load-cart-btn" href="#" class="primary-btn cart-btn cart-btn-right" style="margin-left: 10px;">
+                            <span class="icon_loading"></span>
+                            Load Cart
+                        </a>
                     </div>
-
                 </div>
                 <div class="col-lg-6">
-                    @* <div class="shoping__continue">
-                        <div class="shoping__discount">
-                            <h5>Discount Codes</h5>
-                            <form action="#">
-                                <input type="text" placeholder="Enter your coupon code">
-                                <button type="submit" class="site-btn">APPLY COUPON</button>
-                            </form>
-                        </div>
-                    </div> *@
+                    <!-- Optional discount code section can be added here -->
                 </div>
                 <div class="col-lg-6">
                     <div class="shoping__checkout">
                         <h5>Cart Total</h5>
                         <ul>
-                            <li>Subtotal <span id="subtotal">0 VND</span></li>
-                            <li>Total <span id="total">0 VND</span></li>
+                            <li>Subtotal <span id="subtotal">0 đ</span></li>
+                            <li>Total <span id="total">0 đ</span></li>
                         </ul>
                         <a href="/checkout" class="primary-btn">PROCEED TO CHECKOUT</a>
                     </div>
@@ -147,64 +142,122 @@
     <!-- Shoping Cart Section End -->
 
     <script>
+
         document.addEventListener('DOMContentLoaded', function () {
-            loadCartFromLocalStorage();
+            loadCartFromSessionStorage();
+            updateCartCount();
+            updateCartTotalPrice();
 
             const saveCartBtn = document.getElementById('save-cart-btn');
+            const loadCartBtn = document.getElementById('load-cart-btn');
+            const proceedToCheckoutBtn = document.querySelector('.primary-btn[href="/checkout"]');
+
             if (saveCartBtn) {
                 saveCartBtn.addEventListener('click', saveCart);
             }
+
+            if (loadCartBtn) {
+                loadCartBtn.addEventListener('click', confirmLoadCartFromDatabase);
+            }
+
+            if (proceedToCheckoutBtn) {
+                proceedToCheckoutBtn.addEventListener('click', async function (event) {
+                    event.preventDefault();
+                    const token = sessionStorage.getItem('token');
+
+                    const response = await fetch('http://localhost:5215/odata/Cart', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const dbCart = await response.json();
+                        const dbCartItems = dbCart.$values || [];
+                        const currentCart = JSON.parse(sessionStorage.getItem('cart')) || [];
+
+                        const dbCartFormatted = dbCartItems.map(item => ({
+                            id: item.milkId,
+                            name: item.milk.name,
+                            price: item.milk.price,
+                            imageUrl: item.milk.imageUrl,
+                            quantity: item.quantity
+                        }));
+
+                        if (!areCartsEqual(currentCart, dbCartFormatted)) {
+                            if (confirm("Your current cart has changed compared to the data you saved. This action will save the current cart and replace the previously saved cart. Do you still want to proceed?")) {
+                                await saveCart();
+                                window.location.href = '/checkout';
+                            }
+                        } else {
+                            window.location.href = '/checkout';
+                        }
+                    } else {
+                        console.error('Failed to fetch cart from database.');
+                    }
+                });
+            }
         });
 
-        function loadCartFromLocalStorage() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        function areCartsEqual(cart1, cart2) {
+            if (cart1.length !== cart2.length) return false;
+            const sortedCart1 = cart1.slice().sort((a, b) => a.id - b.id);
+            const sortedCart2 = cart2.slice().sort((a, b) => a.id - b.id);
+            return sortedCart1.every((item, index) => {
+                const otherItem = sortedCart2[index];
+                return item.id === otherItem.id && item.quantity === otherItem.quantity;
+            });
+        }
+
+        function loadCartFromSessionStorage() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             renderCartItems(cart);
         }
 
         function renderCartItems(cartItems) {
             let cartItemsHtml = cartItems.map(item => `
-        <tr>
-            <td class="shopping__cart__item">
-                <img class="shopping__cart__item__image" src="${item.imageUrl}" alt="${item.name}">
-            </td>
-            <td class="shopping__cart__item">
-                <h5>${item.name}</h5>
-            </td>
-            <td class="shopping__cart__price">
-                ${formatCurrency(item.price)} đ
-            </td>
-            <td class="shopping__cart__quantity">
-                <div class="quantity">
-                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
-                    <div class="pro-qty">
-                        <input type="text" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)">
-                    </div>
-                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
-                </div>
-            </td>
-            <td class="shopping__cart__total">
-                ${formatCurrency(item.price * item.quantity)} đ
-            </td>
-            <td class="shopping__cart__item__close">
-                <span class="icon_close" onclick="confirmRemoveFromCart(${item.id})"></span>
-            </td>
-        </tr>
-    `).join('');
+                        <tr>
+                            <td class="shopping__cart__item">
+                                <img class="shopping__cart__item__image" src="${item.imageUrl}" alt="${item.name}">
+                            </td>
+                            <td class="shopping__cart__item">
+                                <h5>${item.name}</h5>
+                            </td>
+                            <td class="shopping__cart__price">
+                                ${formatCurrency(item.price)} đ
+                            </td>
+                            <td class="shopping__cart__quantity">
+                                <div class="quantity">
+                                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                    <div class="pro-qty">
+                                        <input type="text" value="${item.quantity}" onchange="updateQuantity(${item.id}, this.value)">
+                                    </div>
+                                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                                </div>
+                            </td>
+                            <td class="shopping__cart__total">
+                                ${formatCurrency(item.price * item.quantity)} đ
+                            </td>
+                            <td class="shopping__cart__item__close">
+                                <span class="icon_close" onclick="confirmRemoveFromCart(${item.id})"></span>
+                            </td>
+                        </tr>
+                    `).join('');
             document.getElementById('cart-items').innerHTML = cartItemsHtml;
             updateCartTotal(cartItems);
         }
 
-
         async function saveCart() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             const token = sessionStorage.getItem('token');
 
             if (cart.length === 0) {
-                alert('Your cart is empty.');
+                if (confirm("Your current cart is empty. If you proceed, it can clear the cart you saved before. Are you sure?")) {
+                    await clearCartInDatabase(token);
+                }
                 return;
             }
 
-            // Convert the cart items to the expected format
             const cartItems = cart.map(item => ({
                 MilkId: item.id,
                 Quantity: item.quantity
@@ -223,8 +276,9 @@
                 if (response.ok) {
                     alert('Cart saved successfully!');
                 } else {
-                    console.error('Failed to save cart.');
-                    alert('Failed to save cart.');
+                    const errorText = await response.text();
+                    console.error('Failed to save cart:', errorText);
+                    alert(`Failed to save cart: ${errorText}`);
                 }
             } catch (error) {
                 console.error('Error saving cart:', error);
@@ -232,6 +286,74 @@
             }
         }
 
+        async function loadCartFromDatabase() {
+            const token = sessionStorage.getItem('token');
+            if (token) {
+                try {
+                    let response = await fetch('http://localhost:5215/odata/Cart', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const cartData = await response.json();
+                        const cartItems = cartData.$values || [];
+                        const formattedCartItems = cartItems.map(item => ({
+                            id: item.milkId,
+                            name: item.milk.name,
+                            price: item.milk.price,
+                            imageUrl: item.milk.imageUrl,
+                            quantity: item.quantity
+                        }));
+                        sessionStorage.setItem('cart', JSON.stringify(formattedCartItems));
+                        loadCartFromSessionStorage();
+                        updateCartCount();
+                        updateCartTotalPrice();
+                    } else {
+                        console.error('Failed to load cart from database.');
+                        alert('Failed to load cart from database.');
+                    }
+                } catch (error) {
+                    console.error('Error loading cart from database:', error);
+                    alert('Error loading cart from database.');
+                }
+            } else {
+                alert('User is not logged in.');
+            }
+        }
+
+        function confirmLoadCartFromDatabase() {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            if (cart.length > 0) {
+                if (confirm("Your current cart is not empty. If you load the cart you save before, the current cart can be lost. Are you sure?")) {
+                    loadCartFromDatabase();
+                }
+            } else {
+                loadCartFromDatabase();
+            }
+        }
+
+        async function clearCartInDatabase(token) {
+            try {
+                let response = await fetch('http://localhost:5215/odata/Cart/ClearCart', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Cart cleared successfully in the database.');
+                } else {
+                    console.error('Failed to clear cart in the database.');
+                    alert('Failed to clear cart in the database.');
+                }
+            } catch (error) {
+                console.error('Error clearing cart in the database:', error);
+                alert('Error clearing cart in the database.');
+            }
+        }
 
         function formatCurrency(amount) {
             return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -239,12 +361,12 @@
 
         async function updateQuantity(id, quantity) {
             if (quantity < 1) quantity = 1;
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             let item = cart.find(item => item.id === id);
             if (item) {
                 item.quantity = quantity;
-                localStorage.setItem('cart', JSON.stringify(cart));
-                loadCartFromLocalStorage();
+                sessionStorage.setItem('cart', JSON.stringify(cart));
+                loadCartFromSessionStorage();
                 updateCartCount();
             }
         }
@@ -256,37 +378,21 @@
         }
 
         function removeFromCart(id) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             cart = cart.filter(item => item.id !== id);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            loadCartFromLocalStorage();
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            loadCartFromSessionStorage();
             updateCartCount();
         }
 
-        async function clearCart() {
-            const token = sessionStorage.getItem('token');
-
-            try {
-                let response = await fetch('http://localhost:5215/odata/Cart/ClearCart', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    localStorage.removeItem('cart');
-                    loadCartFromLocalStorage();
-                    updateCartCount();
-                } else {
-                    console.error('Failed to clear cart.');
-                }
-            } catch (error) {
-                console.error('Error clearing cart:', error);
+        function clearCart() {
+            if (confirm("Are you sure you want to clear the cart?")) {
+                sessionStorage.removeItem('cart');
+                loadCartFromSessionStorage();
+                updateCartCount();
+                updateCartTotalPrice();
             }
         }
-
-
 
         function updateCartTotal(cartItems) {
             var subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -295,12 +401,11 @@
         }
 
         function updateCartCount() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             let count = cart.reduce((sum, item) => sum + item.quantity, 0);
             document.getElementById('cart-count').innerText = count;
         }
     </script>
-
 
     <style>
         .quantity {
@@ -366,6 +471,18 @@
             .icon_close:hover {
                 color: red;
             }
+
+        .primary-btn .icon_save_alt {
+            margin-right: 5px;
+        }
+
+        .primary-btn .icon_loading {
+            margin-right: 5px;
+        }
+
+        .primary-btn .icon_trash_alt {
+            margin-right: 5px;
+        }
     </style>
 
 </body>

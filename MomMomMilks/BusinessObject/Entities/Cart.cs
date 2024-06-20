@@ -12,7 +12,7 @@ namespace BusinessObject.Entities
         public int UserId { get; set; }
         public DateTime CreatedAt { get; set; }
         public  AppUser User { get; set; }
-        public long PaymentOrderCode { get; set; }
+        //public long PaymentOrderCode { get; set; }
         public ICollection<CartItem> CartItems { get; set; }
     }
 }

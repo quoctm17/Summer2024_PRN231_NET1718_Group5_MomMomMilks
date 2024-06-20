@@ -31,7 +31,7 @@ public class CartDAO
         return await _context.Carts
                              .Include(c => c.CartItems)
                              .ThenInclude(ci => ci.Milk)
-                             .AsNoTracking()
+                             .AsNoTracking() // Ensure entities are not tracked
                              .FirstOrDefaultAsync(c => c.UserId == userId);
     }
 
@@ -96,12 +96,17 @@ public class CartDAO
         var cart = await GetCartByUserIdAsync(userId);
         if (cart != null)
         {
-            await ClearCartAsync(cart.Id);
+            // Detach all entities to avoid tracking issues
+            _context.ChangeTracker.Clear();
+
+            // Clear existing cart items to avoid duplicate tracking
+            _context.CartItems.RemoveRange(cart.CartItems);
             foreach (var item in cartItems)
             {
                 item.CartId = cart.Id;
                 await _context.CartItems.AddAsync(item);
             }
+            _context.Entry(cart).State = EntityState.Modified; // Set state to Modified to track changes
             _context.Carts.Update(cart);
         }
         else
@@ -109,28 +114,37 @@ public class CartDAO
             cart = new Cart
             {
                 UserId = userId,
+                CreatedAt = DateTime.Now,
                 CartItems = cartItems
             };
             await _context.Carts.AddAsync(cart);
         }
 
-        await _context.SaveChangesAsync();
-    }
-    public async Task<bool> AddPaymentOrderCode(int cartId, long orderCode)
-    {
         try
         {
-            var cart = await _context.Carts.FindAsync(cartId);
-            if (cart != null)
-            {
-                cart.PaymentOrderCode = orderCode;
-            }
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            throw new Exception($"Error saving cart for user {userId}: {ex.Message}", ex);
         }
     }
+
+    //public async Task<bool> AddPaymentOrderCode(int cartId, long orderCode)
+    //{
+    //    try
+    //    {
+    //        var cart = await _context.Carts.FindAsync(cartId);
+    //        if (cart != null)
+    //        {
+    //            cart.PaymentOrderCode = orderCode;
+    //        }
+    //        return await _context.SaveChangesAsync() > 0;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception(ex.Message);
+    //    }
+    //}
 
 }
