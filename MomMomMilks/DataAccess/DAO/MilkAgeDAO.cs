@@ -77,6 +77,7 @@ namespace DataAccess.DAO
 				{
 					existed.Min = milkAge.Min;
 					existed.Max = milkAge.Max;
+					existed.Unit = milkAge.Unit;
 				}
 				return await _context.SaveChangesAsync() > 0;
 			}

@@ -304,7 +304,7 @@
                             $.each(result.$values, function (index, value) {
                                 $('#updateMilkAge').append($('<option>', {
                                     value: value.id,
-                                    text: `Từ ${value.min} đến ${value.max}`
+                                    text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
                                 }));
                             });
                         } else {
@@ -435,7 +435,7 @@
                             $.each(result.$values, function (index, value) {
                                 $('#createMilkAge').append($('<option>', {
                                     value: value.id,
-                                    text: `Từ ${value.min} đến ${value.max}`
+                                    text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
                                 }));
                             });
                         } else {
