@@ -103,9 +103,9 @@
                     <div class="mb-3">
                         <label for="updateRole" class="form-label">Role: </label>
                         <select class="form-select" required id="updateRole">
-                            <option value="4">Admin</option>
+                            <option value="2">Admin</option>
                             <option value="3">Manager</option>
-                            <option value="2">Shipper</option>
+                            <option value="4">Shipper</option>
                             <option value="1">Customer</option>
                         </select>
                     </div>
@@ -246,9 +246,9 @@
                         $('#updatePhoneNumber').val(result.phoneNumber);
                         $('#updateEmail').val(result.email);
                         const roleMap = {
-                            'Admin': 4,
+                            'Admin': 2,
                             'Manager': 3,
-                            'Shipper': 2,
+                            'Shipper': 4,
                             'Customer': 1
                         };
                         $('#updateRole').val(roleMap[result.role]);
