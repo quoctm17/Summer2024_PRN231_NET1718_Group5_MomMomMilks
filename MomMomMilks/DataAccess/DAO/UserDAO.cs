@@ -71,8 +71,10 @@ namespace DataAccess.DAO
                 .Include(u => u.Addresses)
                     .ThenInclude(a => a.District)
                 .Include(u => u.Cart)
-                .ThenInclude(c => c.CartItems)
+                    .ThenInclude(c => c.CartItems)
                 .Include(u => u.Orders)
+                .Include(u => u.UserRoles)
+                .ThenInclude(u => u.AppRole)
                 .ToListAsync();
         }
 
@@ -87,6 +89,8 @@ namespace DataAccess.DAO
                  .Include(u => u.Cart)
                  .ThenInclude(c => c.CartItems)
                  .Include(u => u.Orders)
+                 .Include(u => u.UserRoles)
+                .ThenInclude(u => u.AppRole)
                  .FirstOrDefaultAsync();
         }
 
@@ -95,7 +99,7 @@ namespace DataAccess.DAO
             var u = await _userManager.FindByEmailAsync(user.Email);
             try
             {
-                if(u != null)
+                if(u == null)
                 {
                     string password = "Pa$$w0rd";
                     await _userManager.CreateAsync(user, password);
@@ -127,7 +131,8 @@ namespace DataAccess.DAO
                 var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
-                    _context.Users.Remove(user);
+                    user.Status = 0;
+                    _context.Users.Update(user);
                     await _context.SaveChangesAsync();
                 }
             }
