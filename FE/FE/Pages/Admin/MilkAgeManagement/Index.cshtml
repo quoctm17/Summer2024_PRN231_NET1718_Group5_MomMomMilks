@@ -20,6 +20,7 @@
                     <th>Id</th>
                     <th>Min</th>
                     <th>Max</th>
+                    <th>Unit</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -28,6 +29,7 @@
                     <th>Id</th>
                     <th>Min</th>
                     <th>Max</th>
+                    <th>Unit</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -55,6 +57,10 @@
                     <div class="mb-3">
                         <label for="createMax" class="form-label">Max: </label>
                         <input type="number" class="form-control" min="0" id="createMax">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createUnit" class="form-label">Unit: </label>
+                        <input type="text" class="form-control" min="0" id="createUnit">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -87,6 +93,10 @@
                     <div class="mb-3">
                         <label for="updateMax" class="form-label">Max: </label>
                         <input type="number" class="form-control" min="0" id="updateMax">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateUnit" class="form-label">Unit: </label>
+                        <input type="text" class="form-control" min="0" id="updateUnit">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -141,6 +151,7 @@
                         { data: 'id' },
                         { data: 'min' },
                         { data: 'max' },
+                        { data: 'unit' },
                         {
                             data: null,
                             defaultContent: '<button class="btn btn-primary edit">Edit</button>',
@@ -162,6 +173,7 @@
                         $('#updateId').val(result['id']);
                         $('#updateMin').val(result['min']);
                         $('#updateMax').val(result['max']);
+                        $('#updateUnit').val(result['unit']);
                     },
                     error: function (xhr, status, error) {
                         ShowErrorToast();
@@ -177,6 +189,7 @@
                 addedMilkAge = {
                     min: $("#createMin").val(),
                     max: $("#createMax").val(),
+                    unit: $("#createUnit").val(),
                 };
                 if (!addedMilkAge.min || !addedMilkAge.max) {
                     ShowErrorToast("Please fill in all fields");
@@ -207,8 +220,10 @@
                     id: $("#updateId").val(),
                     min: $("#updateMin").val(),
                     max: $("#updateMax").val(),
+                    unit: $("#updateUnit").val(),
                 };
-                if (!updateMilkAge.id || !updateMilkAge.min || !updateMilkAge.max) {
+                console.log(updateMilkAge);
+                if (!updateMilkAge.id || !updateMilkAge.min || !updateMilkAge.max || !updateMilkAge.unit) {
                     ShowErrorToast("Please fill in all fields");
                 } else {
                     $.ajax({
