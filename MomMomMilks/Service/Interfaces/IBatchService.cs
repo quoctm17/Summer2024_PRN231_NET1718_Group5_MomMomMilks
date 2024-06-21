@@ -10,5 +10,6 @@ namespace Service.Interfaces
         Task<bool> CreateBatch(Batch batch);
         Task<bool> UpdateBatch(Batch batch);
         Task<bool> DeleteBatch(int id);
+        Task<bool> UpdateQuantityIfUserBought(int milkId, int quantityBuy);
     }
 }

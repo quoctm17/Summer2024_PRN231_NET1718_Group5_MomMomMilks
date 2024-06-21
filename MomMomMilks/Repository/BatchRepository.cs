@@ -35,5 +35,9 @@ namespace Repository
         {
             return await BatchDAO.Instance.UpdateBatch(batch);
         }
+        public async Task<bool> UpdateQuantityIfUserBought(int milkId, int quantityBuy)
+        {
+            return await BatchDAO.Instance.UpdateQuantityIfUserBought(milkId, quantityBuy);
+        }
     }
 }
