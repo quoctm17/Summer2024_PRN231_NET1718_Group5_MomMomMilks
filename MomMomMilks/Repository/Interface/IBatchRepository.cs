@@ -10,6 +10,7 @@ namespace Repository.Interface
     public interface IBatchRepository
     {
         Task<List<Batch>> GetAllBatches();
+        Task<List<Batch>> GetBatchByMilkId(int milkId);
         Task<Batch> GetSingleBatch(int id);
         Task<int> GetTotalQuantityByMilkId(int milkId);
         Task<bool> CreateBatch(Batch batch);
