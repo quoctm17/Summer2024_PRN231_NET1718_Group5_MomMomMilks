@@ -1,0 +1,324 @@
+﻿@page
+@model FE.Pages.Admin.UserManagement.IndexModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        User Management
+    </div>
+    <div class="p-4">
+        <button class="btn btn-success" id="btnCreateUser">
+            Create new user
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table" id="userTable">
+            <thead>
+                <tr>
+                    <th>Num</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userList" class="font-weight-light">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Name: </label>
+                        <input type="text" class="form-control" required id="createName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createPhoneNumber" class="form-label">Phone Number: </label>
+                        <input type="text" class="form-control" required id="createPhoneNumber">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createEmail" class="form-label">Email: </label>
+                        <input type="email" class="form-control" required id="createEmail">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createRole" class="form-label">Role: </label>
+                        <select class="form-select" required id="createRole">
+                            <option value="4">Admin</option>
+                            <option value="3">Manager</option>
+                            <option value="2">Shipper</option>
+                            <option value="1">Customer</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary" id="createUser">Create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update User</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="updateForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="updateId" class="form-label">Id: </label>
+                        <input type="text" class="form-control" disabled id="updateId">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateName" class="form-label">Name: </label>
+                        <input type="text" class="form-control" required id="updateName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updatePhoneNumber" class="form-label">Phone Number: </label>
+                        <input type="text" class="form-control" required id="updatePhoneNumber">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateEmail" class="form-label">Email: </label>
+                        <input type="email" class="form-control" required id="updateEmail">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateRole" class="form-label">Role: </label>
+                        <select class="form-select" required id="updateRole">
+                            <option value="4">Admin</option>
+                            <option value="3">Manager</option>
+                            <option value="2">Shipper</option>
+                            <option value="1">Customer</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateStatus" class="form-label">Status: </label>
+                        <select class="form-select" required id="updateStatus">
+                            <option value="1">Available</option>
+                            <option value="0">Not Available</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary" id="btnUpdateUser">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+    @using Helpers;
+    @using Models;
+
+        var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+        string token = null;
+        if (user != null)
+        {
+            token = user.Token;
+        }
+    }
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        getUser();
+        document.getElementById('btnCreateUser').addEventListener('click', showCreate);
+        document.getElementById('createUser').addEventListener('click', createUser);
+    });
+
+
+        async function getUser() {
+            try {
+                const response = await fetch(`http://localhost:5215/odata/User/userAdmin`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + '@token'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('API response:', data);
+
+                const users = data.value || data.$values;
+                const userList = document.getElementById('userList');
+
+                for (const user of users) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${user.id}</td>
+                                    <td>${user.userName}</td>
+                                    <td>${user.phoneNumber}</td>
+                                    <td>${user.email}</td>
+                                    <td>${user.role}</td>
+                                    <td>${user.status}</td>
+                                    <td>
+                                                <a href="#" class="updateUser" data-id="${user.id}">Update</a> |
+                                        <a href="#" class="deleteUser" data-id="${user.id}">Delete</a>
+                                    </td>`;
+                    userList.appendChild(tr);
+                }
+
+                // Initialize DataTable after populating the table
+                $(document).ready(function () {
+                    $('#userTable').DataTable();
+                });
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        }
+
+    async function createUser(){
+        //getElementById
+        const userName = document.getElementById('createName').value;
+        const phoneNumber = document.getElementById('createPhoneNumber').value;
+        const email = document.getElementById('createEmail').value;
+        const role = document.getElementById('createRole');
+
+        const user = {
+            userName: userName,
+            phoneNumber: phoneNumber,
+            email: email,
+            role: parseInt(role.value),
+        }
+
+        console.log("User data to be sent:", JSON.stringify(user));
+
+        try {
+            let response = await fetch(`http://localhost:5215/odata/User`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + '@token',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+            if (response.ok || response.status === 500) {
+                console.log('User created successfully');
+                alert('User created successfully');
+                window.location.href = './';
+            } else {
+                console.error('Failed to create user');
+                alert('Failed to create user');
+            }
+        } catch (error) {
+            console.error('Error create user:', error);
+        }
+    }
+
+    async function showCreate() {
+        $('#exampleModal').modal('show');
+    }
+
+        $(document).ready(function () {
+            $('#userTable').on('click', '.updateUser', function () {
+                const userId = $(this).data('id');
+                $.ajax({
+                    url: `http://localhost:5215/odata/User/${userId}`,
+                    type: 'get',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + '@token'
+                    },
+                    success: function (result, status, xhr) {
+                        $('#updateId').val(result.id);
+                        $('#updateName').val(result.userName);
+                        $('#updatePhoneNumber').val(result.phoneNumber);
+                        $('#updateEmail').val(result.email);
+                        const roleMap = {
+                            'Admin': 4,
+                            'Manager': 3,
+                            'Shipper': 2,
+                            'Customer': 1
+                        };
+                        $('#updateRole').val(roleMap[result.role]);
+                        $('#updateStatus').val(result.status);
+                        $('#updateModal').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error fetching user details');
+                    }
+                });
+            });
+
+            var updateUser = {};
+            document.getElementById('btnUpdateUser').addEventListener('click', function () {
+                updateUser = {
+                    id: $("#updateId").val(),
+                    userName: $("#updateName").val(),
+                    email: $("#updateEmail").val(),
+                    phoneNumber: $("#updatePhoneNumber").val(),
+                    status: $("#updateStatus").val(),
+                    role: $("#updateRole").val()
+                };
+                if (!updateUser.id || !updateUser.userName || !updateUser.email || !updateUser.phoneNumber || !updateUser.status || !updateUser.role) {
+                    alert("Please fill in all fields");
+                } else {
+                    $.ajax({
+                        url: `http://localhost:5215/odata/User/updateUser/${updateUser.id}`,
+                        type: 'put',
+                        data: JSON.stringify(updateUser),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            window.location.reload(true);
+                            $('#updateModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error");
+                        }
+                    });
+                }
+            });
+
+            $('#userTable').on('click', '.deleteUser', function () {
+                const userId = $(this).data('id');
+
+                // Ask for confirmation before deleting
+                if (confirm("Are you sure you want to delete this user?")) {
+                    $.ajax({
+                        url: `http://localhost:5215/odata/User/${userId}`,
+                        type: 'DELETE',
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            alert("User deleted successfully");
+                            window.location.reload(true);
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error deleting user");
+                        }
+                    });
+                } else {
+                    console.log("Deletion canceled");
+                }
+            });
+        });
+</script>
+}

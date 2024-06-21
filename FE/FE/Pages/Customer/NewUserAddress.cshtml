@@ -108,7 +108,7 @@
 
     const token = sessionStorage.getItem('token');
 
-    async function createAddress(envent) {
+    async function createAddress(event) {
         event.preventDefault();
         const userId = getUserIdFromToken();
         const houseNumber = document.getElementById('houseNumber').value;
