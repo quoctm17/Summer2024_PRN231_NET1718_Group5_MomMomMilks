@@ -113,11 +113,11 @@
                             </div>
                             <div>
                                 <div class="shoping__continue">
-                                    <div class="shoping__discount">
+                                    <div class="discount">
                                         <p>Discount Codes</p>
-                                        <form action="#" onsubmit="applyCoupon()">
-                                            <input id="shoping_discount_Id" type="text" placeholder="Enter your coupon code">
-                                            <button type="submit" onclick="applyCoupon()" class="site-btn">APPLY COUPON</button>
+                                        <form>
+                                            <input id="shoping_discount_Id" type="text" placeholder="Enter your discount code">
+                                            <button type="submit" id="btnApplyCoupon" class="site-btn">APPLY DISCOUNT</button>
                                         </form>
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@
             loadPaymentTypes();
 
             document.getElementById('placeOrderButton').addEventListener('click', placeOrder);
-            document.querySelector('.shoping__discount form').addEventListener('submit', applyCoupon);
+            document.querySelector('.shoping__discount form').addEventListener('click', applyCoupon);
         });
 
         async function loadOrderSummary() {
@@ -482,5 +482,6 @@
             document.getElementById('order-discount').innerText = `${formatCurrency(discountAmount)} đ`;
             document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
         }
+
     </script>
 </body>

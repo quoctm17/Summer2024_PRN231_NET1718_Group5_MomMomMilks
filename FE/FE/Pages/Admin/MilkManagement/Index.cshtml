@@ -173,10 +173,77 @@
                         <label for="updateImageUrl" class="form-label">Image Url: </label>
                         <input type="text" class="form-control" disabled id="updateImageUrl">
                     </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-primary" id="btnCreateBatch">Add Batch</button>
+                    </div>
+                    <div class="mb-3">
+                        <table class="table" id="batchTable">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Imported Date</th>
+                                    <th>Expired Date</th>
+                                    <th>Imported Price</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Imported Date</th>
+                                    <th>Expired Date</th>
+                                    <th>Imported Price</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="button" class="btn btn-primary" id="updateMilk">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="createBatchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add batch for this milk</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createBatchForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="batchImportedDate" class="form-label">Imported Date: </label>
+                        <input type="date" class="form-control" min="0" id="batchImportedDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="batchExpiredDate" class="form-label">Expired Date: </label>
+                        <input type="date" class="form-control" min="0" id="batchExpiredDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="batchImportedPrice" class="form-label">Imported Price: </label>
+                        <input type="number" class="form-control" min="0" id="batchImportedPrice">
+                    </div>
+                    <div class="mb-3">
+                        <label for="batchQuantity" class="form-label">Quantity: </label>
+                        <input type="number" class="form-control" min="0" id="batchQuantity">
+                    </div>
+                    <div class="mb-3">
+                        <label for="batchMilkId" class="form-label">Milk Id: </label>
+                        <input type="number" disabled class="form-control" min="0" id="batchMilkId">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="createBatch">Create</button>
                 </div>
             </form>
         </div>
@@ -237,6 +304,31 @@
                     ]
                 });
             }
+            var batchTable;
+            function GetBatchTable(milkId) {
+                if (batchTable) {
+                    reloadTableWithNewMilkId(milkId);
+                } else {
+                    batchTable = $('#batchTable').DataTable({
+                        ajax: {
+                            url: 'http://localhost:5215/odata/Batches/GetBatchByMilkId/' + milkId,
+                            dataSrc: '$values'
+                        },
+                        columns: [
+                            { data: 'id' },
+                            { data: 'importDate' },
+                            { data: 'expiredDate' },
+                            { data: 'importedPrice' },
+                            { data: 'quantity' }
+                        ]
+                    });
+                }
+            }
+            function reloadTableWithNewMilkId(milkId) {
+                var newUrl = 'http://localhost:5215/odata/Batches/GetBatchByMilkId/' + milkId;
+                batchTable.ajax.url(newUrl).load();
+            }
+            var addedBatchMilkId = 0;
             $('#milkTable').on('click', "button.edit", function () {
                 var milkId = $(this).parents("tr").find("td:nth-child(1)").text();
                 $.ajax({
@@ -304,7 +396,7 @@
                             $.each(result.$values, function (index, value) {
                                 $('#updateMilkAge').append($('<option>', {
                                     value: value.id,
-                                    text: `Từ ${value.min} đến ${value.max}`
+                                    text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
                                 }));
                             });
                         } else {
@@ -351,6 +443,7 @@
                         'Authorization': 'Bearer ' + '@token'
                     },
                     success: function (result, status, xhr) {
+                        addedBatchMilkId = result['id'];
                         $('#updateId').val(result['id']);
                         $('#updateName').val(result['name']);
                         $('#updateDescription').val(result['description']);
@@ -367,7 +460,68 @@
                         ShowErrorToast();
                     }
                 });
+                GetBatchTable(milkId);
                 $('#updateModal').modal('show');
+            });
+            document.getElementById('btnCreateBatch').addEventListener('click', function () {
+                $('#batchMilkId').val(addedBatchMilkId);
+                $('#createBatchModal').modal('show');
+            });
+            var addedBatch;
+            document.getElementById('createBatch').addEventListener('click', function () {
+                addedBatch = {
+                    importDate: $("#batchImportedDate").val(),
+                    expiredDate: $("#batchExpiredDate").val(),
+                    importedPrice: $("#batchImportedPrice").val(),
+                    quantity: $("#batchQuantity").val(),
+                    milkId: $("#batchMilkId").val()
+                };
+                if (!addedBatch.importDate || !addedBatch.expiredDate || !addedBatch.importedPrice || !addedBatch.quantity || !addedBatch.milkId) {
+                    ShowErrorToast("Please fill in all fields");
+                } else {
+                    var currentMilkPrice = $('#updatePrice').val();
+                    if (addedBatch.importedPrice > currentMilkPrice) {
+                        var userReponse = window.confirm("Current price is below imported price!");
+                        if(userReponse) {
+                            $.ajax({
+                                url: "http://localhost:5215/odata/batches",
+                                type: 'post',
+                                data: JSON.stringify(addedBatch),
+                                processData: false,
+                                contentType: "application/json",
+                                headers: {
+                                    'Authorization': 'Bearer ' + '@token'
+                                },
+                                success: function (result, status, xhr) {
+                                    document.getElementById("createBatchForm").reset();
+                                    GetBatchTable(addedBatchMilkId);
+                                    $('#createBatchModal').modal('hide');
+                                },
+                                error: function (xhr, status, error) {
+                                    ShowErrorToast();
+                                }
+                            });
+                        }
+                    }
+                    $.ajax({
+                        url: "http://localhost:5215/odata/batches",
+                        type: 'post',
+                        data: JSON.stringify(addedBatch),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            document.getElementById("createBatchForm").reset();
+                            GetBatchTable(addedBatchMilkId);
+                            $('#createBatchModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            ShowErrorToast();
+                        }
+                    });
+                }
             });
             document.getElementById('btnCreateMilk').addEventListener('click', function () {
                 $.ajax({
@@ -435,7 +589,7 @@
                             $.each(result.$values, function (index, value) {
                                 $('#createMilkAge').append($('<option>', {
                                     value: value.id,
-                                    text: `Từ ${value.min} đến ${value.max}`
+                                    text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
                                 }));
                             });
                         } else {

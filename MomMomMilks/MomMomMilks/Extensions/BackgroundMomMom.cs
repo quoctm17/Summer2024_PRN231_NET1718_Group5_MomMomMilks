@@ -12,18 +12,28 @@ namespace MomMomMilks.Extensions
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(UpdateCouponExpiryDate, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            var now = DateTime.Now;
+            var targetTime = new DateTime(now.Year, now.Month, now.Day, 0, 0, 2);
+            if (now > targetTime)
+            {
+                targetTime = targetTime.AddDays(1);
+            }
+
+            var initialDelay = targetTime - now;
+            var period = TimeSpan.FromDays(1);
+
+            _timer = new Timer(UpdateCouponExpiryDate, null, initialDelay, period);
 
             return Task.CompletedTask;
         }
 
         private async void UpdateCouponExpiryDate(object? state)
         {
-            /*using (var scope = _serviceProvider.CreateScope())
+            using (var scope = _serviceProvider.CreateScope())
             {
                 var couponService = scope.ServiceProvider.GetRequiredService<ICouponService>();
                 await couponService.UpdateCouponExpiryDate();
-            }*/
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
