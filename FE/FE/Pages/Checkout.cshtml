@@ -113,11 +113,11 @@
                             </div>
                             <div>
                                 <div class="shoping__continue">
-                                    <div class="shoping__discount">
+                                    <div class="discount">
                                         <p>Discount Codes</p>
-                                        <form action="#" onsubmit="applyCoupon()">
-                                            <input id="shoping_discount_Id" type="text" placeholder="Enter your coupon code">
-                                            <button type="submit" onclick="applyCoupon()" class="site-btn">APPLY COUPON</button>
+                                        <form>
+                                            <input id="shoping_discount_Id" type="text" placeholder="Enter your discount code">
+                                            <button type="submit" id="btnApplyCoupon" class="site-btn">APPLY DISCOUNT</button>
                                         </form>
                                     </div>
                                 </div>
@@ -486,15 +486,15 @@
             if (!coupon) {
                 console.error('Coupon is invalid or expired');
                 return;
-
+            }
                 let discountAmount = coupon.discount * 1000;
                 let subtotal = parseFloat(document.getElementById('order-subtotal').innerText.replace(' đ', '').replace('.', ''));
-                var total = subtotal - discount;
+                var total = subtotal - discountAmount;
                 // Cập nhật giá tiền giỏ hàng mới sau khi đã áp dụng giảm giá
                 document.getElementById('order-discount').innerText = `${formatCurrency(discountAmount)} đ`;
                 document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
-            }
-
-            document.querySelector('.shoping__discount form').addEventListener('submit', applyCoupon);
+        }
+        //document.querySelector('.discount form').addEventListener('submit', applyCoupon);
+        document.getElementById('btnApplyCoupon').addEventListener('click', applyCoupon);
     </script>
 </body>

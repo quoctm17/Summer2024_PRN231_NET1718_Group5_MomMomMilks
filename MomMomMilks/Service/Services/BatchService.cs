@@ -46,5 +46,9 @@ namespace Service.Services
         {
             return await _batchRepository.UpdateBatch(batch);
         }
+        public async Task<bool> UpdateQuantityIfUserBought(int milkId, int quantityBuy)
+        {
+            return await _batchRepository.UpdateQuantityIfUserBought(milkId, quantityBuy);
+        }
     }
 }

@@ -130,6 +130,47 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
         }
+      
+      public async Task<bool> UpdateQuantityIfUserBought(int milkId, int quantityBuy)
+        {
+            try
+            {
+                var existed = _context.Batches.Where(b => b.MilkId == milkId).OrderByDescending(b => b.ImportDate);
+
+                for (int i = 1; i <= existed.Count(); i++) {
+                    var item = existed.Skip(i - 1).Take(i).FirstOrDefault();
+                    if (item.Quantity >= quantityBuy)
+                    {
+                        item.Quantity -= quantityBuy;
+                        return true;
+                    }
+                    if (item.Quantity <= quantityBuy)
+                    {
+                        quantityBuy -= item.Quantity;
+                        item.Quantity = 0;
+                        i++;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<bool> AutoUpdateExpiredDate()
+        {
+            try
+            {
+                var existed = await _context.Batches.ToListAsync();
+                
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
     }
 }
