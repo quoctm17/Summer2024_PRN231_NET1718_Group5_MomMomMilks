@@ -15,6 +15,5 @@ namespace BusinessObject.Entities
         public Milk Milk { get; set; }
         public int Quantity { get; set; }
     }
-
 }
 

@@ -54,11 +54,11 @@ namespace MomMomMilks.Controllers
                     amount++;
                 }
                 PaymentData paymentData = new PaymentData(orderCode, amount, body.description, items, body.cancelUrl, body.returnUrl);
-                var result = await _cartService.AddPaymentOrderCode(cart.Id, orderCode);
-                if(!result)
-                {
-                    throw new Exception("Error while adding order code to cart");
-                }
+                //var result = await _cartService.AddPaymentOrderCode(cart.Id, orderCode);
+                //if(!result)
+                //{
+                //    throw new Exception("Error while adding order code to cart");
+                //}
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
                 return Ok(new Response(0, "success", createPayment));
             }
