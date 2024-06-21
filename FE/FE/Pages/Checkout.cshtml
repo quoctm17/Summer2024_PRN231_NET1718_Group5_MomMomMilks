@@ -177,36 +177,25 @@
             loadPaymentTypes();
 
             document.getElementById('placeOrderButton').addEventListener('click', placeOrder);
+            document.querySelector('.shoping__discount form').addEventListener('submit', applyCoupon);
         });
 
         async function loadOrderSummary() {
-            const token = sessionStorage.getItem('token');
-            try {
-                let response = await fetch('http://localhost:5215/odata/Cart?$expand=Milk', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    let cart = await response.json();
-                    console.log('API response:', cart);
-
-                    let cartItems = cart.$values || [];
-                    let orderItemsHtml = cartItems.map(item => `
-                                <li class="checkout__order__item row" data-milk-id="${item.Milk.Id}" data-quantity="${item.Quantity}" data-price="${item.Milk.Price}" data-total="${item.Milk.Price * item.Quantity}">
-                                    <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.Milk.Name}</div>
-                                    <div class="col-lg-2 quantity">${item.Quantity}</div>
-                                    <div class="col-lg-4 text-right item-price">${formatCurrency(item.Milk.Price)} đ</div>
-                                </li>
-                            `).join('');
-                    document.getElementById('order-items').innerHTML = orderItemsHtml;
-                    updateOrderTotal(cartItems);
-                } else {
-                    console.error('Failed to fetch cart data.');
-                }
-            } catch (error) {
-                console.error('Error fetching cart data:', error);
+            const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert('Your cart is empty.');
+                return;
             }
+
+            let orderItemsHtml = cart.map(item => `
+        <li class="checkout__order__item row" data-milk-id="${item.id}" data-quantity="${item.quantity}" data-price="${item.price}" data-total="${item.price * item.quantity}">
+            <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+            <div class="col-lg-2 quantity">${item.quantity}</div>
+            <div class="col-lg-4 text-right item-price">${formatCurrency(item.price)} đ</div>
+        </li>
+    `).join('');
+            document.getElementById('order-items').innerHTML = orderItemsHtml;
+            updateOrderTotal(cart);
         }
 
         async function loadTimeSlots() {
@@ -414,8 +403,9 @@
                 });
                 if (response.ok) {
                     console.log('Cart cleared successfully');
-                    await updateCartTotalPrice(); // Call updateCartTotalPrice after clearing cart
-                    await updateCartCount(); // Call updateCartCount after clearing cart
+                    sessionStorage.removeItem('cart'); // Xóa cart khỏi sessionStorage
+                    updateCartTotalPrice(); // Call updateCartTotalPrice after clearing cart
+                    updateCartCount(); // Call updateCartCount after clearing cart
                 } else {
                     console.error('Failed to clear cart.');
                 }
@@ -428,19 +418,13 @@
             return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
+        // Update order total logic
         function updateOrderTotal(cartItems) {
-            var subtotal = cartItems.reduce((sum, item) => sum + (item.Milk.Price * item.Quantity), 0);
-            var discount = calculateDiscount(subtotal);
+            var subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            var discount = parseFloat(document.getElementById('order-discount').innerText.replace(' đ', '').replace('.', ''));
             var total = subtotal - discount;
             document.getElementById('order-subtotal').innerText = `${formatCurrency(subtotal)} đ`;
-            document.getElementById('order-discount').innerText = `${formatCurrency(discount)} đ`;
             document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
-        }
-
-        function calculateDiscount(subtotal) {
-            // Example discount calculation (e.g., 10% discount)
-            var discountPercentage = 10;
-            return subtotal * discountPercentage / 100;
         }
 
         function getUserIdFromToken() {
@@ -452,8 +436,8 @@
             return null;
         }
 
-        async function applyCoupon() {
-            //event.preventDefault();  // Ngăn chặn việc gửi form mặc định
+        async function applyCoupon(event) {
+            //event.preventDefault();
             const couponCode = document.querySelector('#shoping_discount_Id').value;
             const token = sessionStorage.getItem('token');
 
@@ -472,12 +456,15 @@
                         applyCouponDiscount(data.$values[0]);
                     } else {
                         console.error('Invalid coupon code.');
+                        alert('Invalid coupon code.');
                     }
                 } else {
                     console.error('Failed to apply coupon.');
+                    alert('Failed to apply coupon.');
                 }
             } catch (error) {
                 console.error('Error applying coupon:', error);
+                alert('Error applying coupon.');
             }
         }
 
@@ -486,15 +473,14 @@
             if (!coupon) {
                 console.error('Coupon is invalid or expired');
                 return;
-
-                let discountAmount = coupon.discount * 1000;
-                let subtotal = parseFloat(document.getElementById('order-subtotal').innerText.replace(' đ', '').replace('.', ''));
-                var total = subtotal - discount;
-                // Cập nhật giá tiền giỏ hàng mới sau khi đã áp dụng giảm giá
-                document.getElementById('order-discount').innerText = `${formatCurrency(discountAmount)} đ`;
-                document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
             }
 
-            document.querySelector('.shoping__discount form').addEventListener('submit', applyCoupon);
+            let discountAmount = coupon.discount * 1000;
+            let subtotal = parseFloat(document.getElementById('order-subtotal').innerText.replace(' đ', '').replace('.', ''));
+            var total = subtotal - discountAmount;
+            // Cập nhật giá tiền giỏ hàng mới sau khi đã áp dụng giảm giá
+            document.getElementById('order-discount').innerText = `${formatCurrency(discountAmount)} đ`;
+            document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
+        }
     </script>
 </body>
