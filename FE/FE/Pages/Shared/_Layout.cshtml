@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/style.css" type="text/css">
-    @if (account != null && (account.Role == "Admin" || account.Role == "Manager"))
+    @if (account != null && (account.Role == "Admin" || account.Role == "Manager" || account.Role == "Shipper"))
     {
         <link rel="stylesheet" href="~/css/admin.css" type="text/css">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="~/lib/datatables/datatables.min.css" asp-append-version="true" />
 
 </head>
-@if (account != null && (account.Role == "Admin" || account.Role == "Manager"))
+@if (account != null && (account.Role == "Admin" || account.Role == "Manager" || account.Role == "Shipper"))
 {
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -144,6 +144,14 @@
                                 <a class="nav-link" href="/admin/UserManagement/index">
                                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                     User
+                                </a>
+                            }
+
+                            @if(account.Role == "Shipper")
+                            {
+                                <a class="nav-link" href="/shipper/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Your orders
                                 </a>
                             }
 

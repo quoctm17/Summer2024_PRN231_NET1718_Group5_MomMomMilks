@@ -1,3 +1,5 @@
+using FE.Helpers;
+using FE.Models;
 using FE.Models.Shipper;
 using FE.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +17,17 @@ namespace FE.Pages.Shipper
         }
 
         public List<ShipperOrder> ShipperOrders { get; set; }
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            var result = await _orderService.GetShipperOrders();
-            ShipperOrders = result;
+            var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+            if(user != null && user.Role == "Shipper")
+            {
+                var result = await _orderService.GetShipperOrders();
+                ShipperOrders = result;
+                return Page();
+            }
+            return RedirectToPage("/login");
+            
         }
     }
 }
