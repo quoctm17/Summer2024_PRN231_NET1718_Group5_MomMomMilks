@@ -38,7 +38,7 @@ namespace MomMomMilks.Controllers
                     return Unauthorized("User not logged in");
                 }
 
-                var cart = await _cartService.GetCartByUserIdAsync(userId.Value);
+                var cart = await _cartService.GetCartByUserIdAsync(1);
                 if (cart == null)
                 {
                     return NotFound();
@@ -159,11 +159,18 @@ namespace MomMomMilks.Controllers
         [Authorize]
         public async Task<IActionResult> SaveCart([FromBody] List<CartItemDTO> cartItems)
         {
+            if (cartItems == null || !cartItems.Any())
+            {
+                _logger.LogWarning("SaveCart: Cart items cannot be null or empty");
+                return BadRequest("Cart items cannot be null or empty");
+            }
+
             try
             {
                 var userId = GetUserIdFromToken();
                 if (userId == null)
                 {
+                    _logger.LogWarning("SaveCart: User not logged in");
                     return Unauthorized("User not logged in");
                 }
 
@@ -172,6 +179,8 @@ namespace MomMomMilks.Controllers
                     MilkId = item.MilkId,
                     Quantity = item.Quantity
                 }).ToList();
+
+                _logger.LogInformation($"SaveCart: Saving cart for user {userId} with {cartItemEntities.Count} items");
 
                 await _cartService.SaveCartAsync(userId.Value, cartItemEntities);
                 return Ok();
@@ -182,7 +191,6 @@ namespace MomMomMilks.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
 
 
         private int? GetUserIdFromToken()

@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataAccess.DAO;
 using DataTransfer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -37,23 +38,59 @@ namespace MomMomMilks.Controllers
             }
         }
 
+        [HttpGet("userAdmin")]
+        [EnableQuery]
+        public async Task<IActionResult> GetUserAdmin()
+        {
+            try
+            {
+                var users = await _userService.GetAllUsers();
+                var userAdminList = users.Select(user => new UserDTOAdmin
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    Status = user.Status,
+                    Role = user.UserRoles.First().AppRole.Name
+                }).ToList();
+
+                return Ok(userAdminList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching users.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(int userId)
         {
             try
             {
-                //var userIdFromToken = GetUserIdFromToken();
-                //if (userIdFromToken == null)
-                //{
-                //    return Unauthorized("User not logged in");
-                //}
+                var userIdFromToken = GetUserIdFromToken();
+                if (userIdFromToken == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
 
                 var user = await _userService.GetUserById(userId);
                 if (user == null)
                 {
                     return NotFound();
                 }
-                return Ok(user);
+                var userAdminList = new UserDTOAdmin
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    Status = user.Status,
+                    Role = user.UserRoles.First().AppRole.Name
+                };
+
+                return Ok(userAdminList);
             }
             catch (Exception ex)
             {
@@ -88,7 +125,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] AppUser user)
+        public async Task<IActionResult> AddUser([FromBody] UserCreateDTO user)
         {
             try
             {
@@ -98,12 +135,78 @@ namespace MomMomMilks.Controllers
                     return Unauthorized("User not logged in");
                 }
 
-                await _userService.AddUser(user);
-                return Created(user);
+                var u = new AppUser
+                {
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.UserName,
+                    LockoutEnabled = true,
+                    EmailConfirmed = true,
+                    NormalizedEmail = user.Email.ToUpper(),
+                    NormalizedUserName = user.UserName.ToUpper(),
+                    Status = 1,
+                    Point = 0
+                };
+                await _userService.AddUser(u);
+                var userRole = new AppUserRole
+                {
+                    UserId = u.Id,
+                    RoleId = user.Role
+                };
+                u.UserRoles = new List<AppUserRole> { userRole };
+
+                await _userService.UpdateUser(u);
+
+                return Ok(u);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while adding user.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPut("updateUser/{userId}")]
+        public async Task<IActionResult> UpdateUserAdmin(int userId, [FromBody] UserUpdateDTO user)
+        {
+            try
+            {
+                var userIdFromToken = GetUserIdFromToken();
+                if (userIdFromToken == null)
+                {
+                    return Unauthorized("User not logged in");
+                }
+
+                if (userId != user.Id)
+                {
+                    return BadRequest("User ID mismatch");
+                }
+
+                var userDetail = await _userService.GetUserById(userId);
+                if (userDetail != null)
+                {
+                    userDetail.UserName = user.UserName;
+                    userDetail.Email = user.Email;
+                    userDetail.PhoneNumber = user.PhoneNumber;
+                    userDetail.NormalizedEmail = user.Email.ToUpper();
+                    userDetail.NormalizedUserName = user.UserName.ToUpper();
+                    userDetail.Status = user.Status;
+                    userDetail.UserRoles = new List<AppUserRole>
+                    {
+                        new AppUserRole
+                        {
+                            RoleId = user.Role
+                        }
+                    };
+                    await _userService.UpdateUser(userDetail);
+                    return Ok("Updated Successfully");
+                }
+
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating user.");
                 return StatusCode(500, "Internal server error");
             }
         }

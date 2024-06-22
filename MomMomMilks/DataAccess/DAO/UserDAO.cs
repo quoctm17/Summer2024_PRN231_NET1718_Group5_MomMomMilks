@@ -1,7 +1,12 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DataAccess.DAO
 {
@@ -9,6 +14,7 @@ namespace DataAccess.DAO
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
 
         private static UserDAO instance;
 
@@ -16,6 +22,18 @@ namespace DataAccess.DAO
         {
             _context = new AppDbContext();
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile.AutoMapperProfile())).CreateMapper();
+
+            var store = new UserStore<AppUser, IdentityRole<int>, AppDbContext, int>(_context);
+            var identityOptions = Options.Create(new IdentityOptions());
+            var passwordHasher = new PasswordHasher<AppUser>();
+            var userValidators = new List<IUserValidator<AppUser>> { new UserValidator<AppUser>() };
+            var passwordValidators = new List<IPasswordValidator<AppUser>> { new PasswordValidator<AppUser>() };
+            var keyNormalizer = new UpperInvariantLookupNormalizer();
+            var errors = new IdentityErrorDescriber();
+            var services = new ServiceCollection().AddLogging().BuildServiceProvider();
+            var logger = services.GetRequiredService<ILogger<UserManager<AppUser>>>();
+
+            _userManager = new UserManager<AppUser>(store, identityOptions, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger);
         }
 
         public static UserDAO Instance
@@ -53,8 +71,10 @@ namespace DataAccess.DAO
                 .Include(u => u.Addresses)
                     .ThenInclude(a => a.District)
                 .Include(u => u.Cart)
-                .ThenInclude(c => c.CartItems)
+                    .ThenInclude(c => c.CartItems)
                 .Include(u => u.Orders)
+                .Include(u => u.UserRoles)
+                .ThenInclude(u => u.AppRole)
                 .ToListAsync();
         }
 
@@ -69,15 +89,21 @@ namespace DataAccess.DAO
                  .Include(u => u.Cart)
                  .ThenInclude(c => c.CartItems)
                  .Include(u => u.Orders)
+                 .Include(u => u.UserRoles)
+                .ThenInclude(u => u.AppRole)
                  .FirstOrDefaultAsync();
         }
 
         public async Task AddUser(AppUser user)
         {
+            var u = await _userManager.FindByEmailAsync(user.Email);
             try
             {
-                await _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
+                if(u == null)
+                {
+                    string password = "Pa$$w0rd";
+                    await _userManager.CreateAsync(user, password);
+                }
             }
             catch (Exception ex)
             {
@@ -105,7 +131,8 @@ namespace DataAccess.DAO
                 var user = await _context.Users.FindAsync(userId);
                 if (user != null)
                 {
-                    _context.Users.Remove(user);
+                    user.Status = 0;
+                    _context.Users.Update(user);
                     await _context.SaveChangesAsync();
                 }
             }
