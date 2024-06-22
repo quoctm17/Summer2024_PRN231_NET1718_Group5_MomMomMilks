@@ -51,9 +51,9 @@
                 }
             </div>
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action rounded">User Information</a>
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">User Information</a>
                 <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">My Address</a>
+                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">My Address</a>
                 <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
             </div>
         </div>
