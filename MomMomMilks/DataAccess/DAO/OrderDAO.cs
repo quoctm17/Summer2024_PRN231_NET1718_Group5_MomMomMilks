@@ -264,8 +264,8 @@ namespace DataAccess.DAO
             foreach (var timeSlot in timeSlots)
             {
                 var slotStartTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, timeSlot.StartTime.Hours, timeSlot.StartTime.Minutes, 0);
-                if (currentTime >= slotStartTime.AddHours(-1) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
-                {
+                //if (currentTime >= slotStartTime.AddHours(-1) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
+                //{
                     var orders = await _context.Orders
                         .Where(o => o.TimeSlotId == timeSlot.Id && o.OrderStatusId == 2 && o.ShipperId == null)
                         .Include(o => o.Address)
@@ -290,7 +290,7 @@ namespace DataAccess.DAO
                     }
 
                     await _context.SaveChangesAsync();
-                }
+                //}
             }
         }
 
