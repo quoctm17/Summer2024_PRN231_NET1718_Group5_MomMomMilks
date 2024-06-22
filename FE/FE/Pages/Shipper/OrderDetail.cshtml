@@ -197,15 +197,15 @@
 @if(Model.Order != null)
 {
     <div class="card">
-        <div class="title">Đơn hàng của @Model.Order.BuyerName</div>
+        <div class="title">Order for @Model.Order.BuyerName</div>
         <div class="info">
             <div class="row">
                 <div class="col-7">
-                    <span id="heading">Ngày tạo</span><br>
+                    <span id="heading">Created</span><br>
                     <span id="details">@Model.Order.CreateAt</span>
                 </div>
                 <div class="col-5 pull-right">
-                    <span id="heading">Đơn hàng số: </span><br>
+                    <span id="heading">Order code: </span><br>
                     <span id="details">@Model.Order.Id</span>
                 </div>
             </div>
@@ -213,13 +213,13 @@
         <div class="pricing">
             <div class="row">
                 <div class="col-6">
-                    <span id="name">Sản phẩm</span>
+                    <span id="name">Products</span>
                 </div>
                 <div class="col-3">
-                    <span id="name">Số lượng</span>
+                    <span id="name">Quantity</span>
                 </div>
                 <div class="col-3">
-                    <span id="price">Giá</span>
+                    <span id="price">Price</span>
                 </div>
             </div>
             <hr />
@@ -240,34 +240,35 @@
             }
         </div>
         <div class="tracking">
-            <div class="title">Trạng thái đơn hàng</div>
+            <div class="title">Order tracker</div>
         </div>
         <div class="progress-track">
             <ul id="progressbar">
-                @if(Model.Order.OrderStatusName == "Chờ Giao")
+                @if (Model.Order.OrderStatusName == "Paying")
                 {
-                    <li class="step0 active" id="step1">Chờ chấp nhận</li>
-                    <li class="step0 active text-center" id="step2">Chấp nhận</li>
-                    <li class="step0 text-right" id="step3">Đang giao</li>
-                    <li class="step0 text-right" id="step4">Đã giao</li>
-                } else if(Model.Order.OrderStatusName == "Đang Giao")
+                    <li class="step0 active" id="step1">Paying</li>
+                    <li class="step0 active text-center" id="step2">Paid</li>
+                    <li class="step0 text-right" id="step3">Shipping</li>
+                    <li class="step0 text-right" id="step4">Completed</li>
+                } else if(Model.Order.OrderStatusName == "Shipping")
                 {
-                    <li class="step0 active" id="step1">Chờ chấp nhận</li>
-                    <li class="step0 active text-center" id="step2">Chấp nhận</li>
-                    <li class="step0 active text-right" id="step3">Đang giao</li>
-                    <li class="step0 text-right" id="step4">Đã giao</li>
-                } else if (Model.Order.OrderStatusName == "Đã Giao")
+                    <li class="step0 active" id="step1">Paying</li>
+                    <li class="step0 active text-center" id="step2">Paid</li>
+                    <li class="step0 active text-right" id="step3">Shipping</li>
+                    <li class="step0 text-right" id="step4">Completed</li>
+                }
+                else if (Model.Order.OrderStatusName == "Completed")
                 {
-                    <li class="step0 active" id="step1">Chờ chấp nhận</li>
-                    <li class="step0 active text-center" id="step2">Chấp nhận</li>
-                    <li class="step0 active text-right" id="step3">Đang giao</li>
-                    <li class="step0 active text-right" id="step4">Đã giao</li>
+                    <li class="step0 active" id="step1">Paying</li>
+                    <li class="step0 active text-center" id="step2">Paid</li>
+                    <li class="step0 active text-right" id="step3">Shipping</li>
+                    <li class="step0 text-right" id="step4">Completed</li>
                 } else
                 {
-                    <li class="step0 active" id="step1">Chờ chấp nhận</li>
-                    <li class="step0 active text-center" id="step2">Chấp nhận</li>
-                    <li class="step0 active text-right" id="step3">Đang giao</li>
-                    <li class="step0 active text-right" id="step4">Đã hủy</li>
+                    <li class="step0 active" id="step1">Paying</li>
+                    <li class="step0 active text-center" id="step2">Paid</li>
+                    <li class="step0 active text-right" id="step3">Shipping</li>
+                    <li class="step0 text-right" id="step4">Cancelled</li>
                 }
                 
             </ul>

@@ -38,7 +38,10 @@ namespace FE.Pages
                     } else if(account.Role == "Manager")
                     {
 						return RedirectToPage("/manager/managerorder/index");
-					}
+					} else if(account.Role == "Shipper")
+                    {
+                        return RedirectToPage("/shipper/index");
+                    }
 					// Return a script to set the token in sessionStorage
 					var script = $"<script>sessionStorage.setItem('token', '{account.Token}'); window.location.href = '/index';</script>";
                     return Content(script, "text/html");
