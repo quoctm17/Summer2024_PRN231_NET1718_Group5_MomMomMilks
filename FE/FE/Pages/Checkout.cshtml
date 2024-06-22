@@ -111,15 +111,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="shoping__continue">
-                                    <div class="discount">
-                                        <p>Discount Codes</p>
-                                        <form>
-                                            <input id="shoping_discount_Id" type="text" placeholder="Enter your discount code">
-                                            <button type="submit" id="btnApplyCoupon" class="site-btn">APPLY DISCOUNT</button>
-                                        </form>
-                                    </div>
+                            <div class="checkout__input">
+                                <p>Discount Codes<span>*</span></p>
+                                <div class="input-group">
+                                    <input id="shoping_discount_Id" type="text" placeholder="Enter your discount code" class="input-text">
+                                    <button type="submit" id="btnApplyCoupon" class="site-btn">APPLY DISCOUNT</button>
                                 </div>
                             </div>
                             <!-- Hidden fields for UserName, Phone, and Email -->
@@ -215,6 +211,14 @@
 
                     // Date validation logic
                     const orderDateInput = document.getElementById('orderDate');
+                    const currentDate = new Date();
+                    const maxDate = new Date();
+                    maxDate.setDate(currentDate.getDate() + 7);
+
+                    // Set min and max attributes for date input
+                    orderDateInput.setAttribute('min', currentDate.toISOString().split('T')[0]);
+                    orderDateInput.setAttribute('max', maxDate.toISOString().split('T')[0]);
+
                     orderDateInput.addEventListener('change', function () {
                         const selectedDate = new Date(orderDateInput.value);
                         const currentTime = new Date();
@@ -253,6 +257,7 @@
             }
         }
 
+
         async function loadUserDetails() {
             const token = sessionStorage.getItem('token');
             const userId = getUserIdFromToken();
@@ -261,7 +266,7 @@
             }
 
             try {
-                let response = await fetch(`http://localhost:5215/odata/User/${userId}?$expand=Addresses`, {
+                let response = await fetch(`http://localhost:5215/odata/User/me`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -319,16 +324,6 @@
 
                     // Update nice-select UI if you're using it
                     $('#paymentType').niceSelect('update');
-
-                    paymentTypeDropdown.addEventListener('change', function () {
-                        const selectedValue = paymentTypeDropdown.options[paymentTypeDropdown.selectedIndex].text;
-                        if (selectedValue !== 'In cash') {
-                            alert('This feature will be updated soon');
-                            paymentTypeDropdown.selectedIndex = 0; // Reset to default option
-                            $('#paymentType').niceSelect('update');
-                        }
-                    });
-
                 } else {
                     console.error('Failed to fetch payment types.');
                 }
@@ -350,20 +345,29 @@
                     milkId: parseInt(item.dataset.milkId),
                     quantity: parseInt(item.querySelector('.quantity').innerText),
                     discount: 0,
-                    price: parseFloat(item.dataset.price),
-                    total: parseInt(item.dataset.total)
+                    price: parseFloat(item.dataset.price) / 1000,
+                    total: parseInt(item.dataset.total) / 1000
                 };
             });
 
+            const paymentTypeId = parseInt(paymentTypeSelect.value);
+            let orderStatusId = 1;
+            if (paymentTypeId === 2) { // InCash
+                orderStatusId = 2;
+            }
+
+            const totalAmount = parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', '')) * 1000;
+            const createAt = new Date().toISOString();
+
             const order = {
-                createAt: new Date().toISOString(),
-                updateAt: new Date().toISOString(),
+                createAt: createAt,
+                updateAt: createAt,
                 orderDate: new Date(orderDateInput.value).toISOString(),
-                totalAmount: parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', '')),
+                totalAmount: totalAmount,
                 buyerId: parseInt(userId),
                 addressId: parseInt(addressSelect.value),
-                paymentTypeId: parseInt(paymentTypeSelect.value),
-                orderStatusId: 1,
+                paymentTypeId: paymentTypeId,
+                orderStatusId: orderStatusId,
                 timeSlotId: parseInt(timeSlotSelect.value),
                 orderDetails: orderDetails
             };
@@ -379,16 +383,90 @@
                     },
                     body: JSON.stringify(order)
                 });
-                if (response.ok || response.status === 500) {
-                    console.log('Order placed successfully');
+
+                let orderData;
+
+                if (response.ok) {
+                    orderData = await response.json(); // Get created order data
+                } else {
+                    // If unsuccessful, send another GET request to retrieve the order.
+                    orderData = await fetchOrderByDateAndUserId(createAt, userId);
+                }
+
+                if (orderData) {
+                    console.log('Order placed successfully', orderData);
                     alert('Order placed successfully');
                     await clearCart();
+
+                    if (paymentTypeId === 1) { // OnlinePayment
+                        await createPaymentLink(orderData.id);
+                    } else {
+                        window.location.href = './index';
+                    }
                 } else {
                     console.error('Failed to place order');
                     alert('Failed to place order');
                 }
             } catch (error) {
                 console.error('Error placing order:', error);
+            }
+        }
+
+        async function fetchOrderByDateAndUserId(createAt, userId) {
+            const token = sessionStorage.getItem('token');
+            try {
+                const response = await fetch(`http://localhost:5215/api/Payment/FetchOrderByDateAndUserId`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId, createAt })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Fetched Order Data:', data); // Log response data for debugging
+                    return data;
+                } else {
+                    console.error('Failed to fetch order by date and userId:', response.status, response.statusText);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching order by date and userId:', error);
+                return null;
+            }
+        }
+
+
+        async function createPaymentLink(orderId) {
+            const token = sessionStorage.getItem('token');
+            try {
+                const body = {
+                    description: "Order Payment",
+                    cancelUrl: window.location.origin + "/index",
+                    returnUrl: window.location.origin + "/index",
+                    orderId: orderId // Add orderId to the body of the request
+                };
+
+                let response = await fetch(`http://localhost:5215/api/Payment/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (response.ok) {
+                    const paymentData = await response.json();
+                    window.location.href = paymentData.data.checkoutUrl; // Redirect to payment URL
+                } else {
+                    console.error('Failed to create payment link');
+                    alert('Failed to create payment link');
+                }
+            } catch (error) {
+                console.error('Error creating payment link:', error);
             }
         }
 
@@ -403,7 +481,7 @@
                 });
                 if (response.ok) {
                     console.log('Cart cleared successfully');
-                    sessionStorage.removeItem('cart'); // Xóa cart khỏi sessionStorage
+                    sessionStorage.removeItem('cart'); // Remove cart from sessionStorage
                     updateCartTotalPrice(); // Call updateCartTotalPrice after clearing cart
                     updateCartCount(); // Call updateCartCount after clearing cart
                 } else {
@@ -469,7 +547,7 @@
         }
 
         function applyCouponDiscount(coupon) {
-            // Đảm bảo coupon đưa vào là hợp lệ
+            // Make sure the coupon entered is valid
             if (!coupon) {
                 console.error('Coupon is invalid or expired');
                 return;
@@ -478,7 +556,7 @@
             let discountAmount = coupon.discount * 1000;
             let subtotal = parseFloat(document.getElementById('order-subtotal').innerText.replace(' đ', '').replace('.', ''));
             var total = subtotal - discountAmount;
-            // Cập nhật giá tiền giỏ hàng mới sau khi đã áp dụng giảm giá
+            // Update new cart price after discount has been applied
             document.getElementById('order-discount').innerText = `${formatCurrency(discountAmount)} đ`;
             document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
         }

@@ -16,6 +16,7 @@ namespace Service.Interfaces
         Task CreateOrderAsync(Order order, List<OrderDetail> orderDetails);
         Task<Order> GetOrderAsync(int orderId);
         Task<List<Order>> GetAllOrderHistory(int userId);
+        Task<bool> UpdateOrder(Order order);
         Task<List<ManagerOrderDTO>> GetUnassignedOrders();
         Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId);
         Task<List<ShipperOrderDTO>> GetShipperOrders(int shipperId);
@@ -25,5 +26,8 @@ namespace Service.Interfaces
         Task<bool> ManagerAssignOrder(int shipperId, int orderId);
         Task AutoAssignOrdersToShippers();
         Task<List<OrderStatus>> GetAllStatus();
+        Task<bool> AddPaymentOrderCode(int orderId, long orderCode);
+        Task<Order> GetOrderByPaymentOrderCode(long paymentOrderCode);
+        Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt);
     }
 }

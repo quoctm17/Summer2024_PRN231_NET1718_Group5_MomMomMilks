@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
+using DataAccess.DAO;
 using DataTransfer;
 using DataTransfer.Manager;
 using DataTransfer.Shipper;
@@ -45,6 +46,10 @@ namespace Service.Services
         {
             return await _orderRepository.GetAllOrderHistoryAsync(userId);
         }
+        public async Task<bool> UpdateOrder(Order order)
+        {
+            return await _orderRepository.UpdateOrder(order);
+        }
         public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
         {
             return await _orderRepository.GetDetailHistoryAsync(orderId);
@@ -89,6 +94,21 @@ namespace Service.Services
         public async Task<List<OrderStatus>> GetAllStatus()
         {
             return await _orderRepository.GetAllStatus();
+        }
+
+        public async Task<bool> AddPaymentOrderCode(int orderId, long orderCode)
+        {
+            return await _orderRepository.AddPaymentOrderCode(orderId, orderCode);
+        }
+
+        public async Task<Order> GetOrderByPaymentOrderCode(long paymentOrderCode)
+        {
+            return await _orderRepository.GetOrderByPaymentOrderCode(paymentOrderCode);
+        }
+
+        public async Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt)
+        {
+            return await _orderRepository.GetOrderByBuyerIdAndCreateAt(buyerId, createAt);
         }
     }
 }

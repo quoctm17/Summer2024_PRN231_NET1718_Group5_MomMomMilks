@@ -33,6 +33,7 @@ namespace BusinessObject.Entities
         [JsonIgnore]
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<CouponUsageHistory> CouponUsageHistories { get; set; }
+        public long PaymentOrderCode { get; set; }
 
     }
 }

@@ -15,6 +15,5 @@ namespace Repository.Interface
         Task RemoveCartItemAsync(int userId, int cartItemId);
         Task ClearCartAsync(int userId);
         Task SaveCartAsync(int userId, List<CartItem> cartItems);
-        //Task<bool> AddPaymentOrderCode(int cartId, long orderCode);
     }
 }
