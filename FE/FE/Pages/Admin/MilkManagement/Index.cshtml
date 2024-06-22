@@ -480,6 +480,7 @@
                     ShowErrorToast("Please fill in all fields");
                 } else {
                     var currentMilkPrice = $('#updatePrice').val();
+                    console.log(addedBatch.importedPrice);
                     if (addedBatch.importedPrice > currentMilkPrice) {
                         var userReponse = window.confirm("Current price is below imported price!");
                         if(userReponse) {
