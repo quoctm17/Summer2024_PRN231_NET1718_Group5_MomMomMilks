@@ -3,6 +3,7 @@ using DataAccess.DAO;
 using DataTransfer;
 using DataTransfer.Manager;
 using DataTransfer.Shipper;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 
 namespace Repository
@@ -77,6 +78,10 @@ namespace Repository
         {
             return await OrderDAO.Instance.GetAllOrderHistory(userId);
         }
+        public async Task<bool> UpdateOrder(Order order)
+        {
+            return await OrderDAO.Instance.UpdateOrder(order);
+        }
         public async Task<List<OrderDetailHistoryDTO>> GetDetailHistoryAsync(int orderId)
         {
             return await OrderDAO.Instance.GetDetailHistory(orderId);
@@ -119,6 +124,21 @@ namespace Repository
         public async Task<List<OrderStatus>> GetAllStatus()
         {
             return await OrderDAO.Instance.GetAllStatus();
+        }
+
+        public async Task<bool> AddPaymentOrderCode(int orderId, long orderCode)
+        {
+            return await OrderDAO.Instance.AddPaymentOrderCode(orderId, orderCode);
+        }
+
+        public async Task<Order> GetOrderByPaymentOrderCode(long paymentOrderCode)
+        {
+            return await OrderDAO.Instance.GetOrderByPaymentOrderCode(paymentOrderCode);
+        }
+
+        public async Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt)
+        {
+            return await OrderDAO.Instance.GetOrderByBuyerIdAndCreateAt(buyerId, createAt);
         }
     }
 }

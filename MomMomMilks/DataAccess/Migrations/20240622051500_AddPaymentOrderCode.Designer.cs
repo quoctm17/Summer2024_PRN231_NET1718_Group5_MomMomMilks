@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240621055501_removePaymentOrderCode")]
-    partial class removePaymentOrderCode
+    [Migration("20240622051500_AddPaymentOrderCode")]
+    partial class AddPaymentOrderCode
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -525,6 +525,9 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
+
+                    b.Property<long>("PaymentOrderCode")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("PaymentTypeId")
                         .HasColumnType("int");

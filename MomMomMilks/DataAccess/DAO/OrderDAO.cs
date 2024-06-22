@@ -90,7 +90,10 @@ namespace DataAccess.DAO
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
-            return await _context.Orders.Include(o => o.OrderDetails).FirstOrDefaultAsync(o => o.Id == orderId);
+            return await _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Milk)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
         public async Task<List<OrderStatus>> GetAllStatus()
@@ -102,7 +105,8 @@ namespace DataAccess.DAO
                     .Include(o => o.Orders)
                     .ThenInclude(o => o.OrderDetails)
                     .ToListAsync();
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -128,6 +132,19 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
             return list;
+        }
+
+        public async Task<bool> UpdateOrder(Order order)
+        {
+            try
+            {
+                _context.Orders.Update(order);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating order: " + ex.Message);
+            }
         }
 
         public async Task<List<OrderDetailHistoryDTO>> GetDetailHistory(int orderId)
@@ -285,11 +302,50 @@ namespace DataAccess.DAO
                 existedOrder.ShipperId = shipperId;
                 return await _context.SaveChangesAsync() > 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-    }
 
+        public async Task<bool> AddPaymentOrderCode(int orderId, long orderCode)
+        {
+            try
+            {
+                var order = await _context.Set<Order>().FindAsync(orderId);
+                if (order != null)
+                {
+                    order.PaymentOrderCode = orderCode;
+                }
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        public async Task<Order> GetOrderByPaymentOrderCode(long paymentOrderCode)
+        {
+            return await _context.Set<Order>()
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Milk)
+                .FirstOrDefaultAsync(o => o.PaymentOrderCode == paymentOrderCode);
+        }
+
+        public async Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt)
+        {
+            try
+            {
+                return await _context.Orders
+                    .Where(o => o.BuyerId == buyerId && o.CreateAt == createAt)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching order by buyerId and createAt", ex);
+            }
+        }
+    }
 }

@@ -100,6 +100,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpGet("me")]
+        [EnableQuery]
         public async Task<IActionResult> GetCurrentUser()
         {
             try

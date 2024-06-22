@@ -523,6 +523,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
 
+                    b.Property<long>("PaymentOrderCode")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("PaymentTypeId")
                         .HasColumnType("int");
 

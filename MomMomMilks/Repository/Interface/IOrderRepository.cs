@@ -16,6 +16,7 @@ namespace Repository.Interface
         Task AddOrderAsync(Order order, List<OrderDetail> orderDetails);
         Task<Order> GetOrderByIdAsync(int orderId);
         Task<List<Order>> GetAllOrderHistoryAsync(int userId);
+        Task<bool> UpdateOrder(Order order);
         Task<List<ManagerOrderDTO>> GetUnassignedOrders();
         Task<List<OrderDetailHistoryDTO>> GetDetailHistoryAsync(int orderId);
         Task<List<Order>> GetShipperAssignedOrderAsync(int shipperId);
@@ -25,5 +26,8 @@ namespace Repository.Interface
         Task<bool> ManagerAssignOrder(int shipperId, int orderId);
         Task AutoAssignOrdersToShippers();
         Task<List<OrderStatus>> GetAllStatus();
+        Task<bool> AddPaymentOrderCode(int orderId, long orderCode);
+        Task<Order> GetOrderByPaymentOrderCode(long paymentOrderCode);
+        Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt);
     }
 }

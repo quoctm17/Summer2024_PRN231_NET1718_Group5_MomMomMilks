@@ -4,8 +4,7 @@ using BusinessObject.Entities;
 namespace MomMomMilks.Types
 {
     public record CreatePaymentLinkRequest(
-        int mealPlanId,
-        int cartId,
+        int orderId,
         string description,
         string returnUrl,
         string cancelUrl
