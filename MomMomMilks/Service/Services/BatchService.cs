@@ -45,5 +45,9 @@ namespace Service.Services
         {
             return await _batchRepository.UpdateQuantityIfUserBought(milkId, quantityBuy);
         }
+        public async Task<bool> AutoDeleteExpiredBatch()
+        {
+            return await _batchRepository.AutoDeleteExpiredBatch();
+        }
     }
 }

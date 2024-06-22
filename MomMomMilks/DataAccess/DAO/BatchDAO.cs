@@ -142,6 +142,7 @@ namespace DataAccess.DAO
                     if (item.Quantity >= quantityBuy)
                     {
                         item.Quantity -= quantityBuy;
+                        await _context.SaveChangesAsync();
                         return true;
                     }
                     if (item.Quantity <= quantityBuy)
@@ -158,12 +159,17 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<bool> AutoUpdateExpiredDate()
+        public async Task<bool> AutoDeleteExpiredBatch()
         {
             try
             {
-                var existed = await _context.Batches.ToListAsync();
-                
+                var exists = await _context.Batches.Where(b => b.ExpiredDate < DateTime.Now.AddMonths(1)).ToListAsync();
+                if (exists != null)
+                {
+                    _context.Batches.RemoveRange(exists);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
                 return false;
             }
             catch (Exception ex)
