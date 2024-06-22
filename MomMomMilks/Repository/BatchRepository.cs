@@ -44,5 +44,9 @@ namespace Repository
         {
             return await BatchDAO.Instance.UpdateQuantityIfUserBought(milkId, quantityBuy);
         }
+        public async Task<bool> AutoDeleteExpiredBatch()
+        {
+            return await BatchDAO.Instance.AutoDeleteExpiredBatch();
+        }
     }
 }
