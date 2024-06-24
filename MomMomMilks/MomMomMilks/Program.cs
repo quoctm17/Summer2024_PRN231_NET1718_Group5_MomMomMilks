@@ -7,12 +7,6 @@ using MomMomMilks.Extensions;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.ModelBuilder;
 using System.Text.Json.Serialization;
-using Quartz;
-using Quartz.Impl;
-using Quartz.Spi;
-using Service.Services;
-using Service.Helpers;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,21 +61,6 @@ builder.Services.AddControllers();
 builder.Services.AddLogging();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Add Quartz services
-builder.Services.AddQuartz(q =>
-{
-    q.UseMicrosoftDependencyInjectionJobFactory(); // Correct method name
-    var jobKey = new JobKey("AssignOrdersJob");
-    q.AddJob<AssignOrdersJob>(opts => opts.WithIdentity(jobKey));
-    q.AddTrigger(opts => opts
-        .ForJob(jobKey)
-        .WithIdentity("AssignOrdersJob-trigger")
-        .WithCronSchedule("0 0 6,12,17 * * ?")); // Schedule at 6AM, 12PM, and 5PM
-});
-
-builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
-
 
 var app = builder.Build();
 

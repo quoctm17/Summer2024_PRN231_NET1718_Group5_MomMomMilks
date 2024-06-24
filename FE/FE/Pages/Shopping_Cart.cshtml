@@ -192,6 +192,11 @@
                         } else {
                             window.location.href = '/checkout';
                         }
+                    } else if (response.status === 404) {
+                        if (confirm("Your cart is not saved yet. Do you want to save the cart before proceeding to checkout?")) {
+                            await saveCart();
+                            window.location.href = '/checkout';
+                        }
                     } else {
                         console.error('Failed to fetch cart from database.');
                     }

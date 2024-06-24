@@ -1,7 +1,4 @@
-﻿
-using BusinessObject.Entities;
-
-namespace MomMomMilks.Types
+﻿namespace MomMomMilks.Types
 {
     public record CreatePaymentLinkRequest(
         int orderId,

@@ -38,7 +38,7 @@ namespace MomMomMilks.Controllers
                     return Unauthorized("User not logged in");
                 }
 
-                var cart = await _cartService.GetCartByUserIdAsync(1);
+                var cart = await _cartService.GetCartByUserIdAsync(userId.Value);
                 if (cart == null)
                 {
                     return NotFound();

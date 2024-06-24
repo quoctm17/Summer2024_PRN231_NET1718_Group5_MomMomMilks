@@ -33,17 +33,18 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost("create")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> CreatePaymentLink(CreatePaymentLinkRequest body)
         {
             try
             {
-                long orderCode = long.Parse(DateTimeOffset.Now.ToString("yyyyMMddHHmmss"));
+
                 var order = await _orderService.GetOrderAsync(body.orderId);
                 if (order == null)
                 {
                     throw new Exception("Order not found");
                 }
+                long orderCode = GenerateUniqueOrderCode(order.Id);
 
                 if (order.TotalAmount <= 0)
                 {
@@ -63,7 +64,7 @@ namespace MomMomMilks.Controllers
                     items.Add(item);
                 }
 
-                var totalAmountInCents = (int)order.TotalAmount;
+                var totalAmountInCents = (int)(order.TotalAmount/100);
                 if (totalAmountInCents <= 0)
                 {
                     throw new Exception("Total amount in cents must be greater than 0");
@@ -93,7 +94,7 @@ namespace MomMomMilks.Controllers
 
         [HttpGet("{orderId}")]
         [Authorize]
-        public async Task<IActionResult> GetOrder([FromRoute] int orderId)
+        public async Task<IActionResult> GetOrder([FromRoute] long orderId)
         {
             try
             {
@@ -120,6 +121,45 @@ namespace MomMomMilks.Controllers
 
         }
 
+        // Add this method in the PaymentController class
+
+        // Add this method in the PaymentController class
+
+        [HttpPost("cancel")]
+        //[Authorize]
+        public async Task<IActionResult> CancelPaymentLink(CancelPaymentLinkRequest body)
+        {
+            try
+            {
+                var order = await _orderService.GetOrderByPaymentOrderCode(body.orderCode);
+                if (order == null)
+                {
+                    throw new Exception("Order not found");
+                }
+
+                var paymentLinkInformation = await _payOS.cancelPaymentLink(body.orderCode, body.cancellationReason);
+
+                // Update order status based on current status
+                if (order.OrderStatusId == 1) // Assuming 1 is 'Paying'
+                {
+                    order.OrderStatusId = 5; // Assuming 5 represents 'Cancelled'
+                }
+                else if (order.OrderStatusId == 2) // Assuming 2 is 'Assigning'
+                {
+                    order.OrderStatusId = 6; // Assuming 6 represents 'Return Refund'
+                }
+                await _orderService.UpdateOrder(order);
+
+                return Ok(new Response(0, "success", paymentLinkInformation));
+            }
+            catch (System.Exception exception)
+            {
+                Console.WriteLine(exception);
+                return Ok(new Response(-1, "fail", null));
+            }
+        }
+
+
         [HttpPost("FetchOrderByDateAndUserId")]
         [Authorize]
         public async Task<IActionResult> FetchOrderByDateAndUserId([FromBody] FetchOrderRequestDTO request)
@@ -139,7 +179,13 @@ namespace MomMomMilks.Controllers
             }
         }
 
-
+        // Unique OrderCode constructor
+        private long GenerateUniqueOrderCode(int orderId)
+        {
+            // Combine OrderId and current time in ticks to ensure uniqueness
+            long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return orderId * 100000 + (timestamp % 100000);
+        }
 
     }
 }

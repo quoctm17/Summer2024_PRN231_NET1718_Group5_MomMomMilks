@@ -111,22 +111,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="checkout__input">
+                            @*<div class="checkout__input">
                                 <p>Discount Codes<span>*</span></p>
                                 <div class="input-group">
                                     <input id="shoping_discount_Id" type="text" placeholder="Enter your discount code" class="input-text">
                                     <button type="submit" id="btnApplyCoupon" class="site-btn">APPLY DISCOUNT</button>
                                 </div>
-                            </div>
+                            </div>*@
                             <!-- Hidden fields for UserName, Phone, and Email -->
                             <input type="hidden" id="firstName" name="firstName" required>
                             <input type="hidden" id="phone" name="phone" required>
                             <input type="hidden" id="email" name="email" required>
 
-                            <div class="checkout__input">
+                            @*<div class="checkout__input">
                                 <p>Order notes</p>
                                 <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="orderNotes">
-                            </div>
+                            </div>*@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="checkout__order">
@@ -173,7 +173,14 @@
             loadPaymentTypes();
 
             document.getElementById('placeOrderButton').addEventListener('click', placeOrder);
-            document.querySelector('.shoping__discount form').addEventListener('click', applyCoupon);
+            //document.querySelector('.shoping__discount form').addEventListener('click', applyCoupon);
+
+            // Check if orderCode is present in URL and call confirmPayment
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderCode = urlParams.get('orderCode');
+            if (orderCode) {
+                confirmPayment(orderCode);
+            }
         });
 
         async function loadOrderSummary() {
@@ -445,7 +452,7 @@
                 const body = {
                     description: "Order Payment",
                     cancelUrl: window.location.origin + "/index",
-                    returnUrl: window.location.origin + "/index",
+                    returnUrl: window.location.origin + "/Checkout",
                     orderId: orderId // Add orderId to the body of the request
                 };
 
@@ -469,6 +476,35 @@
                 console.error('Error creating payment link:', error);
             }
         }
+
+
+        async function confirmPayment(orderCode) {
+            const token = sessionStorage.getItem('token');
+            try {
+                const response = await fetch(`http://localhost:5215/api/Payment/${orderCode}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const paymentInfo = await response.json();
+                    console.log('Payment confirmed:', paymentInfo);
+                    if (paymentInfo.status === "PAID") {
+                        window.location.href = "/Customer/OrderHistory";
+                    }
+                } else {
+                    console.error('Failed to confirm payment:', response.status, response.statusText);
+                    alert('Failed to confirm payment');
+                }
+            } catch (error) {
+                console.error('Error confirming payment:', error);
+                alert('Error confirming payment');
+            }
+        }
+
+
 
         async function clearCart() {
             const token = sessionStorage.getItem('token');
