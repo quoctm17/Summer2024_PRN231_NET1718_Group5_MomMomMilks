@@ -6,27 +6,27 @@
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        Brand Management
+        Thương hiệu
     </div>
     <div class="p-4">
         <button class="btn btn-success" id="btnCreateBrand">
-            Create new brand
+            Tạo thương hiệu
         </button>
     </div>
     <div class="card-body">
         <table class="table" id="brandTable">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th></th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th></th>
                 </tr>
             </tfoot>
             <tbody class="font-weight-light">
@@ -38,7 +38,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Brand</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thêm thương hiệu</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -46,13 +46,13 @@
             <form id="createForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="createName" class="form-label">Name: </label>
+                        <label for="createName" class="form-label">Tên thương hiệu: </label>
                         <input type="text" class="form-control" required id="createName">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="createBrand">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="createBrand">Tạo</button>
                 </div>
             </form>
         </div>
@@ -62,7 +62,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update Brand</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -70,17 +70,17 @@
             <form id="updateForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="updateId" class="form-label">Id: </label>
+                        <label for="updateId" class="form-label">Mã: </label>
                         <input type="text" class="form-control" disabled id="updateId">
                     </div>
                     <div class="mb-3">
-                        <label for="updateName" class="form-label">Name: </label>
+                        <label for="updateName" class="form-label">Tên thương hiệu: </label>
                         <input type="text" class="form-control" required id="updateName">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="updateBrand">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="updateBrand">Cập nhật</button>
                 </div>
             </form>
         </div>
@@ -132,7 +132,7 @@
                         { data: 'name' },
                         {
                             data: null,
-                            defaultContent: '<button class="btn btn-primary edit">Edit</button>',
+                            defaultContent: '<button class="btn btn-primary edit">Cập nhật</button>',
                             orderable: false
                         }
                     ]

@@ -321,8 +321,8 @@ namespace DataAccess.Seed
             var list = new List<OrderStatus>
             {
                 new OrderStatus{Name="Paying"},
+                new OrderStatus{Name="Assigning"},
                 new OrderStatus{Name="Shipping"},
-                new OrderStatus{Name="Receiving"},
                 new OrderStatus{Name="Completed"},
                 new OrderStatus{Name="Cancelled"},
                 new OrderStatus{Name="Refunding"}

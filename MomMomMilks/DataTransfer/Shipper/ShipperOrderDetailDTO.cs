@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Entities;
+using DataTransfer.AddressDTOs;
 
 namespace DataTransfer.Shipper
 {
@@ -10,10 +11,11 @@ namespace DataTransfer.Shipper
         public float TotalAmount { get; set; }
         public string BuyerName { get; set; }
         public string BuyerEmail { get; set; }
+        public string BuyerPhone { get; set; }
         public string PaymentTypeName { get; set; }
         public string OrderStatusName { get; set; }
         public string ScheduleTimeSlot { get; set; }
-        public Address Address { get; set; }
+        public AddressDTO Address { get; set; }
         public ICollection<ShipperOrderDetailItemDTO> OrderDetails { get; set; }
     }
 }
