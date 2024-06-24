@@ -126,7 +126,7 @@ namespace MomMomMilks.Controllers
         // Add this method in the PaymentController class
 
         [HttpPost("cancel")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> CancelPaymentLink(CancelPaymentLinkRequest body)
         {
             try
