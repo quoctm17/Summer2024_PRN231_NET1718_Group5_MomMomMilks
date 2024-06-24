@@ -197,29 +197,41 @@
 @if(Model.Order != null)
 {
     <div class="card">
-        <div class="title">Order for @Model.Order.BuyerName</div>
+        <div class="title">Đơn hàng của @Model.Order.BuyerName</div>
         <div class="info">
             <div class="row">
                 <div class="col-7">
-                    <span id="heading">Created</span><br>
+                    <span id="heading">Ngày tạo</span><br>
                     <span id="details">@Model.Order.CreateAt</span>
                 </div>
                 <div class="col-5 pull-right">
-                    <span id="heading">Order code: </span><br>
+                    <span id="heading">Mã đơn hàng: </span><br>
                     <span id="details">@Model.Order.Id</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-7">
+                    <span id="heading">Địa chỉ</span><br>
+                    <span id="details">@Model.Order.Address.HouseNumber, @Model.Order.Address.Street, @Model.Order.Address.WardName, @Model.Order.Address.DistrictName</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-7">
+                    <span id="heading">Số điện thoại</span><br>
+                    <span id="details">@Model.Order.BuyerName - @Model.Order.BuyerPhone</span>
                 </div>
             </div>
         </div>
         <div class="pricing">
             <div class="row">
                 <div class="col-6">
-                    <span id="name">Products</span>
+                    <span id="name">Sản phẩm</span>
                 </div>
                 <div class="col-3">
-                    <span id="name">Quantity</span>
+                    <span id="name">Số lượng</span>
                 </div>
                 <div class="col-3">
-                    <span id="price">Price</span>
+                    <span id="price">Giá</span>
                 </div>
             </div>
             <hr />
@@ -238,37 +250,47 @@
                 </div>
                 <hr />
             }
+            <div class="row">
+                <div class="col-6">
+                </div>
+                <div class="col-3">
+                </div>
+                <div class="col-3">
+                    <span id="price">@Model.Order.OrderDetails.Sum(x => x.Price) VNĐ</span>
+                </div>
+            </div>
         </div>
         <div class="tracking">
-            <div class="title">Order tracker</div>
+            <div class="title">Trạng thái đơn hàng</div>
         </div>
         <div class="progress-track">
             <ul id="progressbar">
                 @if (Model.Order.OrderStatusName == "Paying")
                 {
-                    <li class="step0 active" id="step1">Paying</li>
-                    <li class="step0 active text-center" id="step2">Paid</li>
-                    <li class="step0 text-right" id="step3">Shipping</li>
-                    <li class="step0 text-right" id="step4">Completed</li>
+                    <li class="step0 active" id="step1">Chờ thanh toán</li>
+                    <li class="step0 active text-center" id="step2">Đã thanh toán</li>
+                    <li class="step0 text-right" id="step3">Đang vận chuyển</li>
+                    <li class="step0 text-right" id="step4">Hoàn thành</li>
                 } else if(Model.Order.OrderStatusName == "Shipping")
                 {
-                    <li class="step0 active" id="step1">Paying</li>
-                    <li class="step0 active text-center" id="step2">Paid</li>
-                    <li class="step0 active text-right" id="step3">Shipping</li>
-                    <li class="step0 text-right" id="step4">Completed</li>
+                    <li class="step0 active" id="step1">Chờ thanh toán</li>
+                    <li class="step0 active text-center" id="step2">Đã thanh toán</li>
+                    <li class="step0 active text-right" id="step3">Đang vận chuyển</li>
+                    <li class="step0 text-right" id="step4">Hoàn thành</li>
                 }
                 else if (Model.Order.OrderStatusName == "Completed")
                 {
-                    <li class="step0 active" id="step1">Paying</li>
-                    <li class="step0 active text-center" id="step2">Paid</li>
-                    <li class="step0 active text-right" id="step3">Shipping</li>
-                    <li class="step0 text-right" id="step4">Completed</li>
-                } else
+                    <li class="step0 active" id="step1">Chờ thanh toán</li>
+                    <li class="step0 active text-center" id="step2">Đã thanh toán</li>
+                    <li class="step0 active text-right" id="step3">Đang vận chuyển</li>
+                    <li class="step0 active text-right" id="step4">Hoàn thành</li>
+                }
+                else if (Model.Order.OrderStatusName == "Cancelled")
                 {
-                    <li class="step0 active" id="step1">Paying</li>
-                    <li class="step0 active text-center" id="step2">Paid</li>
-                    <li class="step0 active text-right" id="step3">Shipping</li>
-                    <li class="step0 text-right" id="step4">Cancelled</li>
+                    <li class="step0 active" id="step1">Chờ thanh toán</li>
+                    <li class="step0 active text-center" id="step2">Đã thanh toán</li>
+                    <li class="step0 active text-right" id="step3">Đang vận chuyển</li>
+                    <li class="step0 active text-right" id="step4">Đã hủy</li>
                 }
                 
             </ul>
@@ -277,7 +299,7 @@
 
         <div class="footer">
             <div class="row">
-                @if(Model.Order.OrderStatusName == "Đang Giao")
+                @if(Model.Order.OrderStatusName == "Shipping")
                 {
                     <form method="post">
                         <input type="hidden" asp-for="Order.Id"/>
@@ -287,7 +309,7 @@
                 } 
                 else
                 {
-                    <div>Đơn đơn đã được giao</div>
+                    <div>Đơn đã được giao</div>
                 }
             </div>
         </div>

@@ -6,31 +6,31 @@
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        Milk Age Management
+        Quản lý nhóm tuổi
     </div>
     <div class="p-4">
         <button class="btn btn-success" id="btnCreateMilkAge">
-            Create new Milk Age
+            Tạo mới nhóm tuổi
         </button>
     </div>
     <div class="card-body">
         <table class="table" id="milkAgeTable">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Min</th>
-                    <th>Max</th>
-                    <th>Unit</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Từ</th>
+                    <th>Đến</th>
+                    <th>Đơn vị</th>
+                    <th></th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Id</th>
-                    <th>Min</th>
-                    <th>Max</th>
-                    <th>Unit</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Từ</th>
+                    <th>Đến</th>
+                    <th>Đơn vị</th>
+                    <th></th>
                 </tr>
             </tfoot>
             <tbody class="font-weight-light">
@@ -43,7 +43,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Milk Age</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tạo nhóm tuổi</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -51,21 +51,21 @@
             <form id="createForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="createName" class="form-label">Min: </label>
+                        <label for="createName" class="form-label">Từ: </label>
                         <input type="number" class="form-control" min="0" id="createMin">
                     </div>
                     <div class="mb-3">
-                        <label for="createMax" class="form-label">Max: </label>
+                        <label for="createMax" class="form-label">Đến: </label>
                         <input type="number" class="form-control" min="0" id="createMax">
                     </div>
                     <div class="mb-3">
-                        <label for="createUnit" class="form-label">Unit: </label>
+                        <label for="createUnit" class="form-label">Đơn vị: </label>
                         <input type="text" class="form-control" min="0" id="createUnit">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="createMilkAge">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="createMilkAge">Tạo</button>
                 </div>
             </form>
         </div>
@@ -75,7 +75,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update Milk Age</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật nhóm tuổi</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -83,25 +83,25 @@
             <form id="updateForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="updateId" class="form-label">Id: </label>
+                        <label for="updateId" class="form-label">Mã: </label>
                         <input type="text" class="form-control" disabled id="updateId">
                     </div>
                     <div class="mb-3">
-                        <label for="updateMin" class="form-label">Min: </label>
+                        <label for="updateMin" class="form-label">Từ: </label>
                         <input type="number" class="form-control" min="0" id="updateMin">
                     </div>
                     <div class="mb-3">
-                        <label for="updateMax" class="form-label">Max: </label>
+                        <label for="updateMax" class="form-label">Đến: </label>
                         <input type="number" class="form-control" min="0" id="updateMax">
                     </div>
                     <div class="mb-3">
-                        <label for="updateUnit" class="form-label">Unit: </label>
+                        <label for="updateUnit" class="form-label">Đơn vị: </label>
                         <input type="text" class="form-control" min="0" id="updateUnit">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="updateMilkAge">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateMilkAge">Cập nhật</button>
                 </div>
             </form>
         </div>
@@ -154,7 +154,7 @@
                         { data: 'unit' },
                         {
                             data: null,
-                            defaultContent: '<button class="btn btn-primary edit">Edit</button>',
+                            defaultContent: '<button class="btn btn-primary edit">Cập nhật</button>',
                             orderable: false
                         }
                     ]

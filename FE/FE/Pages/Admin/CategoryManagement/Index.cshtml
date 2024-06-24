@@ -6,29 +6,29 @@
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        Category Management
+        Quản lý loại sữa
     </div>
     <div class="p-4">
         <button class="btn btn-success" id="btnCreateCategory">
-            Create new category
+            Tạo mới loại sữa
         </button>
     </div>
     <div class="card-body">
         <table class="table" id="categoryTable">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Giới thiệu</th>
+                    <th></th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Giới thiệu</th>
+                    <th></th>
                 </tr>
             </tfoot>
             <tbody class="font-weight-light">
@@ -40,7 +40,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thêm loại sữa</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -48,17 +48,17 @@
             <form id="createForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="createName" class="form-label">Name: </label>
+                        <label for="createName" class="form-label">Tên: </label>
                         <input type="text" class="form-control" required id="createName">
                     </div>
                     <div class="mb-3">
-                        <label for="createName" class="form-label">Description: </label>
+                        <label for="createName" class="form-label">Giới thiệu: </label>
                         <input type="text" class="form-control" required id="createDescription">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="createCategory">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="createCategory">Tạo</button>
                 </div>
             </form>
         </div>
@@ -68,7 +68,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update Category</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -76,21 +76,21 @@
             <form id="updateForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="updateId" class="form-label">Id: </label>
+                        <label for="updateId" class="form-label">Mã: </label>
                         <input type="text" class="form-control" disabled id="updateId">
                     </div>
                     <div class="mb-3">
-                        <label for="updateName" class="form-label">Name: </label>
+                        <label for="updateName" class="form-label">Tên: </label>
                         <input type="text" class="form-control" required id="updateName">
                     </div>
                     <div class="mb-3">
-                        <label for="updateName" class="form-label">Description: </label>
+                        <label for="updateName" class="form-label">Giới thiệu: </label>
                         <input type="text" class="form-control" required id="updateDescription">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="updateCategory">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="updateCategory">Cập nhật</button>
                 </div>
             </form>
         </div>
@@ -143,7 +143,7 @@
                         { data: 'description' },
                         {
                             data: null,
-                            defaultContent: '<button class="btn btn-primary edit">Edit</button>',
+                            defaultContent: '<button class="btn btn-primary edit">Cập nhật</button>',
                             orderable: false
                         }
                     ]

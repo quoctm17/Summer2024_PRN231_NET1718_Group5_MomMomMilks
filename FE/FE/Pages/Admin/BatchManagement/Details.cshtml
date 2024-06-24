@@ -3,7 +3,7 @@
 @{
     var message = TempData["Message"];
 }
-<h1 class="text-center">Update batch</h1>
+<h1 class="text-center">Cập nhật lô</h1>
 @if (message != null)
 {
     <div>
@@ -13,47 +13,47 @@
 <form method="post" class="p-4" id="updateBatchForm">
     <div class="text-danger" asp-validation-summary="All"></div>
     <div class="mb-3">
-        <label for="batchId" class="form-label">ID: </label>
+        <label for="batchId" class="form-label">Mã lô hàng: </label>
         <input type="number" class="form-control" id="batchId" asp-for="Batch.Id" />
         <span class="text-danger" asp-validation-for="Batch.Id"></span>
     </div>
     <div class="mb-3">
-        <label for="importedDate" class="form-label">Imported Date: </label>
+        <label for="importedDate" class="form-label">Ngày nhập: </label>
         <input type="datetime-local" class="form-control" required id="importedDate" asp-for="Batch.ImportDate" />
         <span class="text-danger" asp-validation-for="Batch.ImportDate"></span>
     </div>
     <div class="mb-3">
-        <label for="expiredDate" class="form-label">Expired Date: </label>
+        <label for="expiredDate" class="form-label">Ngày hết hạn: </label>
         <input type="date" class="form-control" required id="expiredDate" asp-for="Batch.ExpiredDate" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
         <span class="text-danger" asp-validation-for="Batch.ExpiredDate"></span>
     </div>
     <div class="mb-3">
-        <label for="importedPrice" class="form-label">Imported Price: </label>
+        <label for="importedPrice" class="form-label">Giá nhập: </label>
         <input type="number" class="form-control" required id="importedPrice" asp-for="Batch.ImportedPrice" />
         <span class="text-danger" asp-validation-for="Batch.ImportedPrice"></span>
     </div>
     <div class="mb-3">
-        <label for="quantity" class="form-label">Quantity: </label>
+        <label for="quantity" class="form-label">Số lượng: </label>
         <input type="number" class="form-control" required id="quantity" asp-for="Batch.Quantity" />
         <span class="text-danger" asp-validation-for="Batch.Quantity"></span>
     </div>
     <div class="mb-3">
-        <label for="milkId" class="form-label">Milk: </label>
+        <label for="milkId" class="form-label">Sữa: </label>
         <select class="form-control" id="milkId" asp-for="Batch.MilkId" onchange="executeFunction()">
             @foreach (var milk in Model.Milks)
             {
                 <option value="@milk.Id">@milk.Name</option>
             }
         </select>
-        <p class="text-warning" id="currentMilkPrice">Milk price: </p>
+        <p class="text-warning" id="currentMilkPrice">Giá sữa: </p>
         <span class="text-danger" asp-validation-for="Batch.MilkId"></span>
     </div>
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary mt-3">Update</button>
+        <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
 </form>
         <form method="post" asp-page-handler="Delete">
             <input type="number" class="form-control" hidden id="batchId" asp-for="Batch.Id" />
-                <button type="submit" class="btn btn-danger mt-3">Delete</button>
+                <button type="submit" class="btn btn-danger mt-3">Xoá</button>
         </form>
     </div>
 
@@ -68,7 +68,7 @@
             fetch('http://localhost:5215/odata/milk/' + milkId, { method: 'GET' }) // replace it with your api endpoint
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('currentMilkPrice').innerHTML = 'Current Milk Price: ' + data.price + ' VNĐ';
+                    document.getElementById('currentMilkPrice').innerHTML = 'Giá sữa hiện tại: ' + data.price + ' VNĐ';
                     currentMilkPrice = data.price;
                 })
                 .catch((error) => {
@@ -82,7 +82,7 @@
             fetch('http://localhost:5215/odata/milk/' + milkId, { method: 'GET' }) // replace it with your api endpoint
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('currentMilkPrice').innerHTML = 'Current Milk Price: ' + data.price + ' VNĐ';
+                    document.getElementById('currentMilkPrice').innerHTML = 'Giá sữa hiện tại: ' + data.price + ' VNĐ';
                     currentMilkPrice = data.price;
                 })
                 .catch((error) => {
@@ -104,7 +104,7 @@
             if (importedPrice < milkPrice) {
                 form.submit();
             } else {
-                var userResponse = window.confirm("The milk's current price is under imported price. Are you sure?");
+                var userResponse = window.confirm("Giá sữa hiện tại đang thấp hơn giá nhập!");
                 if (userResponse) {
                     form.submit();
                 }

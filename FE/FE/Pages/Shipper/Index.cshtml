@@ -6,12 +6,12 @@
 <table id="orderTable" class="table align-middle mb-0 bg-white vh-100">
     <thead class="bg-light">
         <tr>
-            <th>Customer</th>
-            <th>Created</th>
-            <th>Updated</th>
-            <th>Timeslot</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>Khách hàng</th>
+            <th>Ngày tạo</th>
+            <th>Ngày cập nhật</th>
+            <th>Buổi</th>
+            <th>Trạng thái</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -36,32 +36,32 @@
                     <p class="fw-normal mb-1">@order.ScheduleTimeSlot</p>
                 </td>
                 <td>
-                    @if(order.OrderStatusName == "To Pay")
+                    @if(order.OrderStatusName == "Paying")
                     {
                         <span class="badge badge-warning rounded-pill d-inline">
-                            @order.OrderStatusName
+                            Đang chờ thanh toán
                         </span>
-                    } else if(order.OrderStatusName == "To Ship")
+                    } else if(order.OrderStatusName == "Shipping")
                     {
                         <span class="badge badge-info rounded-pill d-inline">
-                            @order.OrderStatusName
+                            Đang vận chuyển
                         </span>
                     } else if(order.OrderStatusName == "Completed")
                     {
                         <span class="badge badge-success rounded-pill d-inline">
-                            @order.OrderStatusName
+                            Đã hoàn thành
                         </span>
-                    } else
+                    } else if(order.OrderStatusName == "Cancelled")
                     {
                         <span class="badge badge-danger rounded-pill d-inline">
-                            @order.OrderStatusName
+                            Đã hủy
                         </span>
                     }
 
                 </td>
                 <td>
                     <a class="btn btn-link btn-sm btn-rounded" asp-page="/shipper/orderdetail" asp-route-orderId="@order.Id">
-                        View
+                        Chi tiết
                     </a>
                 </td>
             </tr>

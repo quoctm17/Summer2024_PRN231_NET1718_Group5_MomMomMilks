@@ -172,7 +172,7 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Do not find Shipper");
+                    throw new Exception("Cannot find Shipper");
                 }
                 var orders = await _context.Orders.Where(x => x.ShipperId == shipper.Id)
                     .Include(x => x.Address)
@@ -196,10 +196,12 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Do not find Shipper");
+                    throw new Exception("Cannot find Shipper");
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .Include(x => x.Address)
+                    .ThenInclude(a => a.Ward)
+                    .ThenInclude(a => a.District)
                     .Include(x => x.Buyer)
                     .Include(x => x.PaymentType)
                     .Include(x => x.Schedule)
@@ -223,11 +225,11 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Do not find Shipper");
+                    throw new Exception("Cannot find Shipper");
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .FirstOrDefaultAsync();
-                order.OrderStatusId = 3;
+                order.OrderStatusId = 4;
                 return await _context.SaveChangesAsync() > 0;
             }
             catch (Exception ex)
@@ -243,11 +245,11 @@ namespace DataAccess.DAO
                 var shipper = await _context.Shippers.Where(x => x.AppUserId == shipperId).FirstOrDefaultAsync();
                 if (shipper == null)
                 {
-                    throw new Exception("Do not find Shipper");
+                    throw new Exception("Cannot find Shipper");
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .FirstOrDefaultAsync();
-                order.OrderStatusId = 4;
+                order.OrderStatusId = 5;
                 return await _context.SaveChangesAsync() > 0;
             }
             catch (Exception ex)

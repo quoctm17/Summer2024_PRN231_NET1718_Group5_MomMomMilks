@@ -6,33 +6,33 @@
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        Milk Management
+        Quản lý sữa
     </div>
     <div class="p-4">
         <button class="btn btn-success" id="btnCreateMilk">
-            Create new milk
+            Thêm sữa
         </button>
     </div>
     <div class="card-body">
         <table class="table" id="milkTable">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Giới thiệu</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th></th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Action</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Giới thiệu</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th></th>
                 </tr>
             </tfoot>
             <tbody class="font-weight-light">
@@ -44,7 +44,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Milk</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thêm sữa</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -52,58 +52,58 @@
             <form id="createForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="createName" class="form-label">Name: </label>
+                        <label for="createName" class="form-label">Tên: </label>
                         <input type="text" class="form-control" required id="createName">
                     </div>
                     <div class="mb-3">
-                        <label for="createDescription" class="form-label">Description: </label>
+                        <label for="createDescription" class="form-label">Giới thiệu: </label>
                         <textarea type="text" class="form-control" required id="createDescription" rows="4"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="createPrice" class="form-label">Price: </label>
+                        <label for="createPrice" class="form-label">Giá: </label>
                         <input type="number" class="form-control" required id="createPrice">
                     </div>
                     <div class="mb-3">
-                        <label for="createUserManual" class="form-label">User Manual: </label>
+                        <label for="createUserManual" class="form-label">Hướng dẫn sử dụng: </label>
                         <input type="text" class="form-control" required id="createUserManual">
                     </div>
                     <div class="mb-3">
-                        <label for="createWarning" class="form-label">Warning: </label>
+                        <label for="createWarning" class="form-label">Khuyến cáo: </label>
                         <input type="text" class="form-control" required id="createWarning">
                     </div>
                     <div class="mb-3">
-                        <label for="createPreserveInstructions" class="form-label">Preservation Instruction: </label>
+                        <label for="createPreserveInstructions" class="form-label">Cách bảo quản: </label>
                         <input type="text" class="form-control" required id="createPreserveInstructions">
                     </div>
                     <div class="mb-3">
-                        <label for="createBrand" class="form-label">Brand: </label>
+                        <label for="createBrand" class="form-label">Thương hiệu: </label>
                         <select type="text" class="form-control" id="createBrand"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="createCategory" class="form-label">Category: </label>
+                        <label for="createCategory" class="form-label">Loại sữa: </label>
                         <select type="text" class="form-control" id="createCategory"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="createMilkAge" class="form-label">Milk Age: </label>
+                        <label for="createMilkAge" class="form-label">Nhóm tuổi: </label>
                         <select type="text" class="form-control" id="createMilkAge"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="createSupplier" class="form-label">Supplier: </label>
+                        <label for="createSupplier" class="form-label">Nhà cung cấp: </label>
                         <select type="text" class="form-control" id="createSupplier"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="imageUpload" class="form-label">Upload Image</label>
+                        <label for="imageUpload" class="form-label">Thêm ảnh</label>
                         <input type="file" class="form-control" id="imageUpload">
                         <img src="" id="imageDisplay" style="display:none;width:300px;" />
                     </div>
                     <div class="mb-3">
-                        <label for="createImageUrl" class="form-label">Image Url: </label>
+                        <label for="createImageUrl" class="form-label">Link ảnh: </label>
                         <input type="text" class="form-control" disabled id="createImageUrl">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="createMilk">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="createMilk">Tạo</button>
                 </div>
             </form>
         </div>
@@ -113,7 +113,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update Milk</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Cập nhật</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -121,79 +121,79 @@
             <form id="updateForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="updateId" class="form-label">Id: </label>
+                        <label for="updateId" class="form-label">Mã: </label>
                         <input type="text" class="form-control" disabled id="updateId">
                     </div>
                     <div class="mb-3">
-                        <label for="updateName" class="form-label">Name: </label>
+                        <label for="updateName" class="form-label">Tên: </label>
                         <input type="text" class="form-control" required id="updateName">
                     </div>
                     <div class="mb-3">
-                        <label for="updateDescription" class="form-label">Description: </label>
+                        <label for="updateDescription" class="form-label">Giới thiệu: </label>
                         <textarea type="text" class="form-control" required id="updateDescription" rows="4"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="updatePrice" class="form-label">Price: </label>
+                        <label for="updatePrice" class="form-label">Giá: </label>
                         <input type="number" class="form-control" required id="updatePrice">
                     </div>
                     <div class="mb-3">
-                        <label for="updateUserManual" class="form-label">User Manual: </label>
+                        <label for="updateUserManual" class="form-label">Hướng dẫn sử dụng: </label>
                         <input type="text" class="form-control" required id="updateUserManual">
                     </div>
                     <div class="mb-3">
-                        <label for="updateWarning" class="form-label">Warning: </label>
+                        <label for="updateWarning" class="form-label">Khuyến cáo: </label>
                         <input type="text" class="form-control" required id="updateWarning">
                     </div>
                     <div class="mb-3">
-                        <label for="updatePreserveInstructions" class="form-label">Preservation Instruction: </label>
+                        <label for="updatePreserveInstructions" class="form-label">Cách bảo quản: </label>
                         <input type="text" class="form-control" required id="updatePreserveInstructions">
                     </div>
                     <div class="mb-3">
-                        <label for="updateBrand" class="form-label">Brand: </label>
+                        <label for="updateBrand" class="form-label">Thương hiệu: </label>
                         <select type="text" class="form-control" id="updateBrand"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="updateCategory" class="form-label">Category: </label>
+                        <label for="updateCategory" class="form-label">Loại sữa: </label>
                         <select type="text" class="form-control" id="updateCategory"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="updateMilkAge" class="form-label">Milk Age: </label>
+                        <label for="updateMilkAge" class="form-label">Nhóm tuổi: </label>
                         <select type="text" class="form-control" id="updateMilkAge"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="updateSupplier" class="form-label">Supplier: </label>
+                        <label for="updateSupplier" class="form-label">Nhà cung cấp: </label>
                         <select type="text" class="form-control" id="updateSupplier"></select>
                     </div>
                     <div class="mb-3">
-                        <label for="updateImageUpload" class="form-label">Upload Image</label>
+                        <label for="updateImageUpload" class="form-label">Đăng ảnh</label>
                         <input type="file" class="form-control" id="updateImageUpload">
                         <img src="" id="updateImageDisplay" style="display:none;width:300px;" />
                     </div>
                     <div class="mb-3">
-                        <label for="updateImageUrl" class="form-label">Image Url: </label>
+                        <label for="updateImageUrl" class="form-label">Link ảnh: </label>
                         <input type="text" class="form-control" disabled id="updateImageUrl">
                     </div>
                     <div class="mb-3">
-                        <button type="button" class="btn btn-primary" id="btnCreateBatch">Add Batch</button>
+                        <button type="button" class="btn btn-primary" id="btnCreateBatch">Thêm lô cho sữa này</button>
                     </div>
                     <div class="mb-3">
                         <table class="table" id="batchTable">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Imported Date</th>
-                                    <th>Expired Date</th>
-                                    <th>Imported Price</th>
-                                    <th>Quantity</th>
+                                    <th>Mã lô</th>
+                                    <th>Ngày nhập</th>
+                                    <th>Ngày hết hạn</th>
+                                    <th>Giá nhập</th>
+                                    <th>Số lượng</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Imported Date</th>
-                                    <th>Expired Date</th>
-                                    <th>Imported Price</th>
-                                    <th>Quantity</th>
+                                    <th>Mã lô</th>
+                                    <th>Ngày nhập</th>
+                                    <th>Ngày hết hạn</th>
+                                    <th>Giá nhập</th>
+                                    <th>Số lượng</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -202,8 +202,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="updateMilk">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="updateMilk">Cập nhật</button>
                 </div>
             </form>
         </div>
@@ -213,7 +213,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add batch for this milk</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thêm lô mới</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -221,29 +221,29 @@
             <form id="createBatchForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="batchImportedDate" class="form-label">Imported Date: </label>
+                        <label for="batchImportedDate" class="form-label">Ngày nhập: </label>
                         <input type="date" class="form-control" min="0" id="batchImportedDate">
                     </div>
                     <div class="mb-3">
-                        <label for="batchExpiredDate" class="form-label">Expired Date: </label>
+                        <label for="batchExpiredDate" class="form-label">Ngày hết hạn: </label>
                         <input type="date" class="form-control" min="0" id="batchExpiredDate">
                     </div>
                     <div class="mb-3">
-                        <label for="batchImportedPrice" class="form-label">Imported Price: </label>
+                        <label for="batchImportedPrice" class="form-label">Giá nhập: </label>
                         <input type="number" class="form-control" min="0" id="batchImportedPrice">
                     </div>
                     <div class="mb-3">
-                        <label for="batchQuantity" class="form-label">Quantity: </label>
+                        <label for="batchQuantity" class="form-label">Số lượng: </label>
                         <input type="number" class="form-control" min="0" id="batchQuantity">
                     </div>
                     <div class="mb-3">
-                        <label for="batchMilkId" class="form-label">Milk Id: </label>
+                        <label for="batchMilkId" class="form-label">Mã sữa: </label>
                         <input type="number" disabled class="form-control" min="0" id="batchMilkId">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="createBatch">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="createBatch">Tạo lô</button>
                 </div>
             </form>
         </div>
