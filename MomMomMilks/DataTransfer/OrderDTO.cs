@@ -17,5 +17,6 @@ namespace DataTransfer
         public int PaymentTypeId { get; set; }
         public int TransactionId { get; set; }
         public int ShipperId { get; set; }
+        public long PaymentOrderCode {  get; set; }
     }
 }
