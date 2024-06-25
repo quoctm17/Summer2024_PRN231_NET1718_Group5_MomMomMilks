@@ -140,5 +140,15 @@ namespace Repository
         {
             return await OrderDAO.Instance.GetOrderByBuyerIdAndCreateAt(buyerId, createAt);
         }
+
+        public async Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue()
+        {
+            return await OrderDAO.Instance.GetOrdersToCalculateRevenue();
+        }
+        public async Task UpdateOrderStatusWhenOverDateAsync()
+        {
+            await OrderDAO.Instance.UpdateOrderStatusWhenOverDateAsync();
+        }
+    
     }
 }

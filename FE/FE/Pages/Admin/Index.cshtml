@@ -109,7 +109,7 @@
                 }
 
                 let data = await response.json();
-                const orders = data.$values;
+                const orders = data.$values;                    
 
                 // Process data for the area chart (total amount per month)
                 const monthlyAmounts = {};
@@ -121,8 +121,11 @@
                     monthlyAmounts[month] += order.totalAmount;
                 });
 
+                
+
                 // Prepare data for the area chart
                 const monthlyLabels = Object.keys(monthlyAmounts);
+                
                 const monthlyAmountsData = Object.values(monthlyAmounts);
 
                 // Create the area chart
@@ -235,16 +238,96 @@
                     });
                 }
 
+
+                    //Revenue
+                    let responseRevenue = await fetch('http://localhost:5215/odata/Revenue', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (!responseRevenue.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    let dataOrder = await responseRevenue.json();
+                    const ordersRevenue = dataOrder.$values;
+
+                    //Batch
+
+
+                    let responseBatch = await fetch('http://localhost:5215/odata/Batches', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (!responseBatch.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    let dataBatch = await responseBatch.json();
+                    const batches = dataBatch.$values;
+
+                //Revenue
+                    const monthlyProfits = {};
+                    const monthlyAmountsRevenue = {};
+                    ordersRevenue.forEach(order => {
+                        const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
+                        if (!monthlyAmountsRevenue[month]) {
+                            monthlyAmountsRevenue[month] = 0;
+                        }
+                        monthlyAmountsRevenue[month] += order.totalAmount;
+                    });
+
+                    const monthlyOrdersRevenue = {};
+                    ordersRevenue.forEach(order => {
+                        const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
+                        if (!monthlyOrdersRevenue[month]) {
+                            monthlyOrdersRevenue[month] = 0;
+                        }
+                        monthlyOrdersRevenue[month]++;
+                    });
+
+                    const monthlyLabelsForRevenue = Object.keys(monthlyAmountsRevenue);
+
+                    const milkPriceMap = {};
+                    batches.forEach(batch => {
+                        if (!milkPriceMap[batch.milkId]) {
+                            milkPriceMap[batch.milkId] = batch.importedPrice;
+                        }
+                    });
+
+                    ordersRevenue.forEach(order => {
+                        const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
+                        if (ordersRevenue == null && ordersRevenue["$values"] == null) { console.log("Null Revenue")}
+                        if (!monthlyProfits[month]) {
+                            monthlyProfits[month] = 0; // Khởi tạo giá trị profit ban đầu
+                        }
+
+                        order.orderDetails["$values"].forEach(detail => {
+                            const batch = batches.find(b => b.milkId === detail.milkId);
+                            if (batch) {
+                                const profitPerProduct = (detail.price - batch.importedPrice) * detail.quantity;
+                                console.log(`Profit for Milk ID: ${detail.milkId} is ${profitPerProduct}`);
+                                monthlyProfits[month] += profitPerProduct;
+                            }
+                        });
+                    });
+
+                    console.log("Monthly Profits: ", monthlyProfits);
+
+                    console.log("Monthly Amounts Revenue: ", monthlyAmountsRevenue);
+                    console.log("Monthly Orders Revenue: ", monthlyOrdersRevenue);
+                    console.log("Monthly Profits: ", monthlyProfits);
+
+
                     const tableBody = document.querySelector('#datatablesSimple tbody');
-                    monthlyLabels.forEach(month => {
+                    monthlyLabelsForRevenue.forEach(month => {
                         const row = document.createElement('tr');
                         const cellMonth = document.createElement('td');
                         const cellTotalRevenue = document.createElement('td');
                         const cellTotalOrders = document.createElement('td');
 
                         cellMonth.textContent = month;
-                        cellTotalRevenue.textContent = monthlyAmounts[month] ? formatCurrency(monthlyAmounts[month]) : '0.00 VNĐ';
-                        cellTotalOrders.textContent = monthlyOrders[month];
+                        cellTotalRevenue.textContent = monthlyProfits[month] ? formatCurrency(monthlyProfits[month]) : '0.00 VNĐ';
+                        cellTotalOrders.textContent = monthlyOrdersRevenue[month];
 
                         row.appendChild(cellMonth);
                         row.appendChild(cellTotalRevenue);
