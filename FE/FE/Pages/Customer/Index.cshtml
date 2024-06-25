@@ -51,10 +51,10 @@
                 }
             </div>
             <div class="list-group list-group-flush">
-                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">User Information</a>
-                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
-                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">My Address</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Thông tin của tôi</a>
+                <a href="/Customer/OrderHistory?userId=@account?.Id" class="list-group-item list-group-item-action rounded">Đơn hàng</a>
+                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">Địa chỉ</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Coupon</a>
             </div>
         </div>
         <!-- Main Content -->
@@ -83,13 +83,13 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Order</th>
-                                <th>Created Date</th>
-                                <th>Updated Date</th>
-                                <th>Total Amount</th>
-                                <th>Payment Method</th>
-                                <th>Shipper</th>
-                                <th>Status</th>
+                                <th>Đơn hàng</th>
+                                <th>Ngày mua</th>
+                                <th>Sửa vào ngày</th>
+                                <th>Tổng tiền</th>
+                                <th>Phương thức thanh toán</th>
+                                <th>Người giao</th>
+                                <th>Trạng thái</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -233,31 +233,31 @@
                 console.log(`Order ID: ${order.id} - Adding buttons for online payment`);
                 if (normalizedStatusId === 1) { // Paying
                     return `
-                        <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">View</a>
-                        <a href="#" onclick="payOrder(event, ${order.paymentOrderCode})" class="btn btn-success">Pay</a>
-                        <a href="#" onclick="prepareCancelOrderOnline(${order.paymentOrderCode})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">Cancel</a>
+                        <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>
+                        <a href="#" onclick="prepareCancelOrderOnline(${order.paymentOrderCode})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">Hủy</a>
+                        <a href="#" onclick="payOrder(event, ${order.paymentOrderCode})" class="btn btn-success mt-2">Thanh toán</a>
                     `;
                 } else if (normalizedStatusId === 2) {
                     return `
-                            <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">View</a>
-                            <a href="#" onclick="prepareCancelOrderOnline(${order.paymentOrderCode})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">Cancel</a>
+                                <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>
+                            <a href="#" onclick="prepareCancelOrderOnline(${order.paymentOrderCode})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">Hủy</a>
                         `;
                 } else {
-                    return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">View</a>`;
+                    return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>`;
                 }
             case "In cash": // Cash Payment
                 console.log(`Order ID: ${order.id} - Adding buttons for cash payment`);
                 if (normalizedStatusId === 2) { // Assigning
                     return `
-                        <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">View</a>
-                        <a href="#" onclick="cancelOrderInCash(${order.id})" class="btn btn-danger">Cancel</a>
+                            <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>
+                        <a href="#" onclick="cancelOrderInCash(${order.id})" class="btn btn-danger">Hủy</a>
                     `;
                 } else {
-                    return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">View</a>`;
+                    return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>`;
                 }
             default:
                 console.log(`Order ID: ${order.id} - View only`);
-                return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">View</a>`;
+                return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>`;
         }
     }
 

@@ -51,15 +51,15 @@
                 }
             </div>
             <div class="list-group list-group-flush">
-                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">User Information</a>
-                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
-                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">My Address</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Thông tin của tôi</a>
+                <a href="/Customer/OrderHistory?userId=@account?.Id" class="list-group-item list-group-item-action rounded">Đơn hàng</a>
+                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">Địa chỉ</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Coupon</a>
             </div>
         </div>
         <!-- Main Content -->
         <div class="col-lg-10 col-md-9 main-content pt-4">
-            <h2 class="mb-4">My Information</h2>
+            <h2 class="mb-4">Thông tin của tôi</h2>
             <form method="post">
                 <table class="table">
                     <tbody>
@@ -69,16 +69,16 @@
                             <td><input id="userEmail" asp-for="@Model.User.Email" class="form-control" /></td>
                         </tr>
                         <tr>
-                            <td><b>Full Name</b></td>
+                            <td><b>Tên</b></td>
                             <td><input id="userName" asp-for="@Model.User.UserName" class="form-control" /></td>
                         </tr>
                         <tr>
-                            <td><b>Phone Number</b></td>
+                            <td><b>Số điện thoại</b></td>
                             <td><input id="userPhone" asp-for="@Model.User.PhoneNumber" class="form-control" /></td>
                         </tr>
                     </tbody>
                 </table>
-                <input type="submit" id="editProfile" class="site-btn" value="Edit Profile" />
+                <input type="submit" id="editProfile" class="site-btn" value="Sửa thông tin" />
             </form>
         </div>
     </div>
