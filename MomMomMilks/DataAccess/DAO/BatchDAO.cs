@@ -166,7 +166,10 @@ namespace DataAccess.DAO
                 var exists = await _context.Batches.Where(b => b.ExpiredDate < DateTime.Now.AddMonths(1)).ToListAsync();
                 if (exists != null)
                 {
-                    _context.Batches.RemoveRange(exists);
+                    foreach (var item in exists)
+                    {
+                        item.Status = 0;
+                    }
                     await _context.SaveChangesAsync();
                     return true;
                 }
