@@ -51,27 +51,27 @@
                 }
             </div>
             <div class="list-group list-group-flush">
-                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">User Information</a>
-                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
-                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">My Address</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Thông tin của tôi</a>
+                <a href="/Customer/OrderHistory?userId=@account?.Id" class="list-group-item list-group-item-action rounded">Đơn hàng</a>
+                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">Địa chỉ</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Coupon</a>
             </div>
         </div>
         <!-- Main Content -->
         <div class="col-lg-10 col-md-9 main-content pt-4">
-            <h2 class="mb-4">My Addresses</h2>
+            <h2 class="mb-4">Địa chỉ của tôi</h2>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Number</th>
-                        <th>Address</th>
-                        <th>Actions</th>
+                        <th>#</th>
+                        <th>Địa chỉ</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
                 <tbody id="addressList">
                 </tbody>
             </table>
-            <a asp-page="/Customer/NewUserAddress" class="site-btn">Add new Address</a>
+            <a asp-page="/Customer/NewUserAddress" class="site-btn">Thêm mới địa chỉ</a>
         </div>
     </div>
 </div>
@@ -131,8 +131,8 @@
                 tr.innerHTML = `<td>${sequenceNumber}</td>
                                     <td>${address.houseNumber} ${address.street}, ${wardName}, ${districtName}</td>
                                     <td>
-                                        <a href="/Customer/UserAddressEdit?id=${address.id}">Update</a> |
-                                        <a href="" onclick="deleteAddress('${address.id}')">Delete</a>
+                                        <a href="/Customer/UserAddressEdit?id=${address.id}">Sửa</a> |
+                                        <a href="" onclick="deleteAddress('${address.id}')">Xóa</a>
                                     </td>`;
                 addressList.appendChild(tr);
                 sequenceNumber++;
