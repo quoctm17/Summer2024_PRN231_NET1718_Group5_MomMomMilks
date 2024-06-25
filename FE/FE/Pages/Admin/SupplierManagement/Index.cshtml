@@ -194,7 +194,7 @@
                     name: $("#createName").val(),
                 };
                 if (!addedSupplier.name) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: "http://localhost:5215/odata/Supplier",
@@ -223,7 +223,7 @@
                     name: $("#updateName").val(),
                 };
                 if (!updateSupplier.id || !updateSupplier.name) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: `http://localhost:5215/odata/Supplier`,

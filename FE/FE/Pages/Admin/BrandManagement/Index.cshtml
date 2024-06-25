@@ -194,7 +194,7 @@
                     name: $("#createName").val(),
                 };
                 if (!addedBrand.name) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: "http://localhost:5215/odata/Brands",
@@ -223,7 +223,7 @@
                     name: $("#updateName").val(),
                 };
                 if (!updateBrand.id || !updateBrand.name) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: `http://localhost:5215/odata/Brands`,
