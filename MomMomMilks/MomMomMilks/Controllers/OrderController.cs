@@ -119,27 +119,39 @@ namespace MomMomMilks.Controllers
         [HttpGet("OrderHistory({userId})")]
         public async Task<IActionResult> GetOrderHistoryByUserId([FromRoute] int userId)
         {
-            var orderHistory = await _orderService.GetAllOrderHistory(userId);
-            if (orderHistory == null)
+            try
             {
-                return NotFound();
-            }
-            var orderHistoryDTOs = orderHistory.Select(order => new OrderHistoryDTO
-            {
-                Id = order.Id,
-                CreateAt = order.CreateAt,
-                UpdateAt = order.UpdateAt,
-                TotalAmount = order.TotalAmount,
-                BuyerId = order.BuyerId,
-                AddressId = order.AddressId,
-                PaymentType = order.PaymentType.Name,
-                TransactionId = order.TransactionId,
-                Shipper = order.Shipper != null ? order.Shipper.UserName : null,
-                OrderStatusId = order.OrderStatusId
-            }).ToList();
+                var orderHistory = await _orderService.GetAllOrderHistory(userId);
+                if (orderHistory == null || !orderHistory.Any())
+                {
+                    return NotFound();
+                }
 
-            return Ok(orderHistoryDTOs);
+                var orderHistoryDTOs = orderHistory.Select(order => new OrderHistoryDTO
+                {
+                    Id = order.Id,
+                    CreateAt = order.CreateAt,
+                    UpdateAt = order.UpdateAt,
+                    TotalAmount = order.TotalAmount,
+                    BuyerId = order.BuyerId,
+                    AddressId = order.AddressId,
+                    PaymentType = order.PaymentType?.Name,
+                    TransactionId = order.TransactionId,
+                    Shipper = order.Shipper?.UserName,
+                    OrderStatusId = order.OrderStatusId,
+                    PaymentOrderCode = order.PaymentOrderCode
+                }).ToList();
+
+                return Ok(orderHistoryDTOs);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details for debugging
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+
         [EnableQuery]
         [HttpGet("OrderDetail({orderId})")]
         public async Task<IActionResult> GetOrderDetailHistory([FromRoute] int orderId)
