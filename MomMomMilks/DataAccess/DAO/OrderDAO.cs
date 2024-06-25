@@ -45,6 +45,20 @@ namespace DataAccess.DAO
             }
             return orderDTO;
         }
+        public async Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue()
+        {
+            List<OrderRevenueDTO> orderDTO = null;
+            try
+            {
+                var order = await _context.Orders.Where(o => o.OrderStatusId == 4).Include(o => o.OrderDetails).ThenInclude(od => od.Milk).ToListAsync();
+                orderDTO = _mapper.Map<List<OrderRevenueDTO>>(order);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return orderDTO;
+        }
 
         public async Task<List<ManagerOrderDTO>> GetUnassignedOrders()
         {
@@ -264,8 +278,8 @@ namespace DataAccess.DAO
             foreach (var timeSlot in timeSlots)
             {
                 var slotStartTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, timeSlot.StartTime.Hours, timeSlot.StartTime.Minutes, 0);
-                //if (currentTime >= slotStartTime.AddHours(-1) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
-                //{
+                if (currentTime >= slotStartTime.AddHours(-1) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
+                {
                     var orders = await _context.Orders
                         .Where(o => o.TimeSlotId == timeSlot.Id && o.OrderStatusId == 2 && o.ShipperId == null)
                         .Include(o => o.Address)
@@ -290,7 +304,7 @@ namespace DataAccess.DAO
                     }
 
                     await _context.SaveChangesAsync();
-                //}
+                }
             }
         }
 
@@ -345,6 +359,27 @@ namespace DataAccess.DAO
             catch (Exception ex)
             {
                 throw new Exception("Error fetching order by buyerId and createAt", ex);
+            }
+        }
+        public async Task UpdateOrderStatusWhenOverDateAsync()
+        {
+            try
+            {
+                var currentTime = DateTime.Now;
+                var orders = await _context.Orders.Where(od => od.OrderStatusId == 1).ToListAsync();
+                foreach (var order in orders)
+                {
+                    if (order != null)
+                    {
+                        if ((currentTime - order.CreateAt).TotalMinutes > 10)
+                            order.OrderStatusId = 5;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }
