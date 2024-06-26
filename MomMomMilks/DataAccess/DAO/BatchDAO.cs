@@ -121,7 +121,7 @@ namespace DataAccess.DAO
                 var existed = await _context.Batches.Where(x => x.Id == id).FirstOrDefaultAsync();
                 if (existed != null)
                 {
-                    _context.Batches.Remove(existed);
+                    existed.Status = 0;
                 }
                 return await _context.SaveChangesAsync() > 0;
             }

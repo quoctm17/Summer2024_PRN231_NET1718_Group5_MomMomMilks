@@ -90,54 +90,31 @@ namespace DataAccess.Seed
             await _userManager.CreateAsync(manager, "Pa$$w0rd");
             await _userManager.AddToRolesAsync(manager, new[] { "Manager" });
 
-            var shipper = new AppUser
-            {
-                UserName = "shipper@gmail.com",
-                Email = "shipper@gmail.com",
-                EmailConfirmed = true,
-                Status = 1,
-                Point = 0,
-                Shipper = new Shipper
-                {
-                    Status = "Available",
-                    DistrictId = 1
-                }
-            };
+            var shipperUsers = new List<AppUser>();
 
-            await _userManager.CreateAsync(shipper, "Pa$$w0rd");
-            await _userManager.AddToRolesAsync(shipper, new[] { "Shipper" });
-            var shipper2 = new AppUser
+            for (int i = 1; i <= 24; i++)
             {
-                UserName = "shipper2@gmail.com",
-                Email = "shipper2@gmail.com",
-                EmailConfirmed = true,
-                Status = 1,
-                Point = 0,
-                Shipper = new Shipper
+                shipperUsers.Add(new AppUser
                 {
-                    Status = "Unavailable",
-                    DistrictId = 2
-                }
-            };
+                    UserName = $"shipper{i}@gmail.com",
+                    Email = $"shipper{i}@gmail.com",
+                    EmailConfirmed = true,
+                    Status = 1,
+                    Point = 0,
+                    Shipper = new Shipper
+                    {
+                        Status = i % 3 == 0 ? "Shipping" : i % 2 == 0 ? "Unavailable" : "Available",
+                        DistrictId = i
+                    }
+                });
+            }
 
-            await _userManager.CreateAsync(shipper2, "Pa$$w0rd");
-            await _userManager.AddToRolesAsync(shipper2, new[] { "Shipper" });
-            var shipper3 = new AppUser
+            foreach (var shipper in shipperUsers)
             {
-                UserName = "shipper3@gmail.com",
-                Email = "shipper3@gmail.com",
-                EmailConfirmed = true,
-                Status = 1,
-                Point = 0,
-                Shipper = new Shipper
-                {
-                    Status = "Shipping",
-                    DistrictId = 3
-                }
-            };
+                await _userManager.CreateAsync(shipper, "Pa$$w0rd");
+                await _userManager.AddToRolesAsync(shipper, new[] { "Shipper" });
+            }
 
-            await _userManager.CreateAsync(shipper3, "Pa$$w0rd");
-            await _userManager.AddToRolesAsync(shipper3, new[] { "Shipper" });
         }
 
 
