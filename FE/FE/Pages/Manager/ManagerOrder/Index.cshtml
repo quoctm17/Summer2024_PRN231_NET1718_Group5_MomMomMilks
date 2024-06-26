@@ -7,32 +7,32 @@
 <div class="card mb-4">
 	<div class="card-header">
 		<i class="fas fa-table me-1"></i>
-		Order Management
+		Quản lý đơn hàng
 	</div>
 	<div class="card-body">
 		<table class="table" id="orderTable">
 			<thead>
 				<tr>
-					<th>Id</th>
-					<th>Created Date</th>
-					<th>Updated Date</th>
-					<th>Total</th>
-					<th>Buyer</th>
-					<th>Timeslot</th>
-					<th>Payment Type</th>
-					<th>Status</th>
+					<th>Mã</th>
+					<th>Ngày tạo</th>
+					<th>Ngày cập nhật</th>
+					<th>Tổng tiền</th>
+					<th>Khách hàng</th>
+					<th>Buổi</th>
+					<th>Hình thức thanh toán</th>
+					<th>Trạng thái</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<th>Id</th>
-					<th>Created Date</th>
-					<th>Updated Date</th>
-					<th>Total</th>
-					<th>Buyer</th>
-					<th>Timeslot</th>
-					<th>Payment Type</th>
-					<th>Status</th>
+					<th>Mã</th>
+					<th>Ngày tạo</th>
+					<th>Ngày cập nhật</th>
+					<th>Tổng tiền</th>
+					<th>Khách hàng</th>
+					<th>Buổi</th>
+					<th>Hình thức thanh toán</th>
+					<th>Trạng thái</th>
 				</tr>
 			</tfoot>
 			<tbody>
@@ -45,7 +45,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Assign Order To Shipper</h5>
+				<h5 class="modal-title" id="exampleModalLabel">Giao đơn cho shipper</h5>
 				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -53,7 +53,7 @@
 			<form id="assignOrderForm">
 				<div class="modal-body">
 					<div class="mb-3">
-						<label for="updateId" class="form-label">Id: </label>
+						<label for="updateId" class="form-label">Mã đơn hàng: </label>
 						<input type="text" class="form-control" disabled id="updateId">
 					</div>
 					<div class="mb-3">
@@ -63,8 +63,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-					<button type="button" class="btn btn-primary" id="assignShipper">Assign</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="button" class="btn btn-primary" id="assignShipper">Giao</button>
 				</div>
 			</form>
 		</div>
@@ -123,7 +123,7 @@
 							appendElement.append($("<td>").html(value['scheduleTimeSlot']));
 							appendElement.append($("<td>").html(value['paymentTypeName']));
 							appendElement.append($("<td>").html(value['orderStatusName']));
-							appendElement.append($("<td>").html('<button class=\'btn btn-primary assigned\'>Assigned</button>'));
+							appendElement.append($("<td>").html('<button class=\'btn btn-primary assigned\'>Giao đơn</button>'));
 							$("#orderTable tbody").append(appendElement);
 						});
 					},
@@ -148,7 +148,7 @@
 							$.each(result['$values'], function (index, value) {
 								$('#updateShipperId').append($('<option>', {
 									value: value.id,
-									text: value.districtName + ' - Name: ' + value.name + ' - Month Deliveries: ' + value.monthlyDeliveries
+									text: value.districtName + ' - Tên: ' + value.name + ' - Đơn hàng/tháng: ' + value.monthlyDeliveries
 								}));
 							});
 							$("#updateId").val(orderId);
@@ -168,7 +168,7 @@
 				var orderId = $('#updateId').val();
 				var shipperId = $('#updateShipperId').val();
 				if (!orderId || !shipperId) {
-					ShowErrorToast("Please fill in all fields");
+					ShowErrorToast("Vui lòng nhập tất cả trường");
 				} else {
 					$.ajax({
 						url: `http://localhost:5215/odata/order/ManagerOrders/Assign/${shipperId}/${orderId}`,

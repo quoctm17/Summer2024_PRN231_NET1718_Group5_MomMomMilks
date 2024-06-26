@@ -477,7 +477,7 @@
                     milkId: $("#batchMilkId").val()
                 };
                 if (!addedBatch.importDate || !addedBatch.expiredDate || !addedBatch.importedPrice || !addedBatch.quantity || !addedBatch.milkId) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     var currentMilkPrice = $('#updatePrice').val();
                     console.log(addedBatch.importedPrice);
@@ -707,7 +707,7 @@
                     !updateMilk.milkAgeId ||
                     !updateMilk.supplierId ||
                     !updateMilk.imageUrl) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: `http://localhost:5215/odata/Milk`,

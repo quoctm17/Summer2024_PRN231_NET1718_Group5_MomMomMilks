@@ -207,7 +207,7 @@
                     description: $("#createDescription").val(),
                 };
                 if (!addedCategory.name) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: "http://localhost:5215/odata/Category",
@@ -237,7 +237,7 @@
                     description: $("#updateDescription").val()
                 };
                 if (!updateCategory.id || !updateCategory.name || !updateCategory.description) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: `http://localhost:5215/odata/Category/${updateCategory.id}`,

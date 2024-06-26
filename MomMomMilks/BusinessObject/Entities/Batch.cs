@@ -9,5 +9,6 @@
         public int Quantity { get; set; }
         public int MilkId { get; set; }
         public Milk Milk { get; set; }
+        public byte Status { get; set; }
     }
 }
