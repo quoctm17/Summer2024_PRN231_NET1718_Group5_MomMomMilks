@@ -29,5 +29,7 @@ namespace Service.Interfaces
         Task<bool> AddPaymentOrderCode(int orderId, long orderCode);
         Task<Order> GetOrderByPaymentOrderCode(long paymentOrderCode);
         Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt);
+        Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue();
+        Task UpdateOrderStatusWhenOverDateAsync();
     }
 }

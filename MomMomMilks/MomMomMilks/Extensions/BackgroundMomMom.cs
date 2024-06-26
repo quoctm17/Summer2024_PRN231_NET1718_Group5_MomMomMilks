@@ -6,7 +6,6 @@ namespace MomMomMilks.Extensions
     {
         private Timer? _timer;
         private Timer? _timerBatch;
-        private Timer? _timerOrder;
         private readonly IServiceProvider _serviceProvider;
         public BackgroundMomMom(IServiceProvider serviceProvider)
         {
@@ -24,9 +23,8 @@ namespace MomMomMilks.Extensions
             var initialDelay = targetTime - now;
             var period = TimeSpan.FromDays(1);
 
-            //_timer = new Timer(UpdateCouponExpiryDate, null, initialDelay, period);
-            //_timerBatch = new Timer(DeleteBatchEpired, null, initialDelay, period);
-            _timerOrder = new Timer(AutoAssignOrder, null, initialDelay, period);
+            _timer = new Timer(UpdateCouponExpiryDate, null, initialDelay, period);
+            _timerBatch = new Timer(DeleteBatchEpired, null, initialDelay, period);
 
             return Task.CompletedTask;
         }
@@ -45,14 +43,6 @@ namespace MomMomMilks.Extensions
             {
                 var batchscope = scope.ServiceProvider.GetRequiredService<IBatchService>();
                 await batchscope.AutoDeleteExpiredBatch();
-            }
-        }
-        private async void AutoAssignOrder(object? state)
-        {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
-                await orderService.AutoAssignOrdersToShippers();
             }
         }
 

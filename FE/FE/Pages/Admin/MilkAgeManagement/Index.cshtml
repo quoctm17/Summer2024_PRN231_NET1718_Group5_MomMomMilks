@@ -192,7 +192,7 @@
                     unit: $("#createUnit").val(),
                 };
                 if (!addedMilkAge.min || !addedMilkAge.max) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: "http://localhost:5215/odata/MilkAges",
@@ -224,7 +224,7 @@
                 };
                 console.log(updateMilkAge);
                 if (!updateMilkAge.id || !updateMilkAge.min || !updateMilkAge.max || !updateMilkAge.unit) {
-                    ShowErrorToast("Please fill in all fields");
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
                         url: `http://localhost:5215/odata/MilkAges`,

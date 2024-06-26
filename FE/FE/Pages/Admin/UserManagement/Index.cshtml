@@ -7,24 +7,24 @@
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        User Management
+        Quản lý người dùng
     </div>
     <div class="p-4">
         <button class="btn btn-success" id="btnCreateUser">
-            Create new user
+            Tạo mới người dùng
         </button>
     </div>
     <div class="card-body">
         <table class="table" id="userTable">
             <thead>
                 <tr>
-                    <th>Num</th>
-                    <th>Name</th>
-                    <th>Phone</th>
+                    <th>#</th>
+                    <th>Tên</th>
+                    <th>Điện thoại</th>
                     <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody id="userList" class="font-weight-light">
@@ -36,7 +36,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tạo người dùng</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -44,11 +44,11 @@
             <form id="createForm">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="createName" class="form-label">Name: </label>
+                        <label for="createName" class="form-label">Tên: </label>
                         <input type="text" class="form-control" required id="createName">
                     </div>
                     <div class="mb-3">
-                        <label for="createPhoneNumber" class="form-label">Phone Number: </label>
+                        <label for="createPhoneNumber" class="form-label">Số điện thoại: </label>
                         <input type="text" class="form-control" required id="createPhoneNumber">
                     </div>
                     <div class="mb-3">
@@ -56,7 +56,7 @@
                         <input type="email" class="form-control" required id="createEmail">
                     </div>
                     <div class="mb-3">
-                        <label for="createRole" class="form-label">Role: </label>
+                        <label for="createRole" class="form-label">Vai trò: </label>
                         <select class="form-select" required id="createRole">
                             <option value="4">Admin</option>
                             <option value="3">Manager</option>
@@ -65,8 +65,8 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-primary" id="createUser">Create</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="button" class="btn btn-primary" id="createUser">Tạo</button>
                     </div>
                 </div>
             </form>
@@ -77,7 +77,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update User</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Sửa thông tin</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -89,11 +89,11 @@
                         <input type="text" class="form-control" disabled id="updateId">
                     </div>
                     <div class="mb-3">
-                        <label for="updateName" class="form-label">Name: </label>
+                        <label for="updateName" class="form-label">Tên: </label>
                         <input type="text" class="form-control" required id="updateName">
                     </div>
                     <div class="mb-3">
-                        <label for="updatePhoneNumber" class="form-label">Phone Number: </label>
+                        <label for="updatePhoneNumber" class="form-label">Số điện thoại: </label>
                         <input type="text" class="form-control" required id="updatePhoneNumber">
                     </div>
                     <div class="mb-3">
@@ -101,7 +101,7 @@
                         <input type="email" class="form-control" required id="updateEmail">
                     </div>
                     <div class="mb-3">
-                        <label for="updateRole" class="form-label">Role: </label>
+                        <label for="updateRole" class="form-label">Vai trò: </label>
                         <select class="form-select" required id="updateRole">
                             <option value="2">Admin</option>
                             <option value="3">Manager</option>
@@ -110,15 +110,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="updateStatus" class="form-label">Status: </label>
+                        <label for="updateStatus" class="form-label">Trạng thái: </label>
                         <select class="form-select" required id="updateStatus">
-                            <option value="1">Available</option>
-                            <option value="0">Not Available</option>
+                            <option value="1">Hoạt động</option>
+                            <option value="0">Không hoạt động</option>
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-primary" id="btnUpdateUser">Update</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="button" class="btn btn-primary" id="btnUpdateUser">Sửa</button>
                     </div>
                 </div>
             </form>
@@ -145,7 +145,6 @@
         document.getElementById('createUser').addEventListener('click', createUser);
     });
 
-
         async function getUser() {
             try {
                 const response = await fetch(`http://localhost:5215/odata/User/userAdmin`, {
@@ -166,15 +165,17 @@
 
                 for (const user of users) {
                     const tr = document.createElement('tr');
+                    const phone = user.phoneNumber || "Không có";
+                    const status = user.status === 1 ? "Hoạt động" : "Không hoạt động";
                     tr.innerHTML = `<td>${user.id}</td>
                                     <td>${user.userName}</td>
-                                    <td>${user.phoneNumber}</td>
+                                    <td>${phone}</td>
                                     <td>${user.email}</td>
                                     <td>${user.role}</td>
-                                    <td>${user.status}</td>
+                                    <td>${status}</td>
                                     <td>
-                                                <a href="#" class="updateUser" data-id="${user.id}">Update</a> |
-                                        <a href="#" class="deleteUser" data-id="${user.id}">Delete</a>
+                                        <a href="#" class="updateUser" data-id="${user.id}">Sửa</a> |
+                                        <a href="#" class="deleteUser" data-id="${user.id}">Xóa</a>
                                     </td>`;
                     userList.appendChild(tr);
                 }
@@ -194,6 +195,23 @@
         const phoneNumber = document.getElementById('createPhoneNumber').value;
         const email = document.getElementById('createEmail').value;
         const role = document.getElementById('createRole');
+
+        const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
+        if (!usernameRegex.test(userName)) {
+            alert('Username can only contain letters, spaces, and Vietnamese characters.');
+            return;
+        }
+
+        const phoneNumberRegex = /^\d{10}$/;
+        if (!phoneNumberRegex.test(phoneNumber)) {
+            alert('Phone number must be exactly 10 digits.');
+            return;
+        }
+        const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
 
         const user = {
             userName: userName,
@@ -271,9 +289,29 @@
                     status: $("#updateStatus").val(),
                     role: $("#updateRole").val()
                 };
+
+                const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
+                if (!usernameRegex.test(updateUser.userName)) {
+                    alert('Username can only contain letters, spaces, and Vietnamese characters.');
+                    return;
+                }
+
+                const phoneNumberRegex = /^\d{10}$/;
+                if (!phoneNumberRegex.test(updateUser.phoneNumber)) {
+                    alert('Phone number must be exactly 10 digits.');
+                    return;
+                }
+
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+
                 if (!updateUser.id || !updateUser.userName || !updateUser.email || !updateUser.phoneNumber || !updateUser.status || !updateUser.role) {
                     alert("Please fill in all fields");
-                } else {
+                }
+                else {
                     $.ajax({
                         url: `http://localhost:5215/odata/User/updateUser/${updateUser.id}`,
                         type: 'put',

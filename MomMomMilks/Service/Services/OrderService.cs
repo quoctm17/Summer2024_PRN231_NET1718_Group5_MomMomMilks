@@ -33,7 +33,7 @@ namespace Service.Services
 
         public async Task<Order> GetOrderAsync(int orderId)
         {
-            
+
             return await _orderRepository.GetOrderByIdAsync(orderId);
         }
 
@@ -109,6 +109,14 @@ namespace Service.Services
         public async Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt)
         {
             return await _orderRepository.GetOrderByBuyerIdAndCreateAt(buyerId, createAt);
+        }
+        public async Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue()
+        {
+            return await _orderRepository.GetOrdersToCalculateRevenue();
+        }
+        public async Task UpdateOrderStatusWhenOverDateAsync()
+        {
+            await _orderRepository.UpdateOrderStatusWhenOverDateAsync();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace MomMomMilks.Extensions
 
             _timer = new Timer(RunTaskIfInTimeWindow, null, initialDelay, TimeSpan.FromMinutes(1));
         }
-        private void RunTaskIfInTimeWindow(object? state)
+        private async void RunTaskIfInTimeWindow(object? state)
         {
             var now = DateTime.Now.TimeOfDay;
 
@@ -60,7 +60,8 @@ namespace MomMomMilks.Extensions
                 IsWithinTimeWindow(now, _afternoonStart, _afternoonEnd) ||
                 IsWithinTimeWindow(now, _eveningStart, _eveningEnd))
             {
-                AutoAssignShipper(state);
+                await AutoAssignShipper(state);
+                await AutoUpdateOrderStatus(state);
             }
 
             ScheduleNextRun();
@@ -75,12 +76,20 @@ namespace MomMomMilks.Extensions
             return Task.CompletedTask;
         }
 
-        private async void AutoAssignShipper(object? state)
+        private async Task AutoAssignShipper(object? state)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
                 await orderService.AutoAssignOrdersToShippers();
+            }
+        }
+        private async Task AutoUpdateOrderStatus(object? state)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+                await orderService.UpdateOrderStatusWhenOverDateAsync();
             }
         }
 

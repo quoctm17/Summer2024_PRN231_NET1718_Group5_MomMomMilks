@@ -35,8 +35,8 @@
         <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
             <div class="text-center mb-4">
                 @{
-                                                            @using Helpers
-                                                            @using Models
+                                                                    @using Helpers
+                                                                    @using Models
                     var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
                 }
                 @if (account != null)
@@ -51,10 +51,10 @@
                 }
             </div>
             <div class="list-group list-group-flush">
-                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">User Information</a>
-                <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
-                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">My Address</a>
-                <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Thông tin của tôi</a>
+                <a href="/Customer/OrderHistory?userId=@account?.Id" class="list-group-item list-group-item-action rounded">Đơn hàng</a>
+                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">Địa chỉ</a>
+                <a href="#" class="list-group-item list-group-item-action rounded">Coupon</a>
             </div>
         </div>
         <!-- Main Content -->
@@ -63,7 +63,7 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="#">All</a>
                 </li>
-                <li class="nav-item">
+                @* <li class="nav-item">
                     <a class="nav-link" href="#">Paid</a>
                 </li>
                 <li class="nav-item">
@@ -77,19 +77,19 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Cancelled</a>
-                </li>
+                </li> *@
             </ul>
             <div class="text-center mt-4">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Order</th>
-                                <th>Created Date</th>
-                                <th>Updated Date</th>
-                                <th>Total Amount</th>
-                                <th>Payment Method</th>
-                                <th>Shipper</th>
-                                <th>Status</th>
+                                <th>Đơn hàng</th>
+                                <th>Ngày mua</th>
+                                <th>Sửa vào ngày</th>
+                                <th>Tổng tiền</th>
+                                <th>Phương thức thanh toán</th>
+                                <th>Người giao</th>
+                                <th>Trạng thái</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -104,6 +104,31 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelOrderModalLabel">Cancel Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cancelOrderForm">
+                    <input type="hidden" id="orderCodeInput">
+                    <div class="mb-3">
+                        <label for="cancellationReason" class="form-label">Reason for cancellation:</label>
+                        <textarea class="form-control" id="cancellationReason" name="cancellationReason" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="confirmCancelOrder()">Cancel Order</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -114,6 +139,7 @@
 
     const token = sessionStorage.getItem('token');
     const userId = getUserIdFromToken();
+    let orderIdForCancellation;
 
     async function loadOrder(userId) {
         try {
@@ -146,6 +172,7 @@
                 // Get status asynchronously and wait for it to resolve
                 const statusNamePromise = getOrderStatus(order.orderStatusId);
                 const statusName = await statusNamePromise;
+                const shipper = order.shipper || 'Chưa có';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -154,7 +181,7 @@
                     <td>${updateDate}</td>
                     <td>${order.totalAmount}</td>
                     <td>${order.paymentType}</td>
-                    <td>${order.shipper}</td>
+                    <td>${shipper}</td>
                     <td>${statusName}</td>
                     <td>${await getActionButtons(order)}</td>
                 `;
@@ -197,25 +224,127 @@
 
 
     function getActionButtons(order) {
+        const normalizedPaymentType = order.paymentType;
         const normalizedStatusId = order.orderStatusId;
-        console.log(`Order ID: ${order.id}, Order Status ID: ${normalizedStatusId}`);
+        console.log(`Order ID: ${order.id}, Payment Type ID: ${normalizedPaymentType}, Order Status ID: ${normalizedStatusId}`);
 
-        switch (normalizedStatusId) {
-            case 2: // Shipping
-            case 1: // Paying
-                console.log(`Order ID: ${order.id} - Adding cancel button`);
-                return `
-                    <a href="/Customer/OrderDetail?id=${order.id}" class="site-btn">View</a>
-                    <button onclick="cancelOrder(${order.id})" class="site-btn mt-3">Cancel</button>
-                `;
+        switch (normalizedPaymentType) {
+            case "OnlinePayment": // Online Payment
+                console.log(`Order ID: ${order.id} - Adding buttons for online payment`);
+                if (normalizedStatusId === 1) { // Paying
+                    return `
+                        <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>
+                        <a href="#" onclick="prepareCancelOrderOnline(${order.paymentOrderCode})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">Hủy</a>
+                        <a href="#" onclick="payOrder(event, ${order.paymentOrderCode})" class="btn btn-success mt-2">Thanh toán</a>
+                    `;
+                } else if (normalizedStatusId === 2) {
+                    return `
+                                <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>
+                            <a href="#" onclick="prepareCancelOrderOnline(${order.paymentOrderCode})" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">Hủy</a>
+                        `;
+                } else {
+                    return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>`;
+                }
+            case "In cash": // Cash Payment
+                console.log(`Order ID: ${order.id} - Adding buttons for cash payment`);
+                if (normalizedStatusId === 2) { // Assigning
+                    return `
+                            <a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>
+                        <a href="#" onclick="cancelOrderInCash(${order.id})" class="btn btn-danger">Hủy</a>
+                    `;
+                } else {
+                    return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>`;
+                }
             default:
                 console.log(`Order ID: ${order.id} - View only`);
-                return `<a href="/Customer/OrderDetail?id=${order.id}" class="site-btn">View</a>`;
+                return `<a href="/Customer/OrderDetail?id=${order.id}" class="btn btn-primary">Xem</a>`;
         }
     }
 
 
-    async function cancelOrder(orderId) {
+    async function payOrder(event, paymentOrderCode) {
+        event.preventDefault();
+
+        // Open a blank window immediately to retain the user interaction context
+        const newWindow = window.open('', '_blank');
+
+        try {
+            let response = await fetch(`http://localhost:5215/api/Payment/${paymentOrderCode}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch orders');
+            }
+
+            let data = await response.json();
+            console.log('API response:', data);
+
+            if (data.error !== 0 || !data.data || !data.data.id) {
+                throw new Error('Invalid API response format');
+            }
+
+            const orderId = data.data.id;
+            const paymentUrl = `https://pay.payos.vn/web/${orderId}`;
+
+            // Update the URL of the previously opened window
+            newWindow.location.href = paymentUrl;
+
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            // If there was an error, close the opened window
+            newWindow.close();
+        }
+    }
+
+    function prepareCancelOrderOnline(paymentOrderCode) {
+        orderIdForCancellation = paymentOrderCode;
+        document.getElementById('orderCodeInput').value = paymentOrderCode;
+    }
+
+    async function confirmCancelOrder() {
+        const cancellationReason = document.getElementById('cancellationReason').value.trim();
+        console.log(orderIdForCancellation);
+        if (!cancellationReason) {
+            alert('Please provide a reason for cancellation.');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to cancel this order?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5215/api/Payment/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    orderCode: orderIdForCancellation,
+                    cancellationReason: cancellationReason
+                })
+            });
+
+            if (response.ok) {
+                $('#cancelOrderModal').modal('hide');
+                window.location.href = `/Customer/OrderHistory?userId=${userId}`;
+                console.log('Order canceled successfully');
+                alert('Order canceled successfully');
+            } else {
+                console.error('Failed to cancel order');
+                alert('Failed to cancel order');
+            }
+        } catch (error) {
+            console.error('Error canceling order:', error);
+        }
+    }
+
+    async function cancelOrderInCash(orderId) {
         if (!confirm('Are you sure you want to cancel this order?')) {
             return;
         }

@@ -244,13 +244,13 @@ else
                                 <div class="header__top__right__auth">
                                     <div class="dropdown">
                                         <a type="button" data-bs-toggle="dropdown" aria-expanded="">
-                                            <i class="fa fa-user"></i> Welcome, @account.UserName
+                                            <i class="fa fa-user"></i> Xin chào, @account.UserName
                                         </a>
                                         <ul class="dropdown-menu">
 
-                                            <li><a class="dropdown-item" href="/Customer/UserInformation">Profile Information</a></li>
-                                            <li><a href="/Customer/OrderHistory?userId=@account?.Id" class="dropdown-item">My Order</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="logout()">Log Out</a></li>
+                                            <li><a class="dropdown-item" asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id">Thông Tin</a></li>
+                                            <li><a href="/Customer/OrderHistory?userId=@account?.Id" class="dropdown-item">Đơn Hàng</a></li>
+                                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="logout()">Đăng Xuất</a></li>
 
                                         </ul>
                                     </div>

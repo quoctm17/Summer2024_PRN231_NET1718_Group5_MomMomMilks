@@ -14,12 +14,14 @@ namespace MomMomMilks.Controllers
     public class UserController : ODataController
     {
         private readonly IUserService _userService;
+        private readonly IOrderService _orderService;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService userService, ILogger<UserController> logger)
+        public UserController(IUserService userService, ILogger<UserController> logger, IOrderService orderService)
         {
             _userService = userService;
             _logger = logger;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -254,7 +256,16 @@ namespace MomMomMilks.Controllers
         {
             try
             {
-                await _userService.CancelOrder(orderId);
+                var order = await _orderService.GetOrderAsync(orderId);
+                if (order == null)
+                {
+                    return NotFound();
+                }
+                if (order.OrderStatusId == 2)
+                {
+                    order.OrderStatusId = 5;
+                }
+                await _orderService.UpdateOrder(order);
                 return Ok("Cancel order successfully");
             }catch(Exception ex)
             {

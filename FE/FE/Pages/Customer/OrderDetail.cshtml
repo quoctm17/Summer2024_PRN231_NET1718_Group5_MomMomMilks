@@ -47,10 +47,10 @@
                 }
             </div>
                 <div class="list-group list-group-flush">
-                    <a href="#" class="list-group-item list-group-item-action rounded">User Information</a>
-                    <a asp-page="/Customer/OrderHistory" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">My Orders</a>
-                    <a href="#" class="list-group-item list-group-item-action rounded">My Address</a>
-                    <a href="#" class="list-group-item list-group-item-action rounded">My Coupon</a>
+                    <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Thông tin của tôi</a>
+                    <a href="/Customer/OrderHistory?userId=@account?.Id" class="list-group-item list-group-item-action rounded">Đơn hàng</a>
+                    <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">Địa chỉ</a>
+                    <a href="#" class="list-group-item list-group-item-action rounded">Coupon</a>
                 </div>
         </div>
         <!-- Main Content -->
@@ -62,13 +62,13 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>Place At</th>
-                                <th>Updated At</th>
-                                <th>Amount</th>
-                                <th>Price</th>
-                                <th>Discount</th>
-                                <th>Total Amount</th>
+                                <th>Sản phẩm</th>
+                                <th>Ngày mua</th>
+                                <th>Sửa vào ngày</th>
+                                <th>Số lượng</th>
+                                <th>Tiền</th>
+                                <th>Giảm giá</th>
+                                <th>Tổng tiền</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,7 +87,7 @@
                         </tbody>
                     </table>
                 }
-                    <a href="/Customer/OrderHistory?userId=@account.Id" class="btn btn-primary">Back to Order History</a>
+                    <a href="/Customer/OrderHistory?userId=@account.Id" class="btn btn-primary">Trở về lịch sử đơn hàng</a>
             </div>
         </div>
     </div>
