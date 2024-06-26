@@ -49,7 +49,7 @@ namespace MomMomMilks.Controllers
         {
             var category = _mapper.Map<Category>(create);
             await _categoryService.AddCategoryAsync(category);
-            return Created(category);
+            return Ok(category);
         }
 
         [HttpPut("{key}")]
