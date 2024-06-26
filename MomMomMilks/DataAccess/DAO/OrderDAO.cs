@@ -3,6 +3,7 @@ using BusinessObject.Entities;
 using DataTransfer;
 using DataTransfer.Manager;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace DataAccess.DAO
 {
@@ -280,35 +281,114 @@ namespace DataAccess.DAO
             foreach (var timeSlot in timeSlots)
             {
                 var slotStartTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, timeSlot.StartTime.Hours, timeSlot.StartTime.Minutes, 0);
-                if (currentTime >= slotStartTime.AddHours(-1) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
+
+                // Chỉ xử lý các đơn hàng trong TimeSlot tiếp theo
+                if (currentTime >= slotStartTime.AddMinutes(-90) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
                 {
                     var orders = await _context.Orders
                         .Where(o => o.TimeSlotId == timeSlot.Id && o.OrderStatusId == 2 && o.ShipperId == null)
                         .Include(o => o.Address)
                         .ToListAsync();
 
+                    var districtId = orders.FirstOrDefault()?.Address?.DistrictId;
+
+                    if (districtId == null)
+                        continue;
+
+                    var assignedShipperIds = new HashSet<int>();
+                    var ordersToAssignLater = new List<Order>();
+                    var ordersInDistrict = await _context.Orders
+                        .Where(o => o.TimeSlotId == timeSlot.Id && o.OrderStatusId == 2 && o.Address.DistrictId == districtId)
+                        .ToListAsync();
+
                     foreach (var order in orders)
                     {
-                        var districtId = order.Address.DistrictId;
                         var availableShippers = await _context.Shippers
-                            .Where(s => s.DistrictId == districtId && s.Status == "Available")
+                            .Where(s => s.DistrictId == districtId && s.Status == "Available" && !assignedShipperIds.Contains(s.Id))
                             .ToListAsync();
 
                         if (availableShippers.Any())
                         {
                             var shipper = availableShippers.First();
-                            order.ShipperId = shipper.Id;
-                            shipper.Status = "Shipping";
+                            assignedShipperIds.Add(shipper.Id);
+
+                            if (assignedShipperIds.Count < 5 && ordersInDistrict.Any())
+                            {
+                                order.ShipperId = shipper.Id;
+                                shipper.Status = "Shipping";
+                                _context.Update(shipper);
+                                ordersInDistrict.Remove(order);
+                            }
+                            else
+                            {
+                                ordersToAssignLater.Add(order); // Save order to assign later
+                            }
 
                             _context.Update(order);
-                            _context.Update(shipper);
+                        }
+                        else
+                        {
+                            ordersToAssignLater.Add(order); // No available shippers, assign later
                         }
                     }
 
+                    // Assign remaining orders to later slots
+                    foreach (var order in ordersToAssignLater)
+                    {
+                        AssignOrdersToNextSlot(ordersToAssignLater, timeSlot.Id);
+                    }
+
                     await _context.SaveChangesAsync();
+
+                    // Update status for shippers if all orders in district are assigned
+                    if (ordersInDistrict.Any())
+                    {
+                        var remainingShippers = await _context.Shippers
+                            .Where(s => s.DistrictId == districtId && s.Status == "Available")
+                            .ToListAsync();
+
+                        foreach (var shipper in remainingShippers)
+                        {
+                            shipper.Status = "Shipping";
+                            _context.Update(shipper);
+                        }
+
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
         }
+
+
+        // Hàm hỗ trợ để chuyển đơn hàng sang TimeSlot tiếp theo
+        private void AssignOrdersToNextSlot(List<Order> ordersToAssignLater, int currentSlotId)
+        {
+            var nextSlot = GetNextTimeSlot(currentSlotId);
+
+            foreach (var order in ordersToAssignLater)
+            {
+                order.TimeSlotId = nextSlot.Id;
+                _context.Update(order);
+            }
+
+            _context.SaveChanges();
+        }
+
+        // Hàm hỗ trợ để tìm TimeSlot tiếp theo
+        private TimeSlot GetNextTimeSlot(int currentSlotId)
+        {
+            // Tìm TimeSlot tiếp theo của TimeSlot hiện tại
+            var nextSlot = _context.TimeSlots.FirstOrDefault(ts => ts.Id > currentSlotId);
+
+            // Nếu không tìm thấy TimeSlot tiếp theo, tìm TimeSlot đầu tiên của ngày tiếp theo
+            if (nextSlot == null)
+            {
+                nextSlot = _context.TimeSlots.OrderBy(ts => ts.Id).FirstOrDefault();
+            }
+
+            return nextSlot;
+        }
+
 
         public async Task<bool> ManagerAssignOrder(int orderId, int shipperId)
         {
