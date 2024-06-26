@@ -65,31 +65,51 @@
                     </div>
                     <div class="mb-3">
                         <label for="createUserManual" class="form-label">Hướng dẫn sử dụng: </label>
-                        <input type="text" class="form-control" required id="createUserManual">
+                        <textarea rows="4" type="text" class="form-control" required id="createUserManual"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="createWarning" class="form-label">Khuyến cáo: </label>
-                        <input type="text" class="form-control" required id="createWarning">
+                        <textarea rows="4" type="text" class="form-control" required id="createWarning"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="createPreserveInstructions" class="form-label">Cách bảo quản: </label>
-                        <input type="text" class="form-control" required id="createPreserveInstructions">
+                        <textarea rows="4" type="text" class="form-control" required id="createPreserveInstructions"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="createBrand" class="form-label">Thương hiệu: </label>
-                        <select type="text" class="form-control" id="createBrand"></select>
+                        <div class="input-group">
+                            <select class="form-control" id="createBrand"></select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" id="btnCreateBrand" type="button">+</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="createCategory" class="form-label">Loại sữa: </label>
-                        <select type="text" class="form-control" id="createCategory"></select>
+                        <div class="input-group">
+                            <select type="text" class="form-control" id="createCategory"></select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" id="btnCreateCategory" type="button">+</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="createMilkAge" class="form-label">Nhóm tuổi: </label>
-                        <select type="text" class="form-control" id="createMilkAge"></select>
+                        <div class="input-group">
+                            <select type="text" class="form-control" id="createMilkAge"></select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" id="btnCreateMilkAge" type="button">+</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="createSupplier" class="form-label">Nhà cung cấp: </label>
-                        <select type="text" class="form-control" id="createSupplier"></select>
+                        <div class="input-group">
+                            <select type="text" class="form-control" id="createSupplier"></select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" id="btnCreateSupplier" type="button">+</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="imageUpload" class="form-label">Thêm ảnh</label>
@@ -249,6 +269,58 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="createBrandModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm thương hiệu</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createBrandForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Tên: </label>
+                        <input type="text" class="form-control" required id="createBrandName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="btnCreateBrandModal">Tạo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="createCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm loại sữa</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createCategoryForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Tên: </label>
+                        <input type="text" class="form-control" required id="createCategoryName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Giới thiệu: </label>
+                        <input type="text" class="form-control" required id="createCategoryDescription">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="btnCreateCategoryModal">Tạo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
     <div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true" style=" width: 400px; height:200px;">
         <div class="toast-header">
@@ -256,6 +328,62 @@
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body fs-3 text-white" id="errorToastContent">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="createMilkAgeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tạo nhóm tuổi</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createMilkAgeForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Từ: </label>
+                        <input type="number" class="form-control" min="0" id="createMilkAgeMin">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createMax" class="form-label">Đến: </label>
+                        <input type="number" class="form-control" min="0" id="createMilkAgeMax">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createUnit" class="form-label">Đơn vị: </label>
+                        <input type="text" class="form-control" min="0" id="createMilkAgeUnit">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="btnCreateMilkAgeModal">Tạo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="createSupplierModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm nhà cung cấp</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createSupplierForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createSupplierName" class="form-label">Tên: </label>
+                        <input type="text" class="form-control" required id="createSupplierName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="btnCreateSupplierModal">Tạo</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -304,6 +432,118 @@
                     ]
                 });
             }
+            function GetCategories(selectElement, btnName) {
+                $.ajax({
+                    url: "http://localhost:5215/odata/Category",
+                    type: 'get',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + '@token'
+                    },
+                    success: function (result, status, xhr) {
+                        if (result) {
+                            $(selectElement).html('');
+                            $.each(result.$values, function (index, value) {
+                                $(selectElement).append($('<option>', {
+                                    value: value.id,
+                                    text: value.name
+                                }));
+                            });
+                        } else {
+                            ShowErrorToast('No category found');
+                            document.getElementById(btnName).disabled = true;
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        ShowErrorToast();
+                    }
+                });
+            }
+            function GetBrands(selectElement, btnName) {
+                $.ajax({
+                    url: "http://localhost:5215/odata/Brands",
+                    type: 'get',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + '@token'
+                    },
+                    success: function (result, status, xhr) {
+                        if (result) {
+                            $(selectElement).html('');
+                            $.each(result.$values, function (index, value) {
+                                $(selectElement).append($('<option>', {
+                                    value: value.id,
+                                    text: value.name
+                                }));
+                            });
+                        } else {
+                            ShowErrorToast('No brand found');
+                            document.getElementById(btnName).disabled = true;
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        ShowErrorToast();
+                    }
+                });
+            }
+            function GetMilkAges(selectElement, btnName) {
+                $.ajax({
+                    url: "http://localhost:5215/odata/MilkAges",
+                    type: 'get',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + '@token'
+                    },
+                    success: function (result, status, xhr) {
+                        if (result) {
+                            $(selectElement).html('');
+                            $.each(result.$values, function (index, value) {
+                                $(selectElement).append($('<option>', {
+                                    value: value.id,
+                                    text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
+                                }));
+                            });
+                        } else {
+                            ShowErrorToast('No milk age found');
+                            document.getElementById(btnName).disabled = true;
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        ShowErrorToast();
+                    }
+                });
+            }
+            function GetSuppliers(selectElement, btnName) {
+                $.ajax({
+                    url: "http://localhost:5215/odata/Supplier",
+                    type: 'get',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + '@token'
+                    },
+                    success: function (result, status, xhr) {
+                        if (result) {
+                            $(selectElement).html('');
+                            $.each(result.$values, function (index, value) {
+                                $(selectElement).append($('<option>', {
+                                    value: value.id,
+                                    text: value.name
+                                }));
+                            });
+                        } else {
+                            ShowErrorToast('No supplier found');
+                            document.getElementById(btnName).disabled = true;
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        ShowErrorToast();
+                    }
+                });
+            }
             var batchTable;
             function GetBatchTable(milkId) {
                 if (batchTable) {
@@ -328,113 +568,359 @@
                 var newUrl = 'http://localhost:5215/odata/Batches/GetBatchByMilkId/' + milkId;
                 batchTable.ajax.url(newUrl).load();
             }
+            document.getElementById('btnCreateCategory').addEventListener('click', function () {
+                $('#createCategoryModal').modal('show');
+            });
+            var addedCategory = {};
+            function CreateCategory(selectElement, btnName) {
+                addedCategory = {
+                    name: $("#createCategoryName").val(),
+                    description: $("#createCategoryDescription").val(),
+                };
+                if (!addedCategory.name) {
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
+                } else {
+                    $.ajax({
+                        url: "http://localhost:5215/odata/Category",
+                        type: 'post',
+                        data: JSON.stringify(addedCategory),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            document.getElementById('createCategoryForm').reset();
+                            GetCategories(selectElement, btnName);
+                            $('#createCategoryModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            ShowErrorToast();
+                        }
+                    });
+                }
+            }
+            document.getElementById('btnCreateCategoryModal').addEventListener('click', function () {
+                // addedCategory = {
+                //     name: $("#createName").val(),
+                //     description: $("#createDescription").val(),
+                // };
+                // if (!addedCategory.name) {
+                //     ShowErrorToast("Vui lòng nhập tất cả trường");
+                // } else {
+                //     $.ajax({
+                //         url: "http://localhost:5215/odata/Category",
+                //         type: 'post',
+                //         data: JSON.stringify(addedCategory),
+                //         processData: false,
+                //         contentType: "application/json",
+                //         headers: {
+                //             'Authorization': 'Bearer ' + '@token'
+                //         },
+                //         success: function (result, status, xhr) {
+                //             document.getElementById("createForm").reset();
+                //             categoryTable.ajax.reload(null, false);
+                //             $('#exampleModal').modal('hide');
+                //         },
+                //         error: function (xhr, status, error) {
+                //             ShowErrorToast();
+                //         }
+                //     });
+                // }
+                CreateCategory('#createCategory', 'createMilk');
+            });
+            document.getElementById('btnCreateMilkAge').addEventListener('click', function () {
+                $('#createMilkAgeModal').modal('show');
+            });
+            var addedMilkAge = {};
+            function CreateMilkAge(selectElement, btnName) {
+                addedMilkAge = {
+                    min: $("#createMilkAgeMin").val(),
+                    max: $("#createMilkAgeMax").val(),
+                    unit: $("#createMilkAgeUnit").val(),
+                };
+                if (!addedMilkAge.min || !addedMilkAge.max || !addedMilkAge.unit) {
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
+                } else {
+                    $.ajax({
+                        url: "http://localhost:5215/odata/MilkAges",
+                        type: 'post',
+                        data: JSON.stringify(addedMilkAge),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            document.getElementById("createMilkAgeForm").reset();
+                            GetMilkAges(selectElement, btnName);
+                            $('#createMilkAgeModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            ShowErrorToast();
+                        }
+                    });
+                }
+            }
+            document.getElementById('btnCreateMilkAgeModal').addEventListener('click', function () {
+                // addedMilkAge = {
+                //     min: $("#createMilkAgeMin").val(),
+                //     max: $("#createMilkAgeMax").val(),
+                //     unit: $("#createMilkAgeUnit").val(),
+                // };
+                // if (!addedMilkAge.min || !addedMilkAge.max || !addedMilkAge.unit) {
+                //     ShowErrorToast("Vui lòng nhập tất cả trường");
+                // } else {
+                //     $.ajax({
+                //         url: "http://localhost:5215/odata/MilkAges",
+                //         type: 'post',
+                //         data: JSON.stringify(addedMilkAge),
+                //         processData: false,
+                //         contentType: "application/json",
+                //         headers: {
+                //             'Authorization': 'Bearer ' + '@token'
+                //         },
+                //         success: function (result, status, xhr) {
+                //             document.getElementById("createMilkAgeForm").reset();
+                //             milkAgeTable.ajax.reload(null, false);
+                //             $('#createMilkAgeModal').modal('hide');
+                //         },
+                //         error: function (xhr, status, error) {
+                //             ShowErrorToast();
+                //         }
+                //     });
+                // }
+                CreateMilkAge('#createMilkAge', 'createMilk');
+            });
+            document.getElementById('btnCreateSupplier').addEventListener('click', function () {
+                $('#createSupplierModal').modal('show');
+            });
+            var addedSupplier = {};
+            function CreateSupplier(selectElement, btnName) {
+                addedSupplier = {
+                    name: $("#createSupplierName").val(),
+                };
+                if (!addedSupplier.name) {
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
+                } else {
+                    $.ajax({
+                        url: "http://localhost:5215/odata/Supplier",
+                        type: 'post',
+                        data: JSON.stringify(addedSupplier),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            document.getElementById("createSupplierForm").reset();
+                            GetSuppliers(selectElement, btnName);
+                            $('#createSupplierModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            ShowErrorToast();
+                        }
+                    });
+                }
+            }
+            document.getElementById('btnCreateSupplierModal').addEventListener('click', function () {
+                // addedSupplier = {
+                //     name: $("#createSupplierName").val(),
+                // };
+                // if (!addedSupplier.name) {
+                //     ShowErrorToast("Vui lòng nhập tất cả trường");
+                // } else {
+                //     $.ajax({
+                //         url: "http://localhost:5215/odata/Supplier",
+                //         type: 'post',
+                //         data: JSON.stringify(addedSupplier),
+                //         processData: false,
+                //         contentType: "application/json",
+                //         headers: {
+                //             'Authorization': 'Bearer ' + '@token'
+                //         },
+                //         success: function (result, status, xhr) {
+                //             document.getElementById("createSupplierForm").reset();
+                //             supplierTable.ajax.reload(null, false);
+                //             $('#createSupplierModal').modal('hide');
+                //         },
+                //         error: function (xhr, status, error) {
+                //             ShowErrorToast();
+                //         }
+                //     });
+                // }
+                CreateSupplier('#createSupplier', 'createMilk');
+            });
+            document.getElementById('btnCreateBrand').addEventListener('click', function () {
+                $('#createBrandModal').modal('show');
+            });
+            var addedBrand = {};
+            function CreateBrand(selectElement, btnName) {
+                addedBrand = {
+                    name: $("#createBrandName").val(),
+                };
+                if (!addedBrand.name) {
+                    ShowErrorToast("Vui lòng nhập tất cả trường");
+                } else {
+                    $.ajax({
+                        url: "http://localhost:5215/odata/Brands",
+                        type: 'post',
+                        data: JSON.stringify(addedBrand),
+                        processData: false,
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + '@token'
+                        },
+                        success: function (result, status, xhr) {
+                            document.getElementById("createBrandForm").reset();
+                            GetBrands(selectElement, btnName);
+                            $('#createBrandModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            ShowErrorToast();
+                        }
+                    });
+                }
+            }
+            document.getElementById('btnCreateBrandModal').addEventListener('click', function () {
+                // addedBrand = {
+                //     name: $("#createBrandName").val(),
+                // };
+                // if (!addedBrand.name) {
+                //     ShowErrorToast("Vui lòng nhập tất cả trường");
+                // } else {
+                //     $.ajax({
+                //         url: "http://localhost:5215/odata/Brands",
+                //         type: 'post',
+                //         data: JSON.stringify(addedBrand),
+                //         processData: false,
+                //         contentType: "application/json",
+                //         headers: {
+                //             'Authorization': 'Bearer ' + '@token'
+                //         },
+                //         success: function (result, status, xhr) {
+                //             document.getElementById("createBrandForm").reset();
+                //             GetBrands('#createBrand', 'createMilk');
+                //             $('#createBrandModal').modal('hide');
+                //         },
+                //         error: function (xhr, status, error) {
+                //             ShowErrorToast();
+                //         }
+                //     });
+                // }
+                CreateBrand('#createBrand', 'createMilk');
+            });
             var addedBatchMilkId = 0;
             $('#milkTable').on('click', "button.edit", function () {
                 var milkId = $(this).parents("tr").find("td:nth-child(1)").text();
-                $.ajax({
-                    url: "http://localhost:5215/odata/Category",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#updateCategory').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#updateCategory').append($('<option>', {
-                                    value: value.id,
-                                    text: value.name
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No category found');
-                            document.getElementById('updateMilk').disabled = true;
-                        }
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/Category",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#updateCategory').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#updateCategory').append($('<option>', {
+                //                     value: value.id,
+                //                     text: value.name
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No category found');
+                //             document.getElementById('updateMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
-                $.ajax({
-                    url: "http://localhost:5215/odata/Brands",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#updateBrand').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#updateBrand').append($('<option>', {
-                                    value: value.id,
-                                    text: value.name
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No brand found');
-                            document.getElementById('updateMilk').disabled = true;
-                        }
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/Brands",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#updateBrand').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#updateBrand').append($('<option>', {
+                //                     value: value.id,
+                //                     text: value.name
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No brand found');
+                //             document.getElementById('updateMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
-                $.ajax({
-                    url: "http://localhost:5215/odata/MilkAges",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#updateMilkAge').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#updateMilkAge').append($('<option>', {
-                                    value: value.id,
-                                    text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No milk age found');
-                            document.getElementById('updateMilk').disabled = true;
-                        }
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/MilkAges",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#updateMilkAge').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#updateMilkAge').append($('<option>', {
+                //                     value: value.id,
+                //                     text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No milk age found');
+                //             document.getElementById('updateMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
-                $.ajax({
-                    url: "http://localhost:5215/odata/Supplier",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#updateSupplier').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#updateSupplier').append($('<option>', {
-                                    value: value.id,
-                                    text: value.name
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No supplier found');
-                            document.getElementById('updateMilk').disabled = true;
-                        }
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/Supplier",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#updateSupplier').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#updateSupplier').append($('<option>', {
+                //                     value: value.id,
+                //                     text: value.name
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No supplier found');
+                //             document.getElementById('updateMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                GetCategories('#updateCategory', 'updateMilk');
+                GetBrands('#updateBrand', 'updateMilk');
+                GetMilkAges('#updateMilkAge', 'updateMilk');
+                GetSuppliers('#updateSupplier', 'updateMilk');
                 $.ajax({
                     url: `http://localhost:5215/odata/Milk/${milkId}`,
                     type: 'get',
@@ -525,110 +1011,114 @@
                 }
             });
             document.getElementById('btnCreateMilk').addEventListener('click', function () {
-                $.ajax({
-                    url: "http://localhost:5215/odata/Category",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#createCategory').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#createCategory').append($('<option>', {
-                                    value: value.id,
-                                    text: value.name
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No category found');
-                            document.getElementById('createMilk').disabled = true;
-                        }
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/Category",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#createCategory').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#createCategory').append($('<option>', {
+                //                     value: value.id,
+                //                     text: value.name
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No category found');
+                //             document.getElementById('createMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
-                $.ajax({
-                    url: "http://localhost:5215/odata/Brands",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#createBrand').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#createBrand').append($('<option>', {
-                                    value: value.id,
-                                    text: value.name
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No brand found');
-                            document.getElementById('createMilk').disabled = true;
-                        }
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/Brands",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#createBrand').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#createBrand').append($('<option>', {
+                //                     value: value.id,
+                //                     text: value.name
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No brand found');
+                //             document.getElementById('createMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
-                $.ajax({
-                    url: "http://localhost:5215/odata/MilkAges",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#createMilkAge').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#createMilkAge').append($('<option>', {
-                                    value: value.id,
-                                    text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No milk age found');
-                            document.getElementById('createMilk').disabled = true;
-                        }
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/MilkAges",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#createMilkAge').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#createMilkAge').append($('<option>', {
+                //                     value: value.id,
+                //                     text: `Từ ${value.min} ${value.unit} đến ${value.max} ${value.unit}`
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No milk age found');
+                //             document.getElementById('createMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
-                $.ajax({
-                    url: "http://localhost:5215/odata/Supplier",
-                    type: 'get',
-                    contentType: 'application/json',
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    },
-                    success: function (result, status, xhr) {
-                        if (result) {
-                            $('#createSupplier').html('');
-                            $.each(result.$values, function (index, value) {
-                                $('#createSupplier').append($('<option>', {
-                                    value: value.id,
-                                    text: value.name
-                                }));
-                            });
-                        } else {
-                            ShowErrorToast('No supplier found');
-                            document.getElementById('createMilk').disabled = true;
-                        }
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                // $.ajax({
+                //     url: "http://localhost:5215/odata/Supplier",
+                //     type: 'get',
+                //     contentType: 'application/json',
+                //     headers: {
+                //         'Authorization': 'Bearer ' + '@token'
+                //     },
+                //     success: function (result, status, xhr) {
+                //         if (result) {
+                //             $('#createSupplier').html('');
+                //             $.each(result.$values, function (index, value) {
+                //                 $('#createSupplier').append($('<option>', {
+                //                     value: value.id,
+                //                     text: value.name
+                //                 }));
+                //             });
+                //         } else {
+                //             ShowErrorToast('No supplier found');
+                //             document.getElementById('createMilk').disabled = true;
+                //         }
 
-                    },
-                    error: function (xhr, status, error) {
-                        ShowErrorToast();
-                    }
-                });
+                //     },
+                //     error: function (xhr, status, error) {
+                //         ShowErrorToast();
+                //     }
+                // });
+                GetCategories('#createCategory', 'createMilk');
+                GetBrands('#createBrand', 'createMilk');
+                GetMilkAges('#createMilkAge', 'createMilk');
+                GetSuppliers('#createSupplier', 'createMilk');
                 $('#exampleModal').modal('show');
             });
             var addedMilk = {};

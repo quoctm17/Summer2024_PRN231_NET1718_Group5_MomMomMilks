@@ -191,7 +191,7 @@
                     max: $("#createMax").val(),
                     unit: $("#createUnit").val(),
                 };
-                if (!addedMilkAge.min || !addedMilkAge.max) {
+                if (!addedMilkAge.min || !addedMilkAge.max || !addedMilkAge.unit) {
                     ShowErrorToast("Vui lòng nhập tất cả trường");
                 } else {
                     $.ajax({
