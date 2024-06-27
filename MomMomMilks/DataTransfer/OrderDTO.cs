@@ -18,5 +18,6 @@ namespace DataTransfer
         public int TransactionId { get; set; }
         public int ShipperId { get; set; }
         public long PaymentOrderCode {  get; set; }
+        public ICollection<OrderDetailDTO> OrderDetail { get; set; }
     }
 }

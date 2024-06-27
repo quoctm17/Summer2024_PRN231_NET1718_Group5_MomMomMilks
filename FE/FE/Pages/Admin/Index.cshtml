@@ -1,56 +1,82 @@
 ﻿@page
 @model FE.Pages.Admin.IndexModel
 @{
+
 }
+<style>
+    .filters .form-select {
+        width: auto;
+        display: inline-block;
+    }
+</style>
 <div class="container-fluid px-4">
     <h1 class="mt-4">Dashboard</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item active">Dashboard</li>
     </ol>
     <div class="row">
-        @* <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white mb-4">
-                <div class="card-body">Primary Card</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-warning text-white mb-4">
-                <div class="card-body">Warning Card</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-success text-white mb-4">
-                <div class="card-body">Success Card</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-danger text-white mb-4">
-                <div class="card-body">Danger Card</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                </div>
-            </div>
-        </div>
-    </div> *@
+        <h1>Tổng doanh thu: <span id="totalRevenue"></span></h1> 
+    </div>
     <div class="row">
+        <div class="container">
+            <div class="row g-2 mb-4 flex justify-content-end">
+                <h4 class ="row g-2 flex justify-content-end">Bộ lọc biểu đồ: </h4>
+                <div class="col-auto">
+                    <select class="form-select" id="startMonth">
+                        <option value="">Từ tháng</option>
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" id="startYear">
+                        <option value="">Từ năm</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" id="endMonth">
+                        <option value="">Đến tháng</option>
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" id="endYear">
+                        <option value="">Đến năm</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         <div class="col-xl-6">
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-area me-1"></i>
-                    Total Money In Month
+                    Tổng doanh thu
                 </div>
                 <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
             </div>
@@ -59,7 +85,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Total Order In Month
+                    Tổng đơn
                 </div>
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>
@@ -68,15 +94,15 @@
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Table of Orders and Revenue
+            Bảng dữ liệu các Sản phẩm bán chạy nhất
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
                 <thead>
                     <tr>
-                        <th>Month</th>
-                        <th>Total Revenue</th>
-                        <th>Total Orders</th>
+                        <th>Hạng</th>
+                        <th>Sản phẩm</th>
+                        <th>Tổng số lượng bán ra</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,14 +114,175 @@
 @section Scripts {
     <script>
         const token = sessionStorage.getItem('token');
+        let orders = [];
+        let myChart;
+        let areaCtx;
+        let barCtx;
+
+        function formatCurrency(amount) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
+        }
+
+        function updateTotalRevenue(monthlyProfits) {
+            const totalProfit = calculateTotalProfit(monthlyProfits);
+            const totalRevenueElement = document.getElementById('totalRevenue');
+            if (totalRevenueElement) {
+                totalRevenueElement.textContent = formatCurrency(totalProfit);
+            }
+        }
+
+        function calculateTotalProfit(monthlyProfits) {
+            let totalProfit = 0;
+            Object.values(monthlyProfits).forEach(profit => {
+                totalProfit += profit;
+            });
+            return totalProfit;
+        }
+
+        function processDataForChart(chartType) {
+            const startMonth = parseInt(document.getElementById('startMonth').value);
+            const startYear = parseInt(document.getElementById('startYear').value);
+            const endMonth = parseInt(document.getElementById('endMonth').value);
+            const endYear = parseInt(document.getElementById('endYear').value);
+
+            const filteredOrders = orders.filter(order => {
+                const orderDate = new Date(order.createAt);
+                const orderMonth = orderDate.getMonth() + 1;
+                const orderYear = orderDate.getFullYear();
+
+                if (startYear && endYear) {
+                    if (orderYear < startYear || orderYear > endYear) {
+                        return false;
+                    }
+                    if (orderYear === startYear && orderMonth < startMonth) {
+                        return false;
+                    }
+                    if (orderYear === endYear && orderMonth > endMonth) {
+                        return false;
+                    }
+                    return true;
+                } else {
+                    return true;
+                }
+            });
+
+            if (chartType === 'area') {
+                const monthlyAmounts = {};
+                filteredOrders.forEach(order => {
+                    const monthYear = new Date(order.createAt).toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
+                    if (!monthlyAmounts[monthYear]) {
+                        monthlyAmounts[monthYear] = 0;
+                    }
+                    monthlyAmounts[monthYear] += order.totalAmount;
+                });
+
+                const monthlyLabels = Object.keys(monthlyAmounts);
+                const monthlyAmountsData = Object.values(monthlyAmounts);
+
+                return { labels: monthlyLabels, data: monthlyAmountsData };
+            } else if (chartType === 'bar') {
+                const monthlyOrders = {};
+                filteredOrders.forEach(order => {
+                    const month = new Date(order.createAt).toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
+                    if (!monthlyOrders[month]) {
+                        monthlyOrders[month] = 0;
+                    }
+                    monthlyOrders[month]++;
+                });
+
+                const monthlyOrderLabels = Object.keys(monthlyOrders);
+                const monthlyOrdersData = Object.values(monthlyOrders);
+
+                return { labels: monthlyOrderLabels, data: monthlyOrdersData };
+            }
+
+            return { labels: [], data: [] }; // Default return if chartType is invalid
+        }
+
+        function updateChart(chartType, chartContext) {
+            const { labels, data } = processDataForChart(chartType);
+
+            if (chartContext && labels.length > 0 && data.length > 0) {
+                if (chartContext.chart) {
+                    chartContext.chart.destroy();
+                }
+
+                const chartConfig = {
+                    type: chartType === 'area' ? 'line' : 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: chartType === 'area' ? "Total Amount" : "Number of Orders",
+                            backgroundColor: chartType === 'bar' ? "rgba(2,117,216,1)" : "rgba(2,117,216,0.2)",
+                            borderColor: "rgba(2,117,216,1)",
+                            data: data,
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'month'
+                                },
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 6
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: Math.max(...data) * 1.2,
+                                    maxTicksLimit: 5
+                                },
+                                gridLines: {
+                                    color: "rgba(0, 0, 0, .125)",
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                };
+
+                chartContext.chart = new Chart(chartContext.ctx, chartConfig);
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', async (event) => {
-            const areaCtx = document.getElementById("myAreaChart");
-            const barCtx = document.getElementById("myBarChart");
+            areaCtx = document.getElementById("myAreaChart");
+            barCtx = document.getElementById("myBarChart");
 
-            function formatCurrency(amount) {
-                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
-            }
+            const startMonth = document.getElementById('startMonth');
+            const startYear = document.getElementById('startYear');
+            const endMonth = document.getElementById('endMonth');
+            const endYear = document.getElementById('endYear');
+
+            const areaChartContext = { ctx: areaCtx, chart: null };
+            const barChartContext = { ctx: barCtx, chart: null };
+
+            startMonth.addEventListener('change', () => {
+                updateChart('area', areaChartContext);
+                updateChart('bar', barChartContext);
+            });
+
+            startYear.addEventListener('change', () => {
+                updateChart('area', areaChartContext);
+                updateChart('bar', barChartContext);
+            });
+
+            endMonth.addEventListener('change', () => {
+                updateChart('area', areaChartContext);
+                updateChart('bar', barChartContext);
+            });
+
+            endYear.addEventListener('change', () => {
+                updateChart('area', areaChartContext);
+                updateChart('bar', barChartContext);
+            });
 
             try {
                 let response = await fetch('http://localhost:5215/odata/Order', {
@@ -109,81 +296,12 @@
                 }
 
                 let data = await response.json();
-                const orders = data.$values;                    
-
-                // Process data for the area chart (total amount per month)
-                const monthlyAmounts = {};
-                orders.forEach(order => {
-                    const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
-                    if (!monthlyAmounts[month]) {
-                        monthlyAmounts[month] = 0;
-                    }
-                    monthlyAmounts[month] += order.totalAmount;
-                });
-
-                
-
-                // Prepare data for the area chart
-                const monthlyLabels = Object.keys(monthlyAmounts);
-                
-                const monthlyAmountsData = Object.values(monthlyAmounts);
-
-                // Create the area chart
-                if (areaCtx) {
-                    new Chart(areaCtx, {
-                        type: 'line',
-                        data: {
-                            labels: monthlyLabels,
-                            datasets: [{
-                                label: "Total Amount",
-                                lineTension: 0.3,
-                                backgroundColor: "rgba(2,117,216,0.2)",
-                                borderColor: "rgba(2,117,216,1)",
-                                pointRadius: 5,
-                                pointBackgroundColor: "rgba(2,117,216,1)",
-                                pointBorderColor: "rgba(255,255,255,0.8)",
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "rgba(2,117,216,1)",
-                                pointHitRadius: 50,
-                                pointBorderWidth: 2,
-                                data: monthlyAmountsData,
-                            }],
-                        },
-                        options: {
-                            scales: {
-                                xAxes: [{
-                                    time: {
-                                        unit: 'month'
-                                    },
-                                    gridLines: {
-                                        display: false
-                                    },
-                                    ticks: {
-                                        maxTicksLimit: 6
-                                    }
-                                }],
-                                yAxes: [{
-                                    ticks: {
-                                        min: 0,
-                                        max: Math.max(...monthlyAmountsData) * 1.2, // adjust the max value to be slightly higher than the max data point
-                                        maxTicksLimit: 5
-                                    },
-                                    gridLines: {
-                                        color: "rgba(0, 0, 0, .125)",
-                                    }
-                                }],
-                            },
-                            legend: {
-                                display: false
-                            }
-                        }
-                    });
-                }
+                orders = data.$values;
 
                 // Process data for the bar chart (number of orders per month)
                 const monthlyOrders = {};
                 orders.forEach(order => {
-                    const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
+                    const month = new Date(order.createAt).toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
                     if (!monthlyOrders[month]) {
                         monthlyOrders[month] = 0;
                     }
@@ -237,7 +355,18 @@
                         }
                     });
                 }
-
+                
+                //Top Product
+                let responseTopProduct = await fetch('http://localhost:5215/odata/Order/topProduct?topN=10', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!responseTopProduct.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                let dataTopProduct = await responseTopProduct.json();
+                const topProducts = dataTopProduct.$values;
 
                     //Revenue
                     let responseRevenue = await fetch('http://localhost:5215/odata/Revenue', {
@@ -269,7 +398,7 @@
                     const monthlyProfits = {};
                     const monthlyAmountsRevenue = {};
                     ordersRevenue.forEach(order => {
-                        const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
+                        const month = new Date(order.createAt).toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
                         if (!monthlyAmountsRevenue[month]) {
                             monthlyAmountsRevenue[month] = 0;
                         }
@@ -278,7 +407,7 @@
 
                     const monthlyOrdersRevenue = {};
                     ordersRevenue.forEach(order => {
-                        const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
+                        const month = new Date(order.createAt).toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
                         if (!monthlyOrdersRevenue[month]) {
                             monthlyOrdersRevenue[month] = 0;
                         }
@@ -295,10 +424,10 @@
                     });
 
                     ordersRevenue.forEach(order => {
-                        const month = new Date(order.createAt).toLocaleString('en-CA', { month: 'long', year: 'numeric' });
+                        const month = new Date(order.createAt).toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
                         if (ordersRevenue == null && ordersRevenue["$values"] == null) { console.log("Null Revenue")}
                         if (!monthlyProfits[month]) {
-                            monthlyProfits[month] = 0; // Khởi tạo giá trị profit ban đầu
+                            monthlyProfits[month] = 0; 
                         }
 
                         order.orderDetails["$values"].forEach(detail => {
@@ -317,29 +446,33 @@
                     console.log("Monthly Orders Revenue: ", monthlyOrdersRevenue);
                     console.log("Monthly Profits: ", monthlyProfits);
 
+                const tableBody = document.querySelector('#datatablesSimple tbody');
 
-                    const tableBody = document.querySelector('#datatablesSimple tbody');
-                    monthlyLabelsForRevenue.forEach(month => {
-                        const row = document.createElement('tr');
-                        const cellMonth = document.createElement('td');
-                        const cellTotalRevenue = document.createElement('td');
-                        const cellTotalOrders = document.createElement('td');
+                topProducts.forEach((product, index) => {
+                    const row = document.createElement('tr');
 
-                        cellMonth.textContent = month;
-                        cellTotalRevenue.textContent = monthlyProfits[month] ? formatCurrency(monthlyProfits[month]) : '0.00 VNĐ';
-                        cellTotalOrders.textContent = monthlyOrdersRevenue[month];
+                    const cellTop = document.createElement('td');
+                    cellTop.textContent = index + 1; 
 
-                        row.appendChild(cellMonth);
-                        row.appendChild(cellTotalRevenue);
-                        row.appendChild(cellTotalOrders);
+                    const cellMilkName = document.createElement('td');
+                    cellMilkName.textContent = product.milkName;
 
-                        tableBody.appendChild(row);
-                    });
+                    const cellTotalQuantitySold = document.createElement('td');
+                    cellTotalQuantitySold.textContent = product.totalQuantitySold;
 
-                    // Initialize DataTable
-                    $(document).ready(function () {
-                        $('#datatablesSimple').DataTable();
-                    });
+                    row.appendChild(cellTop);
+                    row.appendChild(cellMilkName);
+                    row.appendChild(cellTotalQuantitySold);
+
+                    tableBody.appendChild(row);
+                });
+
+                $(document).ready(function () {
+                    $('#datatablesSimple').DataTable();
+                });
+                updateTotalRevenue(monthlyProfits);
+                updateChart('area', areaChartContext);
+                updateChart('bar', barChartContext);
             } catch (error) {
                 console.error('Error fetching the data:', error);
             }

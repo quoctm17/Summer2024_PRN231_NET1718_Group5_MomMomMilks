@@ -31,5 +31,6 @@ namespace Repository.Interface
         Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt);
         Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue();
         Task UpdateOrderStatusWhenOverDateAsync();
+        Task<List<TopProduct>> GetTopProducts(int topN);
     }
 }
