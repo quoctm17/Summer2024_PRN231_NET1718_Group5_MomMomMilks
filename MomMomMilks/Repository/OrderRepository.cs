@@ -149,6 +149,9 @@ namespace Repository
         {
             await OrderDAO.Instance.UpdateOrderStatusWhenOverDateAsync();
         }
-    
+        public async Task<List<TopProduct>> GetTopProducts(int topN)
+        {
+            return await OrderDAO.Instance.GetTopProducts(topN);
+        }
     }
 }

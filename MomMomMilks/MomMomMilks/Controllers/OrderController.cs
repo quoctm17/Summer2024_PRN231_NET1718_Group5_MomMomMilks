@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entities;
 using CloudinaryDotNet.Actions;
+using DataAccess.DAO;
 using DataTransfer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -211,6 +212,20 @@ namespace MomMomMilks.Controllers
         {
             var result = await _orderService.ManagerAssignOrder(orderId, shipperId);
             return Ok(result);
+        }
+        [EnableQuery]
+        [HttpGet("topProduct")]
+        public async Task<IActionResult> GetTopProducts([FromQuery] int topN = 10)
+        {
+            var topProducts = await _orderService.GetTopProducts(topN);
+            var topProductsDto = topProducts.Select(tp => new TopProductDto
+            {
+                MilkId = tp.Milk.Id,
+                MilkName = tp.Milk.Name,
+                TotalQuantitySold = tp.TotalQuantitySold
+            }).ToList();
+
+            return Ok(topProductsDto);
         }
     }
 }

@@ -37,7 +37,10 @@ namespace DataAccess.DAO
             List<OrderDTO> orderDTO = null;
             try
             {
-                var order = await _context.Orders.ToListAsync();
+                var order = await _context.Orders
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(o => o.Milk)
+                    .ToListAsync();
                 orderDTO = _mapper.Map<List<OrderDTO>>(order);
             }
             catch (Exception ex)
@@ -45,6 +48,21 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
             return orderDTO;
+        }
+        public async Task<List<TopProduct>> GetTopProducts(int topN)
+        {
+            var topProducts = await _context.OrderDetails
+                .GroupBy(od => od.Milk)
+                .Select(g => new TopProduct
+                {
+                    Milk = g.Key,
+                    TotalQuantitySold = g.Sum(od => od.Quantity)
+                })
+                .OrderByDescending(tp => tp.TotalQuantitySold)
+                .Take(topN)
+                .ToListAsync();
+
+            return topProducts;
         }
         public async Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue()
         {

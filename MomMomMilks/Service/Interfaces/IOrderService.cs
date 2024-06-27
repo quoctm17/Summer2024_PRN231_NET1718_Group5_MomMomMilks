@@ -31,5 +31,6 @@ namespace Service.Interfaces
         Task<Order> GetOrderByBuyerIdAndCreateAt(int buyerId, DateTime createAt);
         Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue();
         Task UpdateOrderStatusWhenOverDateAsync();
+        Task<List<TopProduct>> GetTopProducts(int topN);
     }
 }

@@ -118,5 +118,9 @@ namespace Service.Services
         {
             await _orderRepository.UpdateOrderStatusWhenOverDateAsync();
         }
+        public async Task<List<TopProduct>> GetTopProducts(int topN)
+        {
+            return await _orderRepository.GetTopProducts(topN);
+        }
     }
 }
