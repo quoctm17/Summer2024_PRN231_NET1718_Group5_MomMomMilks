@@ -25,8 +25,8 @@
                     <div class="breadcrumb__text">
                         <h2>@Model.Milk.Name</h2>
                         <div class="breadcrumb__option">
-                            <a href="/Index">Home</a>
-                            <a href="/Milk/Index">Milk</a>
+                            <a href="/Index">Trang chủ</a>
+                            <a href="/Milk/Index">Sữa</a>
                             <span>@Model.Milk.Name</span>
                         </div>
                     </div>
@@ -70,11 +70,11 @@
                         <a href="javascript:void(0)" onclick="addToCart(@Model.Milk.Id, @Model.Milk.Name, @Model.Milk.Price, @Model.Milk.ImageUrl)" class="primary-btn">ADD TO CART</a>
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
-                            <li><b>Availability</b> <span>In Stock (@Model.TotalQuantity)</span></li>
-                            <li><b>Brand</b> <span>@Model.Milk.Brand</span></li>
-                            <li><b>Age</b> <span>@Model.Milk.MilkAge</span></li>
-                            <li><b>Category</b> <span>@Model.Milk.Category</span></li>
-                            <li><b>Supplier</b> <span>@Model.Milk.Supplier</span></li>
+                            <li><b>Hàng còn</b> <span>Trong kho (@Model.TotalQuantity)</span></li>
+                            <li><b>Hãng</b> <span>@Model.Milk.Brand</span></li>
+                            <li><b>Độ tuổi</b> <span>@Model.Milk.MilkAge</span></li>
+                            <li><b>Loại sữa</b> <span>@Model.Milk.Category</span></li>
+                            <li><b>Nhà cung cấp</b> <span>@Model.Milk.Supplier</span></li>
                         </ul>
 
                     </div>
@@ -84,26 +84,26 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-1" role="tab"
-                                   aria-selected="false">Information</a>
+                                   aria-selected="false">Thông tin</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
-                                   aria-selected="false">Reviews <span>(0)</span></a>
+                                   aria-selected="false">Đánh giá <span>(0)</span></a>
                             </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane" id="tabs-1" role="tabpanel">
                                 <div class="product__details__tab__desc">
-                                    <h6>Product Details</h6>
-                                    <p>@Model.Milk.UserManual</p>
-                                    <p>@Model.Milk.Warning</p>
-                                    <p>@Model.Milk.PreserveInstructions</p>
+                                    <h4 class="mb-3">Chi tiết sản phẩm</h4>
+                                    <p style="font-size: 20px;">@Model.Milk.UserManual</p>
+                                    <p style="font-size: 20px;">@Model.Milk.Warning</p>
+                                    <p style="font-size: 20px;">@Model.Milk.PreserveInstructions</p>
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-2" role="tabpanel">
                                 <div class="product__details__tab__desc">
-                                    <h6>Product Reviews</h6>
-                                    <p>No reviews yet.</p>
+                                    <h6>Đánh giá sản phẩm</h6>
+                                    <p>Chưa có đánh giá.</p>
                                 </div>
                             </div>
                         </div>

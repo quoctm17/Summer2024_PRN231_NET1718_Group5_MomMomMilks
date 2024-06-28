@@ -78,13 +78,13 @@
                     <div class="form-group col-md-6">
                         <p>Quận<span> *</span></p>
                         <select id="districtId" class="form-control" required>
-                            <option value="" selected>Select your District</option>
+                            <option value="" selected>Chọn Quận</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
                         <p>Phường<span> *</span></p>
                         <select id="wardId" class="form-control" required>
-                            <option value="" selected>Select your Ward</option>
+                            <option value="" selected>Chọn Phường</option>
                         </select>
                     </div>
                 </div>
@@ -168,7 +168,7 @@
             const data = await response.json();
             console.log('District data:', data);
             let districtSelect = document.getElementById('districtId');
-            districtSelect.innerHTML = '<option value="" selected>Select your District</option>'; // Clear previous options
+            districtSelect.innerHTML = '<option value="" selected>Chọn Quận</option>'; // Clear previous options
             for (let i = 0; i < data.$values.length; i++) {
                 let district = data.$values[i];
                 let option = document.createElement('option');
@@ -184,7 +184,7 @@
 
     async function loadWard(districtId) {
         const wardSelect = document.getElementById('wardId');
-        wardSelect.innerHTML = '<option value="" selected>Select your Ward</option>'; // Clear previous options
+        wardSelect.innerHTML = '<option value="" selected>Chọn Phường</option>'; // Clear previous options
         if (!districtId) return;
         try {
             const response = await fetch(`http://localhost:5215/odata/Wards?$filter=districtId eq ${districtId}`, {
@@ -198,7 +198,7 @@
             const data = await response.json();
             console.log('Ward data:', data);
             let wardSelect = document.getElementById('wardId');
-            wardSelect.innerHTML = '<option value="" selected>Select your Ward</option>'; // Clear previous options
+            wardSelect.innerHTML = '<option value="" selected>Chọn Phường</option>'; // Clear previous options
             for (let i = 0; i < data.$values.length; i++) {
                 let ward = data.$values[i];
                 let option = document.createElement('option');

@@ -44,7 +44,7 @@
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <input class="form-control" type="text" placeholder="Tìm kiếm..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
                     <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                 </div>
             </form>
@@ -66,7 +66,7 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
+                            @* <div class="sb-sidenav-menu-heading">Core</div>
                             <a class="nav-link" href="/admin/index">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
@@ -113,8 +113,8 @@
                                         </nav>
                                     </div>
                                 </nav>
-                            </div>
-                            <div class="sb-sidenav-menu-heading">Management</div>
+                            </div> *@
+                            <div class="sb-sidenav-menu-heading">Quản lý</div>
                             @if (account.Role == "Admin")
                             {
                                 <a class="nav-link" href="/admin/batchmanagement/index">
@@ -212,7 +212,7 @@ else
                         <div class="header__top__left">
                             <ul>
                                 <li><i class="fa fa-envelope"></i> mommommilks@gmail.com</li>
-                                <li>Great choice for mother, healthy for baby</li>
+                                <li>Lựa chọn của mẹ bầu, sức khỏe cho trẻ thơ</li>
                             </ul>
                         </div>
                     </div>
@@ -229,14 +229,14 @@ else
                                 <div>English</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
-                                    <li><a href="#">Spanis</a></li>
+                                    <li><a href="#">Tiếng Việt</a></li>
                                     <li><a href="#">English</a></li>
                                 </ul>
                             </div>
                             @if (account == null)
                             {
                                 <div class="header__top__right__auth">
-                                    <a href="/Login"><i class="fa fa-user"></i>Login</a>
+                                    <a href="/Login"><i class="fa fa-user"></i>Đăng nhập</a>
                                 </div>
                             }
                             else
@@ -270,19 +270,18 @@ else
                     <div class="col-lg-6">
                         <nav class="header__menu" style="padding-top: 50px;">
                             <ul>
-                                <li class="active"><a href="/">Home</a></li>
-                                <li><a href="/Milk/Index">Shop</a></li>
+                                <li class="active"><a href="/">Trang chủ</a></li>
+                                <li><a href="/Milk/Index">Cửa hàng</a></li>
                                 <li>
-                                    <a href="#">Pages</a>
+                                    <a href="#">Trang</a>
                                     <ul class="header__menu__dropdown">
-                                        <li><a href="./shop_details">Shop Details</a></li>
-                                        <li><a href="./shopping_cart">Shopping Cart</a></li>
-                                        <li><a href="./checkout">Check Out</a></li>
-                                        <li><a href="./blog_details">Blog Details</a></li>
+                                        <li><a href="./shop_details">Chi tiết cửa hàng</a></li>
+                                        <li><a href="./shopping_cart">Giỏ Hàng</a></li>
+                                        <li><a href="./checkout">Thanh toán</a></li>
+                                        <li><a href="./blog_details">Bài viết liên quan</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="./blog">Blog</a></li>
-                                <li><a href="./contact">Contact</a></li>
+                                <li><a href="./contact">Liên hệ</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -292,7 +291,7 @@ else
                                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                                 <li><a href="/shopping_cart"><i class="fa fa-shopping-bag"></i> <span id="cart-count">0</span></a></li>
                             </ul>
-                            <div class="header__cart__price">Cart Total: <span id="cart-total">0.00đ</span></div>
+                            <div class="header__cart__price">Tổng tiền: <span id="cart-total">0.00đ</span></div>
 
                         </div>
                     </div>
@@ -320,40 +319,39 @@ else
                             <a href="./index.html"><img src="~/img/logo.webp" alt=""></a>
                         </div>
                         <ul>
-                            <li>Address: 60-49 Road 11378 New York</li>
-                            <li>Phone: +65 11.188.888</li>
-                            <li>Email: hello@colorlib.com</li>
+                            <li>Địa chỉ: FPTU, Quận 9</li>
+                            <li>Số điện thoại: 036363636</li>
+                            <li>Email: mommomsmilk@gmail.com</li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
                     <div class="footer__widget">
-                        <h6>Useful Links</h6>
+                        <h6>Đường dẫn</h6>
                         <ul>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">About Our Shop</a></li>
-                            <li><a href="#">Secure Shopping</a></li>
-                            <li><a href="#">Delivery information</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Our Sitemap</a></li>
+                            <li><a href="#">Về chúng tôi</a></li>
+                            <li><a href="#">Cửa hàng chúng tôi</a></li>
+                            <li><a href="#">Bảo mật mua hàng</a></li>
+                            <li><a href="#">Thông tin giao hàng</a></li>
+                            <li><a href="#">Chính sách bảo mật</a></li>
+                            <li><a href="#">Bản đồ vị trí</a></li>
                         </ul>
                         <ul>
-                            <li><a href="#">Who We Are</a></li>
-                            <li><a href="#">Our Services</a></li>
-                            <li><a href="#">Projects</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">Innovation</a></li>
-                            <li><a href="#">Testimonials</a></li>
+                            <li><a href="#">Chúng tôi là ai</a></li>
+                            <li><a href="#">Các dịch vụ</a></li>
+                            <li><a href="#">Dự án</a></li>
+                            <li><a href="#">Liên hệ</a></li>
+                            <li><a href="#">Phát triển</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-12">
                     <div class="footer__widget">
-                        <h6>Join Our Newsletter Now</h6>
-                        <p>Get E-mail updates about our latest shop and special offers.</p>
+                        <h6>Nhận thông báo ngay</h6>
+                        <p>Nhận các thông báo qua email về các ưu đãi và sản phẩm mới.</p>
                         <form action="#">
-                            <input type="text" placeholder="Enter your mail">
-                            <button type="submit" class="site-btn">Subscribe</button>
+                            <input type="text" placeholder="Nhập địa chỉ email">
+                            <button type="submit" class="site-btn">Đăng ký</button>
                         </form>
                         <div class="footer__widget__social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
