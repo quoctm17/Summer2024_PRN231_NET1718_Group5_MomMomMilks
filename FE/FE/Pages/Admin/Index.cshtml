@@ -297,64 +297,6 @@
 
                 let data = await response.json();
                 orders = data.$values;
-
-                // Process data for the bar chart (number of orders per month)
-                const monthlyOrders = {};
-                orders.forEach(order => {
-                    const month = new Date(order.createAt).toLocaleString('vi-VN', { month: 'long', year: 'numeric' });
-                    if (!monthlyOrders[month]) {
-                        monthlyOrders[month] = 0;
-                    }
-                    monthlyOrders[month]++;
-                });
-
-                // Prepare data for the bar chart
-                const monthlyOrderLabels = Object.keys(monthlyOrders);
-                const monthlyOrdersData = Object.values(monthlyOrders);
-
-                // Create the bar chart
-                if (barCtx) {
-                    new Chart(barCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: monthlyOrderLabels,
-                            datasets: [{
-                                label: "Number of Orders",
-                                backgroundColor: "rgba(2,117,216,1)",
-                                borderColor: "rgba(2,117,216,1)",
-                                data: monthlyOrdersData,
-                            }],
-                        },
-                        options: {
-                            scales: {
-                                xAxes: [{
-                                    time: {
-                                        unit: 'month'
-                                    },
-                                    gridLines: {
-                                        display: false
-                                    },
-                                    ticks: {
-                                        maxTicksLimit: 6
-                                    }
-                                }],
-                                yAxes: [{
-                                    ticks: {
-                                        min: 0,
-                                        max: Math.max(...monthlyOrdersData) * 1.2, // adjust the max value to be slightly higher than the max data point
-                                        maxTicksLimit: 5
-                                    },
-                                    gridLines: {
-                                        display: true
-                                    }
-                                }],
-                            },
-                            legend: {
-                                display: false
-                            }
-                        }
-                    });
-                }
                 
                 //Top Product
                 let responseTopProduct = await fetch('http://localhost:5215/odata/Order/topProduct?topN=10', {
