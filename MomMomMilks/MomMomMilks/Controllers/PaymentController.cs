@@ -20,16 +20,19 @@ namespace MomMomMilks.Controllers
         private readonly PayOS _payOS;
         private readonly ILogger<PaymentController> _logger;
         private readonly IOrderService _orderService;
+        private readonly ITransactionService _transactionService;
 
         public PaymentController(
             PayOS payOS,
             ILogger<PaymentController> logger,
-            IOrderService orderService
+            IOrderService orderService,
+            ITransactionService transactionService
             )
         {
             _payOS = payOS;
             _logger = logger;
             _orderService = orderService;
+            _transactionService = transactionService;
         }
 
         [HttpPost("create")]
@@ -64,7 +67,7 @@ namespace MomMomMilks.Controllers
                     items.Add(item);
                 }
 
-                var totalAmountInCents = (int)(order.TotalAmount/100);
+                var totalAmountInCents = (int)(order.TotalAmount / 100);
                 if (totalAmountInCents <= 0)
                 {
                     throw new Exception("Total amount in cents must be greater than 0");
@@ -79,6 +82,14 @@ namespace MomMomMilks.Controllers
                 if (!result)
                 {
                     throw new Exception("Error while adding order code to order");
+                }
+
+                // Update the transaction with the PaymentOrderCode
+                var transaction = await _transactionService.GetTransactionByOrderIdAsync(order.Id);
+                if (transaction != null)
+                {
+                    transaction.PaymentOrderCode = orderCode.ToString();
+                    await _transactionService.UpdateTransactionAsync(transaction);
                 }
 
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
@@ -102,12 +113,20 @@ namespace MomMomMilks.Controllers
                 var status = paymentLinkInformation.status == "PAID";
                 if (status)
                 {
-                    var order = await _orderService.GetOrderByPaymentOrderCode(paymentLinkInformation.orderCode);
-                    if (order != null)
+                    var transaction = await _transactionService.GetTransactionByOrderPaymentCodeAsync(paymentLinkInformation.orderCode);
+                    if (transaction != null)
                     {
-                        // Confirm payment and update order status
-                        order.OrderStatusId = 2; // Paid
-                        await _orderService.UpdateOrder(order);
+                        var order = await _orderService.GetOrderByPaymentOrderCode(paymentLinkInformation.orderCode);
+                        if (order != null)
+                        {
+                            // Confirm payment and update order status
+                            order.OrderStatusId = 2; // Assigning
+                            await _orderService.UpdateOrder(order);
+
+                            // Update transaction status
+                            transaction.Status = "Paid";
+                            await _transactionService.UpdateTransactionAsync(transaction);
+                        }
                     }
                 }
                 return Ok(new Response(0, "Ok", paymentLinkInformation));
@@ -120,10 +139,6 @@ namespace MomMomMilks.Controllers
             }
 
         }
-
-        // Add this method in the PaymentController class
-
-        // Add this method in the PaymentController class
 
         [HttpPost("cancel")]
         [Authorize]
@@ -149,6 +164,17 @@ namespace MomMomMilks.Controllers
                     order.OrderStatusId = 6; // Assuming 6 represents 'Return Refund'
                 }
                 await _orderService.UpdateOrder(order);
+
+                // Create a new transaction for the refund
+                var refundTransaction = new BusinessObject.Entities.Transaction
+                {
+                    OrderId = order.Id,
+                    Status = "Refunding",
+                    CreatedAt = DateTime.Now,
+                    GrossAmount = order.TotalAmount,
+                    PaymentOrderCode = null // Refund doesn't need a PaymentOrderCode
+                };
+                await _transactionService.AddTransactionAsync(refundTransaction);
 
                 return Ok(new Response(0, "success", paymentLinkInformation));
             }

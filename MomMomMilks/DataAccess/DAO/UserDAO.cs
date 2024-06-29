@@ -84,7 +84,6 @@ namespace DataAccess.DAO
                 .Where(u => u.Id == userId)
                 .Include(u => u.Addresses)
                     .ThenInclude(a => a.Ward)
-                .Include(u => u.Addresses)
                     .ThenInclude(a => a.District)
                  .Include(u => u.Cart)
                  .ThenInclude(c => c.CartItems)

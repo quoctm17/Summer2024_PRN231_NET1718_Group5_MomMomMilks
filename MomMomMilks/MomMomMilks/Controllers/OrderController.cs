@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using MomMomMilks.Exceptions;
 using MomMomMilks.Extensions;
 using Repository;
 using Repository.Interface;
@@ -81,6 +82,11 @@ namespace MomMomMilks.Controllers
                 await _orderService.CreateOrderAsync(order, order.OrderDetails.ToList());
                 Console.WriteLine("Order created successfully");
                 return CreatedAtAction(nameof(Get), new { key = order.Id }, order);
+            }
+            catch (OutOfStockException ex)
+            {
+                Console.WriteLine($"OutOfStockException: {ex.Message}");
+                return StatusCode(409, new { message = ex.Message });
             }
             catch (Exception ex)
             {

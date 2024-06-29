@@ -24,7 +24,7 @@ namespace Service.Interfaces
         Task<bool> ConfirmShipped(int shipperId, int orderId);
         Task<bool> ConfirmCancelled(int shipperId, int orderId);
         Task<bool> ManagerAssignOrder(int shipperId, int orderId);
-        Task AutoAssignOrdersToShippers();
+        Task AutoAssignOrdersToShippers(DateTime orderDate, string timeSlot);
         Task<List<OrderStatus>> GetAllStatus();
         Task<bool> AddPaymentOrderCode(int orderId, long orderCode);
         Task<Order> GetOrderByPaymentOrderCode(long paymentOrderCode);

@@ -172,7 +172,7 @@
             loadTimeSlots();
             loadPaymentTypes();
 
-            document.getElementById('placeOrderButton').addEventListener('click', placeOrder);
+            document.getElementById('placeOrderButton').addEventListener('click', validateOrderAmount);
             //document.querySelector('.shoping__discount form').addEventListener('click', applyCoupon);
 
             // Check if orderCode is present in URL and call confirmPayment
@@ -182,6 +182,15 @@
                 confirmPayment(orderCode);
             }
         });
+
+        async function validateOrderAmount() {
+            const totalAmount = parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', '')) * 1000;
+            if (totalAmount > 5000000) {
+                alert('Tổng tiền không được vượt quá 5 triệu đồng.');
+            } else {
+                placeOrder();
+            }
+        }
 
         async function loadOrderSummary() {
             const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
@@ -395,7 +404,14 @@
 
                 if (response.ok) {
                     orderData = await response.json(); // Get created order data
-                } else {
+                }
+                else if (response.status === 409) {
+                    const errorData = await response.json();
+                    console.error('Failed to place order:', errorData.message);
+                    alert(`Failed to place order: ${errorData.message}`);
+                }
+                else
+                {
                     // If unsuccessful, send another GET request to retrieve the order.
                     orderData = await fetchOrderByDateAndUserId(createAt, userId);
                 }
@@ -416,6 +432,7 @@
                 }
             } catch (error) {
                 console.error('Error placing order:', error);
+                alert('Error placing order');
             }
         }
 

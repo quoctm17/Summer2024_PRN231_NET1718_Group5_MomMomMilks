@@ -11,6 +11,7 @@ namespace DataAccess.DAO
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private Dictionary<int, int> _shippedOrdersCounts; // Used to store ShippedOrdersCount for each Shipper
 
         private static OrderDAO instance;
 
@@ -18,6 +19,8 @@ namespace DataAccess.DAO
         {
             _context = new AppDbContext();
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfile.AutoMapperProfile())).CreateMapper();
+            _shippedOrdersCounts = new Dictionary<int, int>(); // Initialize the dictionary for shipped orders count
+
         }
 
         public static OrderDAO Instance
@@ -291,122 +294,122 @@ namespace DataAccess.DAO
             }
         }
 
-        public async Task AutoAssignOrdersToShippers()
+        public async Task AutoAssignOrdersToShippers(DateTime orderDate, string timeSlot)
         {
-            var currentTime = DateTime.Now;
-            var timeSlots = await _context.TimeSlots.ToListAsync();
+            // Retrieve orders that need to be assigned
+            List<Order> ordersToAssign = GetOrdersToAssign(orderDate, timeSlot);
 
-            foreach (var timeSlot in timeSlots)
+            foreach (Order order in ordersToAssign)
             {
-                var slotStartTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day, timeSlot.StartTime.Hours, timeSlot.StartTime.Minutes, 0);
+                // Get DistrictId of the current order
+                int districtId = GetDistrictIdFromOrderAddress(order);
 
-                // Chỉ xử lý các đơn hàng trong TimeSlot tiếp theo
-                if (currentTime >= slotStartTime.AddMinutes(-90) && currentTime <= slotStartTime.AddHours(timeSlot.EndTime.Hours - timeSlot.StartTime.Hours))
+                // Find all Shippers with the same DistrictId and status "Available"
+                List<Shipper> shippers = GetAvailableShippersByDistrictId(districtId);
+
+                foreach (Shipper shipper in shippers)
                 {
-                    var orders = await _context.Orders
-                        .Where(o => o.TimeSlotId == timeSlot.Id && o.OrderStatusId == 2 && o.ShipperId == null)
-                        .Include(o => o.Address)
-                        .ToListAsync();
+                    // Assign Shipper to the order
+                    AssignShipperToOrder(shipper, order);
 
-                    var districtId = orders.FirstOrDefault()?.Address?.DistrictId;
+                    // Check if Shipper has reached the order limit and update status
+                    UpdateShipperStatus(shipper, orderDate, timeSlot);
 
-                    if (districtId == null)
-                        continue;
+                    // Update TimeSlot and OrderDate if it is Evening
+                    UpdateTimeSlotAndOrderDate(ref orderDate, ref timeSlot);
 
-                    var assignedShipperIds = new HashSet<int>();
-                    var ordersToAssignLater = new List<Order>();
-                    var ordersInDistrict = await _context.Orders
-                        .Where(o => o.TimeSlotId == timeSlot.Id && o.OrderStatusId == 2 && o.Address.DistrictId == districtId)
-                        .ToListAsync();
+                    // Save changes to the database
+                    _context.SaveChanges();
 
-                    foreach (var order in orders)
-                    {
-                        var availableShippers = await _context.Shippers
-                            .Where(s => s.DistrictId == districtId && s.Status == "Available" && !assignedShipperIds.Contains(s.Id))
-                            .ToListAsync();
-
-                        if (availableShippers.Any())
-                        {
-                            var shipper = availableShippers.First();
-                            assignedShipperIds.Add(shipper.Id);
-
-                            if (assignedShipperIds.Count < 5 && ordersInDistrict.Any())
-                            {
-                                order.ShipperId = shipper.Id;
-                                shipper.Status = "Shipping";
-                                _context.Update(shipper);
-                                ordersInDistrict.Remove(order);
-                            }
-                            else
-                            {
-                                ordersToAssignLater.Add(order); // Save order to assign later
-                            }
-
-                            _context.Update(order);
-                        }
-                        else
-                        {
-                            ordersToAssignLater.Add(order); // No available shippers, assign later
-                        }
-                    }
-
-                    // Assign remaining orders to later slots
-                    foreach (var order in ordersToAssignLater)
-                    {
-                        AssignOrdersToNextSlot(ordersToAssignLater, timeSlot.Id);
-                    }
-
-                    await _context.SaveChangesAsync();
-
-                    // Update status for shippers if all orders in district are assigned
-                    if (ordersInDistrict.Any())
-                    {
-                        var remainingShippers = await _context.Shippers
-                            .Where(s => s.DistrictId == districtId && s.Status == "Available")
-                            .ToListAsync();
-
-                        foreach (var shipper in remainingShippers)
-                        {
-                            shipper.Status = "Shipping";
-                            _context.Update(shipper);
-                        }
-
-                        await _context.SaveChangesAsync();
-                    }
+                    // Exit the loop after assigning Shipper to the order
+                    break;
                 }
             }
         }
 
-
-        // Hàm hỗ trợ để chuyển đơn hàng sang TimeSlot tiếp theo
-        private void AssignOrdersToNextSlot(List<Order> ordersToAssignLater, int currentSlotId)
+        // Retrieves orders with matching OrderDate and TimeSlot
+        private List<Order> GetOrdersToAssign(DateTime orderDate, string timeSlot)
         {
-            var nextSlot = GetNextTimeSlot(currentSlotId);
-
-            foreach (var order in ordersToAssignLater)
-            {
-                order.TimeSlotId = nextSlot.Id;
-                _context.Update(order);
-            }
-
-            _context.SaveChanges();
+            // Retrieve orders with matching OrderDate and TimeSlot
+            return _context.Orders
+                .Include(o => o.TimeSlot) // Include TimeSlot information
+                .Where(o => o.OrderDate == orderDate && o.TimeSlot.Name == timeSlot) // Compare with TimeSlot Name
+                .ToList();
         }
 
-        // Hàm hỗ trợ để tìm TimeSlot tiếp theo
-        private TimeSlot GetNextTimeSlot(int currentSlotId)
+        private int GetDistrictIdFromOrderAddress(Order order)
         {
-            // Tìm TimeSlot tiếp theo của TimeSlot hiện tại
-            var nextSlot = _context.TimeSlots.FirstOrDefault(ts => ts.Id > currentSlotId);
-
-            // Nếu không tìm thấy TimeSlot tiếp theo, tìm TimeSlot đầu tiên của ngày tiếp theo
-            if (nextSlot == null)
-            {
-                nextSlot = _context.TimeSlots.OrderBy(ts => ts.Id).FirstOrDefault();
-            }
-
-            return nextSlot;
+            // Retrieve DistrictId from the order's Address
+            return order.Address.DistrictId;
         }
 
+        private List<Shipper> GetAvailableShippersByDistrictId(int districtId)
+        {
+            // Retrieve shippers with matching DistrictId and status "Available"
+            return _context.Shippers
+                .Where(s => s.DistrictId == districtId && s.Status == "Available")
+                .ToList();
+        }
+
+        private void AssignShipperToOrder(Shipper shipper, Order order)
+        {
+            // Assign shipper to the order
+            order.ShipperId = shipper.Id;
+
+            // Initialize shipped orders count if not already initialized
+            if (!_shippedOrdersCounts.ContainsKey(shipper.Id))
+            {
+                _shippedOrdersCounts[shipper.Id] = 0;
+            }
+
+            // Increment the number of orders assigned to Shipper by 1
+            _shippedOrdersCounts[shipper.Id]++;
+        }
+
+
+        private void UpdateShipperStatus(Shipper shipper, DateTime orderDate, string timeSlot)
+        {
+            // Check if shipper has been assigned all orders in current time slot
+            var assignedOrderCount = _shippedOrdersCounts.ContainsKey(shipper.Id) ? _shippedOrdersCounts[shipper.Id] : 0;
+
+            if (assignedOrderCount >= 15)
+            {
+                // Update shipper status to "Shipping" when order limit is reached
+                shipper.Status = "Shipping";
+            }
+            else
+            {
+                // Check if all orders in the current time slot have been assigned
+                var totalOrdersInTimeSlot = _context.Orders
+                    .Where(o => o.OrderDate == orderDate && o.TimeSlot.Name == timeSlot && o.ShipperId == null)
+                    .Count();
+
+                if (totalOrdersInTimeSlot == 0)
+                {
+                    // Update shipper status to "Shipping" if all orders in time slot have been assigned
+                    shipper.Status = "Shipping";
+                }
+                else
+                {
+                    // Otherwise, keep shipper status as "Available"
+                    shipper.Status = "Available";
+                }
+            }
+        }
+
+        private void UpdateTimeSlotAndOrderDate(ref DateTime orderDate, ref string timeSlot)
+        {
+            // Update OrderDate and TimeSlot for "Evening" orders
+            if (timeSlot == "Evening")
+            {
+                orderDate = orderDate.AddDays(1); // Next day
+                timeSlot = "Morning"; // Morning of the next day
+            }
+            else
+            {
+                timeSlot = "Afternoon"; // Afternoon for other times
+            }
+        }
 
         public async Task<bool> ManagerAssignOrder(int orderId, int shipperId)
         {

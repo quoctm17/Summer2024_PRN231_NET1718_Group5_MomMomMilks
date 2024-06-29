@@ -77,10 +77,11 @@ namespace Service.Services
             return await _orderRepository.ConfirmCancelledAsync(shipperId, orderId);
         }
 
-        public async Task AutoAssignOrdersToShippers()
+        public async Task AutoAssignOrdersToShippers(DateTime orderDate, string timeSlot)
         {
-            await _orderRepository.AutoAssignOrdersToShippers();
+            await _orderRepository.AutoAssignOrdersToShippers(orderDate, timeSlot);
         }
+
 
         public async Task<bool> ManagerAssignOrder(int shipperId, int orderId)
         {
