@@ -2,8 +2,7 @@
 using DataAccess.DAO;
 using DataTransfer;
 using DataTransfer.Manager;
-using DataTransfer.Shipper;
-using Microsoft.EntityFrameworkCore;
+using MomMomMilks.Exceptions;
 using Repository.Interface;
 
 namespace Repository
@@ -31,6 +30,18 @@ namespace Repository
                     await OrderDetailsDAO.Instance.AddOrderDetailAsync(detail);
                     Console.WriteLine($"OrderDetail added: {detail.Id}");
                 }
+
+                // Create a transaction with default status as Pending
+                var transaction = new Transaction
+                {
+                    Status = "Pending",
+                    CreatedAt = DateTime.Now,
+                    OrderId = order.Id,
+                    GrossAmount = order.TotalAmount
+                };
+
+                await TransactionDAO.Instance.AddTransaction(transaction);
+                Console.WriteLine("Transaction created successfully");
 
             }
             catch (Exception ex)
@@ -65,7 +76,7 @@ namespace Repository
 
             if (remainingQuantity > 0)
             {
-                throw new Exception("Not enough stock available to fulfill the order.");
+                throw new OutOfStockException("Not enough stock available to fulfill the order.");
             }
         }
 
@@ -107,9 +118,9 @@ namespace Repository
             return await OrderDAO.Instance.ConfirmCancelled(shipperId, orderId);
         }
 
-        public async Task AutoAssignOrdersToShippers()
+        public async Task AutoAssignOrdersToShippers(DateTime orderDate, string timeSlot)
         {
-            await OrderDAO.Instance.AutoAssignOrdersToShippers();
+            await OrderDAO.Instance.AutoAssignOrdersToShippers(orderDate, timeSlot);
         }
 
         public async Task<bool> ManagerAssignOrder(int shipperId, int orderId)

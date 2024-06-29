@@ -15,6 +15,8 @@ DataAccessServiceRegistration.AddDataAccessServices(builder.Services, builder.Co
 
 // Add identity services.
 builder.Services.AddIdentityServices(builder.Configuration);
+
+// Add application services.
 builder.Services.AddApplicationServices(builder.Configuration);
 
 // Add OData Service

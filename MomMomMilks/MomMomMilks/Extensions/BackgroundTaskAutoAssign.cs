@@ -81,9 +81,38 @@ namespace MomMomMilks.Extensions
             using (var scope = _serviceProvider.CreateScope())
             {
                 var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
-                await orderService.AutoAssignOrdersToShippers();
+
+                // Define the current date and time slot
+                var currentDate = DateTime.Now.Date;
+                string currentTimeSlot = GetCurrentTimeSlot();
+
+                // Pass the current date and time slot to AutoAssignOrdersToShippers
+                await orderService.AutoAssignOrdersToShippers(currentDate, currentTimeSlot);
             }
         }
+
+        private string GetCurrentTimeSlot()
+        {
+            var now = DateTime.Now.TimeOfDay;
+
+            if (IsWithinTimeWindow(now, _morningStart, _morningEnd))
+            {
+                return "Morning";
+            }
+            else if (IsWithinTimeWindow(now, _afternoonStart, _afternoonEnd))
+            {
+                return "Afternoon";
+            }
+            else if (IsWithinTimeWindow(now, _eveningStart, _eveningEnd))
+            {
+                return "Evening";
+            }
+            else
+            {
+                throw new Exception("Current time does not fall within any defined time slot.");
+            }
+        }
+
         private async Task AutoUpdateOrderStatus(object? state)
         {
             using (var scope = _serviceProvider.CreateScope())

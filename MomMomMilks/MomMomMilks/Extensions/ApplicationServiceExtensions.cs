@@ -44,6 +44,7 @@ namespace MomMomMilks.Extensions
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IMilkAgeRepository, MilkAgeRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 
             // Services
@@ -65,6 +66,7 @@ namespace MomMomMilks.Extensions
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IMilkAgeService, MilkAgeService>();
             services.AddScoped<IImageService, ImageService>();
+            services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IEmailService, MomMomMilks.EmailService.EmailService>();
 
             services.Configure<SendInBlue>(config.GetSection("SendInBlue"));
