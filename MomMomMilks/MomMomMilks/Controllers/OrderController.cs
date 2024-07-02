@@ -219,6 +219,13 @@ namespace MomMomMilks.Controllers
             var result = await _orderService.ManagerAssignOrder(orderId, shipperId);
             return Ok(result);
         }
+        [HttpPut("Refund")]
+        //[Authorize]
+        public async Task<IActionResult> ManagerAssignOrder([FromQuery] int orderDetailId, [FromQuery] string note)
+        {
+            var result = await _orderService.RefundOrder(orderDetailId, note);
+            return Ok(result);
+        }
         [EnableQuery]
         [HttpGet("topProduct")]
         public async Task<IActionResult> GetTopProducts([FromQuery] int topN = 10)
