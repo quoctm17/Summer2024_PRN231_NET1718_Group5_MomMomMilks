@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessObject.Entities
+namespace DataTransfer
 {
-    public class OrderDetail
+    public class OrderDetailRefundDTO
     {
-        public int Id { get; set; }
         public int OrderId { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
@@ -18,10 +17,7 @@ namespace BusinessObject.Entities
         public int Quantity { get; set; }
         public int Total { get; set; }
         public int BatchId { get; set; }
-        public string? Note {  get; set; }
+        public string? Note { get; set; }
         public string Status { get; set; }
-        public Batch Batch { get; set; }
-        public Order Order { get; set; }
-        public Milk Milk { get; set; }
     }
 }

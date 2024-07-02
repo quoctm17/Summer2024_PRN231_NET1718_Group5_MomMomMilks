@@ -123,5 +123,9 @@ namespace Service.Services
         {
             return await _orderRepository.GetTopProducts(topN);
         }
+        public async Task<bool> RefundOrder(int orderDetailId, string note)
+        {
+            return await _orderRepository.RefundOrder(orderDetailId, note);
+        }
     }
 }

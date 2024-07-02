@@ -86,8 +86,12 @@ namespace DataAccess.AutoMapperProfile
             CreateMap<Order, OrderRevenueDTO>()
                 
                 .ReverseMap();
+            CreateMap<Order, OrderRefundDTO>()
+                .ReverseMap();
             CreateMap<OrderDetail, OrderDetailDTO>()
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Milk.Price))
+                .ReverseMap();
+            CreateMap<OrderDetail, OrderDetailRefundDTO>()                
                 .ReverseMap();
         }
     }

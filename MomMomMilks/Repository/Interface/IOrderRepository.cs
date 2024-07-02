@@ -32,5 +32,6 @@ namespace Repository.Interface
         Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue();
         Task UpdateOrderStatusWhenOverDateAsync();
         Task<List<TopProduct>> GetTopProducts(int topN);
+        Task<bool> RefundOrder(int orderDetailId, string note);
     }
 }
