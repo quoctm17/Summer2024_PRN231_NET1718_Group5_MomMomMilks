@@ -223,7 +223,7 @@
                     console.log('TimeSlots:', timeSlots);
 
                     let timeSlotDropdown = document.getElementById('timeSlot');
-                    timeSlotDropdown.innerHTML = '<option value="" disabled selected>Select a time slot</option>';
+                    timeSlotDropdown.innerHTML = '<option value="" disabled selected>Chọn khung giờ</option>';
 
                     // Date validation logic
                     const orderDateInput = document.getElementById('orderDate');
@@ -239,7 +239,7 @@
                         const selectedDate = new Date(orderDateInput.value);
                         const currentTime = new Date();
 
-                        timeSlotDropdown.innerHTML = '<option value="" disabled selected>Select a time slot</option>';
+                        timeSlotDropdown.innerHTML = '<option value="" disabled selected>Chọn khung giờ</option>';
 
                         for (let i = 0; i < timeSlots.$values.length; i++) {
                             let timeSlot = timeSlots.$values[i];
@@ -297,7 +297,7 @@
 
                     if (user.addresses && user.addresses.$values.length > 0) {
                         let addressDropdown = document.getElementById('addressSelect');
-                        addressDropdown.innerHTML = '<option value="" disabled selected>Select an address</option>'; // Clear previous options
+                        addressDropdown.innerHTML = '<option value="" disabled selected>Chọn địa chỉ</option>'; // Clear previous options
                         for (let i = 0; i < user.addresses.$values.length; i++) {
                             let address = user.addresses.$values[i];
                             let option = document.createElement('option');

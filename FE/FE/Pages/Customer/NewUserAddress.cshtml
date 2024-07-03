@@ -95,6 +95,25 @@
         </div>
     </div>
 </div>
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationMessage">
+                <!-- Message will be inserted dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -144,15 +163,26 @@
             });
             if (response.ok || response.status === 500) {
                 console.log('Address created successfully');
-                alert('Address created successfully');
-                window.location.href = './UserAddress';
+                showNotification('Address created successfully');
             } else {
                 console.error('Failed to create address');
-                alert('Failed to create address');
+                showNotification('Failed to create address');
             }
         } catch (error) {
             console.error('Error create address:', error);
         }
+    }
+
+    function showNotification(message) {
+        document.getElementById('notificationMessage').innerText = message;
+        const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+
+        const closeButton = document.getElementById('closeNotificationModal');
+        closeButton.addEventListener('click', function () {
+            window.location.href = './UserAddress';
+        });
+
+        notificationModal.show();
     }
 
     async function loadDistrict() {
