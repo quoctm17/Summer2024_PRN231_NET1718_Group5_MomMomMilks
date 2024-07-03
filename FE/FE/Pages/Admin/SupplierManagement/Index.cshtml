@@ -9,9 +9,9 @@
         Quản lý nhà cung cấp
     </div>
     <div class="p-4">
-        <button class="btn btn-success" id="btnCreateSupplier">
+        <a href="/admin/suppliermanagement/create" class="btn btn-success" id="btnCreateSupplier">
             Thêm nhà cung cấp
-        </button>
+        </a>
     </div>
     <div class="card-body">
         <table class="table" id="supplierTable">
@@ -30,6 +30,14 @@
                 </tr>
             </tfoot>
             <tbody class="font-weight-light">
+                @foreach (var supplier in Model.Suppliers)
+                {
+                    <tr>
+                        <td>@supplier.Id</td>
+                        <td>@supplier.Name</td>
+                        <td><a href="/admin/suppliermanagement/update?id=@supplier.Id" class="btn btn-primary text-white">Cập nhật</a></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -97,7 +105,7 @@
         </div>
     </div>
 </div>
-@section Scripts {
+@* @section Scripts {
     @{
     @using Helpers;
     @using Models;
@@ -247,4 +255,4 @@
         });
     </script>
 }
-
+ *@

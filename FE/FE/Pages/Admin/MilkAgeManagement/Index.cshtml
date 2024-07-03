@@ -9,9 +9,9 @@
         Quản lý nhóm tuổi
     </div>
     <div class="p-4">
-        <button class="btn btn-success" id="btnCreateMilkAge">
+        <a href="/admin/milkagemanagement/create" class="btn btn-success" id="btnCreateMilkAge">
             Tạo mới nhóm tuổi
-        </button>
+        </a>
     </div>
     <div class="card-body">
         <table class="table" id="milkAgeTable">
@@ -34,6 +34,16 @@
                 </tr>
             </tfoot>
             <tbody class="font-weight-light">
+                @foreach (var milkage in Model.MilkAges)
+                {
+                    <tr>
+                        <td>@milkage.Id</td>
+                        <td>@milkage.Min</td>
+                        <td>@milkage.Max</td>
+                        <td>@milkage.Unit</td>
+                        <td><a href="/admin/milkagemanagement/update?id=@milkage.Id" class="btn btn-primary text-white">Cập nhật</a></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -117,7 +127,7 @@
         </div>
     </div>
 </div>
-@section Scripts {
+@* @section Scripts {
     @{
     @using Helpers;
     @using Models;
@@ -248,5 +258,5 @@
         });
     </script>
 }
-
+ *@
 
