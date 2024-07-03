@@ -1,0 +1,1550 @@
+[
+  {
+    "Name": "Phường Bến Nghé",
+    "DistrictId": 1,
+    "Latitude": "10.7733749",
+    "Longitude": "106.704347"
+  },
+  {
+    "Name": "Phường Bến Thành",
+    "DistrictId": 1,
+    "Latitude": "10.773956",
+    "Longitude": "106.697784"
+  },
+  {
+    "Name": "Phường Cô Giang",
+    "DistrictId": 1,
+    "Latitude": "10.7661276",
+    "Longitude": "106.6955578"
+  },
+  {
+    "Name": "Phường Đa Kao",
+    "DistrictId": 1,
+    "Latitude": "10.7872739",
+    "Longitude": "106.6963782"
+  },
+  {
+    "Name": "Phường Nguyễn Cư Trinh",
+    "DistrictId": 1,
+    "Latitude": "10.764782",
+    "Longitude": "106.682573"
+  },
+  {
+    "Name": "Phường Nguyễn Thái Bình",
+    "DistrictId": 1,
+    "Latitude": "10.7703127",
+    "Longitude": "106.6976151"
+  },
+  {
+    "Name": "Phường Phạm Ngũ Lão",
+    "DistrictId": 1,
+    "Latitude": "10.7678942",
+    "Longitude": "106.6930505"
+  },
+  {
+    "Name": "Phường Tân Định",
+    "DistrictId": 1,
+    "Latitude": "10.7900764",
+    "Longitude": "106.6891093"
+  },
+  {
+    "Name": "Phường An Khánh",
+    "DistrictId": 2,
+    "Latitude": "10.791587",
+    "Longitude": "106.741059"
+  },
+  {
+    "Name": "Phường An Lợi Đông",
+    "DistrictId": 2,
+    "Latitude": "10.7724629",
+    "Longitude": "106.7478286"
+  },
+  {
+    "Name": "Phường An Phú",
+    "DistrictId": 2,
+    "Latitude": "10.7986665",
+    "Longitude": "106.7497258"
+  },
+  {
+    "Name": "Phường Bình An",
+    "DistrictId": 2,
+    "Latitude": "10.8021184",
+    "Longitude": "106.7397223"
+  },
+  {
+    "Name": "Phường Bình Khánh",
+    "DistrictId": 2,
+    "Latitude": "10.7722347",
+    "Longitude": "106.7477848"
+  },
+  {
+    "Name": "Phường Bình Trưng Đông",
+    "DistrictId": 2,
+    "Latitude": "10.7791136",
+    "Longitude": "106.7723194"
+  },
+  {
+    "Name": "Phường Bình Trưng Tây",
+    "DistrictId": 2,
+    "Latitude": "10.7783427",
+    "Longitude": "106.7645088"
+  },
+  {
+    "Name": "Phường Cát Lái",
+    "DistrictId": 2,
+    "Latitude": "10.7708626",
+    "Longitude": "106.7853917"
+  },
+  {
+    "Name": "Phường Thạnh Mỹ Lợi",
+    "DistrictId": 2,
+    "Latitude": "10.7701413",
+    "Longitude": "106.7685971"
+  },
+  {
+    "Name": "Phường Thảo Điền",
+    "DistrictId": 2,
+    "Latitude": "10.8040133",
+    "Longitude": "106.7339996"
+  },
+  {
+    "Name": "Phường Thủ Thiêm",
+    "DistrictId": 2,
+    "Latitude": "10.7693661",
+    "Longitude": "106.7348897"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 3,
+    "Latitude": "10.781768",
+    "Longitude": "106.685683"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 3,
+    "Latitude": "10.779953",
+    "Longitude": "106.688237"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 3,
+    "Latitude": "10.780689",
+    "Longitude": "106.688657"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 3,
+    "Latitude": "10.779227",
+    "Longitude": "106.690579"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 3,
+    "Latitude": "10.781755",
+    "Longitude": "106.690696"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 3,
+    "Latitude": "10.781247",
+    "Longitude": "106.692376"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 3,
+    "Latitude": "10.779955",
+    "Longitude": "106.693751"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 3,
+    "Latitude": "10.778542",
+    "Longitude": "106.696123"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 3,
+    "Latitude": "10.77813",
+    "Longitude": "106.698796"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 3,
+    "Latitude": "10.778553",
+    "Longitude": "106.70101"
+  },
+  {
+    "Name": "Phường 11",
+    "DistrictId": 3,
+    "Latitude": "10.777514",
+    "Longitude": "106.704102"
+  },
+  {
+    "Name": "Phường 12",
+    "DistrictId": 3,
+    "Latitude": "10.776738",
+    "Longitude": "106.707416"
+  },
+  {
+    "Name": "Phường 13",
+    "DistrictId": 3,
+    "Latitude": "10.775942",
+    "Longitude": "106.70962"
+  },
+  {
+    "Name": "Phường 14",
+    "DistrictId": 3,
+    "Latitude": "10.774949",
+    "Longitude": "106.71182"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 4,
+    "Latitude": "10.757053",
+    "Longitude": "106.700051"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 4,
+    "Latitude": "10.756487",
+    "Longitude": "106.701474"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 4,
+    "Latitude": "10.755376",
+    "Longitude": "106.702956"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 4,
+    "Latitude": "10.754361",
+    "Longitude": "106.704261"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 4,
+    "Latitude": "10.753252",
+    "Longitude": "106.705723"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 4,
+    "Latitude": "10.752129",
+    "Longitude": "106.707083"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 4,
+    "Latitude": "10.750007",
+    "Longitude": "106.709865"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 4,
+    "Latitude": "10.748976",
+    "Longitude": "106.711271"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 4,
+    "Latitude": "10.747798",
+    "Longitude": "106.712709"
+  },
+  {
+    "Name": "Phường 12",
+    "DistrictId": 4,
+    "Latitude": "10.745662",
+    "Longitude": "106.715265"
+  },
+  {
+    "Name": "Phường 13",
+    "DistrictId": 4,
+    "Latitude": "10.743753",
+    "Longitude": "106.717222"
+  },
+  {
+    "Name": "Phường 14",
+    "DistrictId": 4,
+    "Latitude": "10.741597",
+    "Longitude": "106.719868"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 5,
+    "Latitude": "10.753664",
+    "Longitude": "106.679221"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 5,
+    "Latitude": "10.752646",
+    "Longitude": "106.680999"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 5,
+    "Latitude": "10.751556",
+    "Longitude": "106.682858"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 5,
+    "Latitude": "10.750368",
+    "Longitude": "106.684656"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 5,
+    "Latitude": "10.749272",
+    "Longitude": "106.686525"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 5,
+    "Latitude": "10.748231",
+    "Longitude": "106.688156"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 5,
+    "Latitude": "10.747082",
+    "Longitude": "106.690014"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 5,
+    "Latitude": "10.746072",
+    "Longitude": "106.691715"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 5,
+    "Latitude": "10.745045",
+    "Longitude": "106.693607"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 5,
+    "Latitude": "10.743919",
+    "Longitude": "106.69539"
+  },
+  {
+    "Name": "Phường 11",
+    "DistrictId": 5,
+    "Latitude": "10.742893",
+    "Longitude": "106.697171"
+  },
+  {
+    "Name": "Phường 12",
+    "DistrictId": 5,
+    "Latitude": "10.741737",
+    "Longitude": "106.698957"
+  },
+  {
+    "Name": "Phường 13",
+    "DistrictId": 5,
+    "Latitude": "10.740661",
+    "Longitude": "106.700694"
+  },
+  {
+    "Name": "Phường 14",
+    "DistrictId": 5,
+    "Latitude": "10.739494",
+    "Longitude": "106.702537"
+  },
+  {
+    "Name": "Phường 15",
+    "DistrictId": 5,
+    "Latitude": "10.738253",
+    "Longitude": "106.704314"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 6,
+    "Latitude": "10.7473153",
+    "Longitude": "106.6319042"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 6,
+    "Latitude": "10.746264",
+    "Longitude": "106.633375"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 6,
+    "Latitude": "10.7451984",
+    "Longitude": "106.6347835"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 6,
+    "Latitude": "10.7441593",
+    "Longitude": "106.6362334"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 6,
+    "Latitude": "10.7431358",
+    "Longitude": "106.6377428"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 6,
+    "Latitude": "10.7421477",
+    "Longitude": "106.6392017"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 6,
+    "Latitude": "10.7411034",
+    "Longitude": "106.6406298"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 6,
+    "Latitude": "10.7401165",
+    "Longitude": "106.6420903"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 6,
+    "Latitude": "10.7390843",
+    "Longitude": "106.6435127"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 6,
+    "Latitude": "10.7380314",
+    "Longitude": "106.6449936"
+  },
+  {
+    "Name": "Phường Tân Phong",
+    "DistrictId": 7,
+    "Latitude": "10.7319209",
+    "Longitude": "106.7166537"
+  },
+  {
+    "Name": "Phường Tân Quy",
+    "DistrictId": 7,
+    "Latitude": "10.7263484",
+    "Longitude": "106.7155895"
+  },
+  {
+    "Name": "Phường Tân Thuận Tây",
+    "DistrictId": 7,
+    "Latitude": "10.7407897",
+    "Longitude": "106.7224975"
+  },
+  {
+    "Name": "Phường Tân Thuận Đông",
+    "DistrictId": 7,
+    "Latitude": "10.7385063",
+    "Longitude": "106.7203248"
+  },
+  {
+    "Name": "Phường Bình Thuận",
+    "DistrictId": 7,
+    "Latitude": "10.7369201",
+    "Longitude": "106.7184459"
+  },
+  {
+    "Name": "Phường Phú Mỹ",
+    "DistrictId": 7,
+    "Latitude": "10.7339065",
+    "Longitude": "106.7147373"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 8,
+    "Latitude": "10.7378314",
+    "Longitude": "106.6248482"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 8,
+    "Latitude": "10.7363461",
+    "Longitude": "106.626173"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 8,
+    "Latitude": "10.7348582",
+    "Longitude": "106.6275947"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 8,
+    "Latitude": "10.7334188",
+    "Longitude": "106.6290369"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 8,
+    "Latitude": "10.7319255",
+    "Longitude": "106.6304092"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 8,
+    "Latitude": "10.7304877",
+    "Longitude": "106.6319308"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 8,
+    "Latitude": "10.7289644",
+    "Longitude": "106.6333785"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 8,
+    "Latitude": "10.7275136",
+    "Longitude": "106.6348745"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 8,
+    "Latitude": "10.7260345",
+    "Longitude": "106.6363257"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 8,
+    "Latitude": "10.7245015",
+    "Longitude": "106.6378084"
+  },
+  {
+    "Name": "Phường Long Bình",
+    "DistrictId": 9,
+    "Latitude": "10.8485516",
+    "Longitude": "106.8374776"
+  },
+  {
+    "Name": "Phường Long Thạnh Mỹ",
+    "DistrictId": 9,
+    "Latitude": "10.8458462",
+    "Longitude": "106.8277143"
+  },
+  {
+    "Name": "Phường Tân Phú",
+    "DistrictId": 9,
+    "Latitude": "10.8468589",
+    "Longitude": "106.8144854"
+  },
+  {
+    "Name": "Phường Hiệp Phú",
+    "DistrictId": 9,
+    "Latitude": "10.8461242",
+    "Longitude": "106.8032673"
+  },
+  {
+    "Name": "Phường Tăng Nhơn Phú A",
+    "DistrictId": 9,
+    "Latitude": "10.8473941",
+    "Longitude": "106.7925042"
+  },
+  {
+    "Name": "Phường Tăng Nhơn Phú B",
+    "DistrictId": 9,
+    "Latitude": "10.8493898",
+    "Longitude": "106.7803814"
+  },
+  {
+    "Name": "Phường Phước Long B",
+    "DistrictId": 9,
+    "Latitude": "10.8453377",
+    "Longitude": "106.7677326"
+  },
+  {
+    "Name": "Phường Phước Long A",
+    "DistrictId": 9,
+    "Latitude": "10.8453451",
+    "Longitude": "106.7559474"
+  },
+  {
+    "Name": "Phường Trường Thạnh",
+    "DistrictId": 9,
+    "Latitude": "10.8499871",
+    "Longitude": "106.7421678"
+  },
+  {
+    "Name": "Phường Long Phước",
+    "DistrictId": 9,
+    "Latitude": "10.8463985",
+    "Longitude": "106.7292075"
+  },
+  {
+    "Name": "Phường Long Trường",
+    "DistrictId": 9,
+    "Latitude": "10.8470455",
+    "Longitude": "106.7184741"
+  },
+  {
+    "Name": "Phường Long Thạnh Mỹ",
+    "DistrictId": 9,
+    "Latitude": "10.8480114",
+    "Longitude": "106.7074856"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 10,
+    "Latitude": "10.7744075",
+    "Longitude": "106.6655015"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 10,
+    "Latitude": "10.7736056",
+    "Longitude": "106.667187"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 10,
+    "Latitude": "10.7728093",
+    "Longitude": "106.6688974"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 10,
+    "Latitude": "10.7719981",
+    "Longitude": "106.6706372"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 10,
+    "Latitude": "10.7712026",
+    "Longitude": "106.6723143"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 10,
+    "Latitude": "10.7704046",
+    "Longitude": "106.6740758"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 10,
+    "Latitude": "10.7696307",
+    "Longitude": "106.6757353"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 10,
+    "Latitude": "10.7688421",
+    "Longitude": "106.677497"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 10,
+    "Latitude": "10.7680668",
+    "Longitude": "106.6791944"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 10,
+    "Latitude": "10.7672738",
+    "Longitude": "106.6809395"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 11,
+    "Latitude": "10.762982",
+    "Longitude": "106.635312"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 11,
+    "Latitude": "10.76194",
+    "Longitude": "106.637159"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 11,
+    "Latitude": "10.760836",
+    "Longitude": "106.638969"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 11,
+    "Latitude": "10.759732",
+    "Longitude": "106.640826"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 11,
+    "Latitude": "10.758696",
+    "Longitude": "106.642608"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 11,
+    "Latitude": "10.757653",
+    "Longitude": "106.64442"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 11,
+    "Latitude": "10.756613",
+    "Longitude": "106.646235"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 11,
+    "Latitude": "10.755546",
+    "Longitude": "106.648058"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 11,
+    "Latitude": "10.754491",
+    "Longitude": "106.649864"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 11,
+    "Latitude": "10.753452",
+    "Longitude": "106.651671"
+  },
+  {
+    "Name": "Phường An Phú Đông",
+    "DistrictId": 12,
+    "Latitude": "10.8824495",
+    "Longitude": "106.6309075"
+  },
+  {
+    "Name": "Phường Đông Hưng Thuận",
+    "DistrictId": 12,
+    "Latitude": "10.872686",
+    "Longitude": "106.6324423"
+  },
+  {
+    "Name": "Phường Tân Hưng Thuận",
+    "DistrictId": 12,
+    "Latitude": "10.865154",
+    "Longitude": "106.6258345"
+  },
+  {
+    "Name": "Phường Tân Thới Hiệp",
+    "DistrictId": 12,
+    "Latitude": "10.8609855",
+    "Longitude": "106.6212292"
+  },
+  {
+    "Name": "Phường Tân Thới Nhất",
+    "DistrictId": 12,
+    "Latitude": "10.855874",
+    "Longitude": "106.6188655"
+  },
+  {
+    "Name": "Phường Thạnh Lộc",
+    "DistrictId": 12,
+    "Latitude": "10.8545837",
+    "Longitude": "106.6155092"
+  },
+  {
+    "Name": "Phường Thạnh Xuân",
+    "DistrictId": 12,
+    "Latitude": "10.8525462",
+    "Longitude": "106.6128981"
+  },
+  {
+    "Name": "Phường Trung Mỹ Tây",
+    "DistrictId": 12,
+    "Latitude": "10.8481441",
+    "Longitude": "106.6115172"
+  },
+  {
+    "Name": "Phường Bình Hưng Hòa",
+    "DistrictId": 13,
+    "Latitude": "10.7976731",
+    "Longitude": "106.6081093"
+  },
+  {
+    "Name": "Phường Bình Hưng Hòa A",
+    "DistrictId": 13,
+    "Latitude": "10.7948257",
+    "Longitude": "106.6103574"
+  },
+  {
+    "Name": "Phường Bình Hưng Hòa B",
+    "DistrictId": 13,
+    "Latitude": "10.7917491",
+    "Longitude": "106.612278"
+  },
+  {
+    "Name": "Phường Bình Trị Đông",
+    "DistrictId": 13,
+    "Latitude": "10.788691",
+    "Longitude": "106.6141964"
+  },
+  {
+    "Name": "Phường Bình Trị Đông A",
+    "DistrictId": 13,
+    "Latitude": "10.7859028",
+    "Longitude": "106.6164089"
+  },
+  {
+    "Name": "Phường Bình Trị Đông B",
+    "DistrictId": 13,
+    "Latitude": "10.7831126",
+    "Longitude": "106.6185138"
+  },
+  {
+    "Name": "Phường Tân Tạo",
+    "DistrictId": 13,
+    "Latitude": "10.7804089",
+    "Longitude": "106.6207691"
+  },
+  {
+    "Name": "Phường Tân Tạo A",
+    "DistrictId": 13,
+    "Latitude": "10.7778612",
+    "Longitude": "106.6232828"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 14,
+    "Latitude": "10.802782",
+    "Longitude": "106.688953"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 14,
+    "Latitude": "10.800394",
+    "Longitude": "106.691593"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 14,
+    "Latitude": "10.797939",
+    "Longitude": "106.694245"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 14,
+    "Latitude": "10.795474",
+    "Longitude": "106.696865"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 14,
+    "Latitude": "10.792964",
+    "Longitude": "106.69959"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 14,
+    "Latitude": "10.790489",
+    "Longitude": "106.702288"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 14,
+    "Latitude": "10.788016",
+    "Longitude": "106.704976"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 14,
+    "Latitude": "10.785537",
+    "Longitude": "106.707658"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 14,
+    "Latitude": "10.783078",
+    "Longitude": "106.710293"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 14,
+    "Latitude": "10.780621",
+    "Longitude": "106.712923"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 15,
+    "Latitude": "10.8427284",
+    "Longitude": "106.6789142"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 15,
+    "Latitude": "10.8404317",
+    "Longitude": "106.6815269"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 15,
+    "Latitude": "10.8382053",
+    "Longitude": "106.684053"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 15,
+    "Latitude": "10.8359737",
+    "Longitude": "106.6865176"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 15,
+    "Latitude": "10.8337412",
+    "Longitude": "106.689071"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 15,
+    "Latitude": "10.8315217",
+    "Longitude": "106.6916104"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 15,
+    "Latitude": "10.8292836",
+    "Longitude": "106.6941682"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 15,
+    "Latitude": "10.8270308",
+    "Longitude": "106.6966785"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 15,
+    "Latitude": "10.8247627",
+    "Longitude": "106.6991948"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 15,
+    "Latitude": "10.8224994",
+    "Longitude": "106.7017152"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 16,
+    "Latitude": "10.7990583",
+    "Longitude": "106.6872176"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 16,
+    "Latitude": "10.7970123",
+    "Longitude": "106.6889452"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 16,
+    "Latitude": "10.7950242",
+    "Longitude": "106.6906189"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 16,
+    "Latitude": "10.7930164",
+    "Longitude": "106.6923247"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 16,
+    "Latitude": "10.7910232",
+    "Longitude": "106.6940385"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 16,
+    "Latitude": "10.7890091",
+    "Longitude": "106.6957445"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 16,
+    "Latitude": "10.7870014",
+    "Longitude": "106.6974472"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 16,
+    "Latitude": "10.7850073",
+    "Longitude": "106.699177"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 16,
+    "Latitude": "10.7830021",
+    "Longitude": "106.700856"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 16,
+    "Latitude": "10.7809962",
+    "Longitude": "106.7025261"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 17,
+    "Latitude": "10.804398",
+    "Longitude": "106.650959"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 17,
+    "Latitude": "10.802975",
+    "Longitude": "106.652876"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 17,
+    "Latitude": "10.801536",
+    "Longitude": "106.654866"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 17,
+    "Latitude": "10.800084",
+    "Longitude": "106.656813"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 17,
+    "Latitude": "10.798627",
+    "Longitude": "106.658789"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 17,
+    "Latitude": "10.797168",
+    "Longitude": "106.660763"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 17,
+    "Latitude": "10.795715",
+    "Longitude": "106.662725"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 17,
+    "Latitude": "10.794246",
+    "Longitude": "106.664697"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 17,
+    "Latitude": "10.792791",
+    "Longitude": "106.666678"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 17,
+    "Latitude": "10.791339",
+    "Longitude": "106.668639"
+  },
+  {
+    "Name": "Phường 1",
+    "DistrictId": 18,
+    "Latitude": "10.7901485",
+    "Longitude": "106.6259189"
+  },
+  {
+    "Name": "Phường 2",
+    "DistrictId": 18,
+    "Latitude": "10.788761",
+    "Longitude": "106.628218"
+  },
+  {
+    "Name": "Phường 3",
+    "DistrictId": 18,
+    "Latitude": "10.7873645",
+    "Longitude": "106.630515"
+  },
+  {
+    "Name": "Phường 4",
+    "DistrictId": 18,
+    "Latitude": "10.785973",
+    "Longitude": "106.632834"
+  },
+  {
+    "Name": "Phường 5",
+    "DistrictId": 18,
+    "Latitude": "10.784572",
+    "Longitude": "106.635127"
+  },
+  {
+    "Name": "Phường 6",
+    "DistrictId": 18,
+    "Latitude": "10.7831745",
+    "Longitude": "106.637422"
+  },
+  {
+    "Name": "Phường 7",
+    "DistrictId": 18,
+    "Latitude": "10.781774",
+    "Longitude": "106.639719"
+  },
+  {
+    "Name": "Phường 8",
+    "DistrictId": 18,
+    "Latitude": "10.780366",
+    "Longitude": "106.642016"
+  },
+  {
+    "Name": "Phường 9",
+    "DistrictId": 18,
+    "Latitude": "10.7789565",
+    "Longitude": "106.644319"
+  },
+  {
+    "Name": "Phường 10",
+    "DistrictId": 18,
+    "Latitude": "10.777543",
+    "Longitude": "106.646615"
+  },
+  {
+    "Name": "Phường Linh Trung",
+    "DistrictId": 19,
+    "Latitude": "10.870000",
+    "Longitude": "106.770000"
+  },
+  {
+    "Name": "Phường Linh Xuân",
+    "DistrictId": 19,
+    "Latitude": "10.880000",
+    "Longitude": "106.780000"
+  },
+  {
+    "Name": "Phường Hiệp Bình Chánh",
+    "DistrictId": 19,
+    "Latitude": "10.830000",
+    "Longitude": "106.720000"
+  },
+  {
+    "Name": "Phường Hiệp Bình Phước",
+    "DistrictId": 19,
+    "Latitude": "10.840000",
+    "Longitude": "106.730000"
+  },
+  {
+    "Name": "Phường Trường Thọ",
+    "DistrictId": 19,
+    "Latitude": "10.850000",
+    "Longitude": "106.740000"
+  },
+  {
+    "Name": "Phường Linh Chiểu",
+    "DistrictId": 19,
+    "Latitude": "10.860000",
+    "Longitude": "106.750000"
+  },
+  {
+    "Name": "Phường Linh Tây",
+    "DistrictId": 19,
+    "Latitude": "10.870000",
+    "Longitude": "106.760000"
+  },
+  {
+    "Name": "Phường Linh Đông",
+    "DistrictId": 19,
+    "Latitude": "10.880000",
+    "Longitude": "106.770000"
+  },
+  {
+    "Name": "Phường Tam Bình",
+    "DistrictId": 19,
+    "Latitude": "10.890000",
+    "Longitude": "106.780000"
+  },
+  {
+    "Name": "Phường Tam Phú",
+    "DistrictId": 19,
+    "Latitude": "10.900000",
+    "Longitude": "106.790000"
+  },
+  {
+    "Name": "Phường Bình Thọ",
+    "DistrictId": 19,
+    "Latitude": "10.910000",
+    "Longitude": "106.800000"
+  },
+  {
+    "Name": "Phường Bình Chiểu",
+    "DistrictId": 19,
+    "Latitude": "10.920000",
+    "Longitude": "106.810000"
+  },
+  {
+    "Name": "Phường Linh Tây",
+    "DistrictId": 19,
+    "Latitude": "10.930000",
+    "Longitude": "106.820000"
+  },
+  {
+    "Name": "Phường Tam Bình",
+    "DistrictId": 19,
+    "Latitude": "10.940000",
+    "Longitude": "106.830000"
+  },
+  {
+    "Name": "Phường Tam Phú",
+    "DistrictId": 19,
+    "Latitude": "10.950000",
+    "Longitude": "106.840000"
+  },
+  {
+    "Name": "Phường Bình Thọ",
+    "DistrictId": 19,
+    "Latitude": "10.960000",
+    "Longitude": "106.850000"
+  },
+  {
+    "Name": "Phường Bình Chiểu",
+    "DistrictId": 19,
+    "Latitude": "10.970000",
+    "Longitude": "106.860000"
+  },
+  {
+    "Name": "Phường Linh Trung",
+    "DistrictId": 19,
+    "Latitude": "10.980000",
+    "Longitude": "106.870000"
+  },
+  {
+    "Name": "Phường Linh Xuân",
+    "DistrictId": 19,
+    "Latitude": "10.990000",
+    "Longitude": "106.880000"
+  },
+  {
+    "Name": "Thị trấn Tân Túc",
+    "DistrictId": 20,
+    "Latitude": "10.6810867",
+    "Longitude": "106.6059683"
+  },
+  {
+    "Name": "Xã An Phú Tây",
+    "DistrictId": 20,
+    "Latitude": "10.669231",
+    "Longitude": "106.593716"
+  },
+  {
+    "Name": "Xã Bình Chánh",
+    "DistrictId": 20,
+    "Latitude": "10.665203",
+    "Longitude": "106.557003"
+  },
+  {
+    "Name": "Xã Bình Hưng",
+    "DistrictId": 20,
+    "Latitude": "10.7042148",
+    "Longitude": "106.5503025"
+  },
+  {
+    "Name": "Xã Bình Lợi",
+    "DistrictId": 20,
+    "Latitude": "10.6658763",
+    "Longitude": "106.4949512"
+  },
+  {
+    "Name": "Xã Đa Phước",
+    "DistrictId": 20,
+    "Latitude": "10.6260553",
+    "Longitude": "106.610457"
+  },
+  {
+    "Name": "Xã Hưng Long",
+    "DistrictId": 20,
+    "Latitude": "10.6521607",
+    "Longitude": "106.5895272"
+  },
+  {
+    "Name": "Xã Lê Minh Xuân",
+    "DistrictId": 20,
+    "Latitude": "10.7255676",
+    "Longitude": "106.5158447"
+  },
+  {
+    "Name": "Xã Phạm Văn Hai",
+    "DistrictId": 20,
+    "Latitude": "10.782951",
+    "Longitude": "106.5144383"
+  },
+  {
+    "Name": "Xã Phong Phú",
+    "DistrictId": 20,
+    "Latitude": "10.687297",
+    "Longitude": "106.670178"
+  },
+  {
+    "Name": "Xã Qui Đức",
+    "DistrictId": 20,
+    "Latitude": "10.6297085",
+    "Longitude": "106.6144764"
+  },
+  {
+    "Name": "Xã Tân Kiên",
+    "DistrictId": 20,
+    "Latitude": "10.724738",
+    "Longitude": "106.575322"
+  },
+  {
+    "Name": "Xã Tân Nhựt",
+    "DistrictId": 20,
+    "Latitude": "10.7472072",
+    "Longitude": "106.5131912"
+  },
+  {
+    "Name": "Xã Tân Quý Tây",
+    "DistrictId": 20,
+    "Latitude": "10.664495",
+    "Longitude": "106.582967"
+  },
+  {
+    "Name": "Xã Vĩnh Lộc A",
+    "DistrictId": 20,
+    "Latitude": "10.8270251",
+    "Longitude": "106.5979293"
+  },
+  {
+    "Name": "Xã Vĩnh Lộc B",
+    "DistrictId": 20,
+    "Latitude": "10.841157",
+    "Longitude": "106.5901688"
+  },
+  {
+    "Name": "Thị trấn Cần Thạnh",
+    "DistrictId": 21,
+    "Latitude": "10.4069972",
+    "Longitude": "106.9764251"
+  },
+  {
+    "Name": "Xã An Thới Đông",
+    "DistrictId": 21,
+    "Latitude": "10.4769021",
+    "Longitude": "106.8385298"
+  },
+  {
+    "Name": "Xã Bình Khánh",
+    "DistrictId": 21,
+    "Latitude": "10.5134241",
+    "Longitude": "106.8156785"
+  },
+  {
+    "Name": "Xã Long Hòa",
+    "DistrictId": 21,
+    "Latitude": "10.4392058",
+    "Longitude": "106.9209448"
+  },
+  {
+    "Name": "Xã Lý Nhơn",
+    "DistrictId": 21,
+    "Latitude": "10.4991436",
+    "Longitude": "106.7352647"
+  },
+  {
+    "Name": "Xã Tam Thôn Hiệp",
+    "DistrictId": 21,
+    "Latitude": "10.4979435",
+    "Longitude": "106.7438397"
+  },
+  {
+    "Name": "Xã Thạnh An",
+    "DistrictId": 21,
+    "Latitude": "10.4819787",
+    "Longitude": "106.8238257"
+  },
+  {
+    "Name": "Xã Trung An",
+    "DistrictId": 22,
+    "Latitude": "10.9997214",
+    "Longitude": "106.5053708"
+  },
+  {
+    "Name": "Xã Phú Mỹ Hưng",
+    "DistrictId": 22,
+    "Latitude": "11.0350762",
+    "Longitude": "106.4641527"
+  },
+  {
+    "Name": "Xã An Nhơn Tây",
+    "DistrictId": 22,
+    "Latitude": "11.0976954",
+    "Longitude": "106.4620926"
+  },
+  {
+    "Name": "Xã Nhuận Đức",
+    "DistrictId": 22,
+    "Latitude": "11.1012781",
+    "Longitude": "106.4427422"
+  },
+  {
+    "Name": "Xã Phạm Văn Cội",
+    "DistrictId": 22,
+    "Latitude": "11.0911236",
+    "Longitude": "106.4200152"
+  },
+  {
+    "Name": "Xã Phú Hòa Đông",
+    "DistrictId": 22,
+    "Latitude": "11.0560766",
+    "Longitude": "106.4145873"
+  },
+  {
+    "Name": "Xã Trung Lập Hạ",
+    "DistrictId": 22,
+    "Latitude": "11.0587801",
+    "Longitude": "106.3860977"
+  },
+  {
+    "Name": "Xã Trung Lập Thượng",
+    "DistrictId": 22,
+    "Latitude": "11.0789687",
+    "Longitude": "106.3852913"
+  },
+  {
+    "Name": "Xã An Phú",
+    "DistrictId": 22,
+    "Latitude": "11.0087512",
+    "Longitude": "106.5032298"
+  },
+  {
+    "Name": "Xã Bình Mỹ",
+    "DistrictId": 22,
+    "Latitude": "10.9977222",
+    "Longitude": "106.631659"
+  },
+  {
+    "Name": "Xã Hòa Phú",
+    "DistrictId": 22,
+    "Latitude": "11.0113944",
+    "Longitude": "106.5832184"
+  },
+  {
+    "Name": "Xã Tân An Hội",
+    "DistrictId": 22,
+    "Latitude": "11.0345923",
+    "Longitude": "106.5704638"
+  },
+  {
+    "Name": "Xã Tân Phú Trung",
+    "DistrictId": 22,
+    "Latitude": "11.0441204",
+    "Longitude": "106.5329828"
+  },
+  {
+    "Name": "Xã Tân Thạnh Đông",
+    "DistrictId": 22,
+    "Latitude": "10.973349",
+    "Longitude": "106.4936652"
+  },
+  {
+    "Name": "Xã Tân Thạnh Tây",
+    "DistrictId": 22,
+    "Latitude": "11.0333483",
+    "Longitude": "106.5991168"
+  },
+  {
+    "Name": "Xã Tân Thông Hội",
+    "DistrictId": 22,
+    "Latitude": "11.0451392",
+    "Longitude": "106.5616242"
+  },
+  {
+    "Name": "Thị trấn Hóc Môn",
+    "DistrictId": 23,
+    "Latitude": "10.8904422",
+    "Longitude": "106.5834355"
+  },
+  {
+    "Name": "Xã Bà Điểm",
+    "DistrictId": 23,
+    "Latitude": "10.859268",
+    "Longitude": "106.5897045"
+  },
+  {
+    "Name": "Xã Đông Thạnh",
+    "DistrictId": 23,
+    "Latitude": "10.8879235",
+    "Longitude": "106.6494244"
+  },
+  {
+    "Name": "Xã Nhị Bình",
+    "DistrictId": 23,
+    "Latitude": "10.8943422",
+    "Longitude": "106.6186204"
+  },
+  {
+    "Name": "Xã Tân Hiệp",
+    "DistrictId": 23,
+    "Latitude": "10.899237",
+    "Longitude": "106.562398"
+  },
+  {
+    "Name": "Xã Tân Thới Nhì",
+    "DistrictId": 23,
+    "Latitude": "10.8810737",
+    "Longitude": "106.5664914"
+  },
+  {
+    "Name": "Xã Tân Xuân",
+    "DistrictId": 23,
+    "Latitude": "10.8693285",
+    "Longitude": "106.5700974"
+  },
+  {
+    "Name": "Xã Thới Tam Thôn",
+    "DistrictId": 23,
+    "Latitude": "10.8699571",
+    "Longitude": "106.5763424"
+  },
+  {
+    "Name": "Xã Trung Chánh",
+    "DistrictId": 23,
+    "Latitude": "10.865968",
+    "Longitude": "106.5872918"
+  },
+  {
+    "Name": "Thị trấn Nhà Bè",
+    "DistrictId": 24,
+    "Latitude": "10.7006008",
+    "Longitude": "106.7540118"
+  },
+  {
+    "Name": "Xã Hiệp Phước",
+    "DistrictId": 24,
+    "Latitude": "10.643799",
+    "Longitude": "106.7662116"
+  },
+  {
+    "Name": "Xã Long Thới",
+    "DistrictId": 24,
+    "Latitude": "10.6595814",
+    "Longitude": "106.7254055"
+  },
+  {
+    "Name": "Xã Nhơn Đức",
+    "DistrictId": 24,
+    "Latitude": "10.6556213",
+    "Longitude": "106.7104193"
+  },
+  {
+    "Name": "Xã Phú Xuân",
+    "DistrictId": 24,
+    "Latitude": "10.7031266",
+    "Longitude": "106.7473182"
+  },
+  {
+    "Name": "Xã Phước Kiển",
+    "DistrictId": 24,
+    "Latitude": "10.6956758",
+    "Longitude": "106.708423"
+  },
+  {
+    "Name": "Xã Phước Lộc",
+    "DistrictId": 24,
+    "Latitude": "10.6486922",
+    "Longitude": "106.6931423"
+  }
+]

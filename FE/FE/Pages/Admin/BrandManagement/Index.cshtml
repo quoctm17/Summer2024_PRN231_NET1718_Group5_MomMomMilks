@@ -9,9 +9,9 @@
         Thương hiệu
     </div>
     <div class="p-4">
-        <button class="btn btn-success" id="btnCreateBrand">
+        <a class="btn btn-success text-white" href="/admin/brandmanagement/create" id="btnCreateBrand">
             Tạo thương hiệu
-        </button>
+        </a>
     </div>
     <div class="card-body">
         <table class="table" id="brandTable">
@@ -30,6 +30,14 @@
                 </tr>
             </tfoot>
             <tbody class="font-weight-light">
+                @foreach(var brand in Model.Brands)
+                {
+                    <tr>
+                        <td>@brand.Id</td>
+                        <td>@brand.Name</td>
+                        <td><a href="/admin/brandmanagement/update?id=@brand.Id" class="btn btn-primary text-white">Cập nhật</a></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -97,7 +105,7 @@
     </div>
 </div>
 
-@section Scripts {
+@* @section Scripts {
     @{
     @using Helpers;
     @using Models;
@@ -248,3 +256,4 @@
     </script>
 }
 
+ *@

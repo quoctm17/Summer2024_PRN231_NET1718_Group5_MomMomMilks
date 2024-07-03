@@ -1,0 +1,56 @@
+[
+  {
+    "ImportedPrice": 1000000,
+    "Quantity": 50,
+    "MilkId": 1,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 950000,
+    "Quantity": 50,
+    "MilkId": 1,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 700000,
+    "Quantity": 50,
+    "MilkId": 2,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 300000,
+    "Quantity": 52,
+    "MilkId": 3,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 650000,
+    "Quantity": 30,
+    "MilkId": 3,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 505000,
+    "Quantity": 30,
+    "MilkId": 4,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 555000,
+    "Quantity": 30,
+    "MilkId": 4,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 520000,
+    "Quantity": 10,
+    "MilkId": 5,
+    "Status": 1
+  },
+  {
+    "ImportedPrice": 530000,
+    "Quantity": 30,
+    "MilkId": 5,
+    "Status": 1
+  }
+]
