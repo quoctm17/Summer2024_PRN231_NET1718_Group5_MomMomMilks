@@ -1,6 +1,7 @@
 ﻿using FE.Models;
 using FE.Models.Shipper;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace FE.Services
 {
@@ -75,6 +76,20 @@ namespace FE.Services
         public async Task<bool> ConfirmCancelledShipperOrder(int orderId)
         {
             var response = await _client.PutAsync($"odata/Order/ShipperOrders/cancel({orderId})", null);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(json);
+            }
+            return false;
+        }
+        public async Task<bool> Refund(List<Refund> refunds)
+        {
+            var json1 = JsonConvert.SerializeObject(refunds);
+
+            // Create a StringContent object with the JSON payload
+            var content = new StringContent(json1, Encoding.UTF8, "application/json");
+            var response = await _client.PutAsync($"odata/Order/refund", content);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

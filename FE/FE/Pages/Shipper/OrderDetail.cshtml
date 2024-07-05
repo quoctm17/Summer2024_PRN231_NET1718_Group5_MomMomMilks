@@ -305,6 +305,7 @@
                         <input type="hidden" asp-for="Order.Id"/>
                         <button type="submit" asp-page-handler="ConfirmShipped" class="btn btn-success w-auto me-3">Đã giao</button>
                         <button type="submit" asp-page-handler="ConfirmCancelled" class="btn btn-danger w-auto">Khách hàng hủy</button>
+                        <button type="button" id="btnRefund" class="btn btn-warning w-auto">Trả hàng</button>
                     </form>
                 } 
                 else
@@ -315,4 +316,78 @@
         </div>
     </div>
 
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Trả hàng</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="updateForm" method="post" asp-page-handler="Refund">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                    <div class="modal-body">
+                        @foreach(var od in Model.Order.OrderDetails)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="milkChecked[@od.Id].IsChecked" value="true" id="flexCheckDefault_@od.Id">
+                                <label class="form-check-label" for="flexCheckDefault_@od.Id">
+                                    @od.MilkName
+                                </label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nguyên nhân: </label>
+                                <input type="text" class="form-control" name="milkChecked[@od.Id].Reason" id="reason_@od.Id">
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary" id="updateSupplier">Xác nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            document.getElementById('btnRefund').addEventListener('click', function () {
+                $('#updateModal').modal('show');
+            });
+            document.getElementById('updateForm').addEventListener('submit', function (event) {
+                let valid = true;
+                let atLeastOneChecked = false;
+                const checkboxes = document.querySelectorAll('input[name$=".IsChecked"]');
+
+                checkboxes.forEach(function (checkbox) {
+                    const id = checkbox.id.split('_')[1];
+                    const reasonInput = document.getElementById(`reason_${id}`);
+
+                    if (checkbox.checked) {
+                        atLeastOneChecked = true;
+                        if (!reasonInput.value.trim()) {
+                            alert(`Nhập nguyên nhân trả hàng cho sữa số: ${id}`);
+                            reasonInput.focus();
+                            valid = false;
+                            event.preventDefault(); // Prevent form submission
+                        }
+                    }
+                });
+
+                if (!atLeastOneChecked) {
+                    alert('Hãy tích vào ít nhất một mặt hàng.');
+                    valid = false;
+                    event.preventDefault(); // Prevent form submission
+                }
+
+                if (!valid) {
+                    return;
+                }   
+            });
+        });
+    </script>
 }
