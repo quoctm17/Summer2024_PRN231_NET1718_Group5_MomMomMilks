@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+option csharp_namespace = "gRPCService";
+
+import "google/api/annotations.proto";
+
+package milkAge;
+
+service MilkAgeIt {
+    // Create
+    rpc CreateMilkAge(CreateMilkAgeRequest) returns (CreateMilkAgeResponse) {
+        option (google.api.http) = {
+            post: "/v1/MilkAge",
+            body: "*"
+        };
+    }
+
+    // Read single
+    rpc ReadMilkAge(ReadMilkAgeRequest) returns (ReadMilkAgeResponse) {
+        option (google.api.http) = {
+            get: "/v1/MilkAge/{id}"
+        };
+    }
+
+    // Read list
+    rpc ListMilkAge(GetMilkAgeAllRequest) returns (GetMilkAgeAllResponse) {
+        option (google.api.http) = {
+            get: "/v1/MilkAge"
+        };
+    }
+
+    // Update
+    rpc UpdateMilkAge (UpdateMilkAgeRequest) returns (UpdateMilkAgeResponse) {
+        option (google.api.http) = {
+            put : "/v1/MilkAge",
+            body: "*"
+        };
+    }
+
+    // Delete
+    rpc DeleteMilkAge (DeleteMilkAgeRequest) returns (DeleteMilkAgeResponse) {
+        option (google.api.http) = {
+            delete: "/v1/MilkAge/{id}"
+        };
+    }
+}
+
+message CreateMilkAgeRequest {
+    int32 min = 1;
+    int32 max = 2;
+    string unit = 3;
+}
+
+message CreateMilkAgeResponse {
+    int32 id = 1;
+}
+
+message ReadMilkAgeRequest {
+    int32 id = 1;
+}
+
+message ReadMilkAgeResponse {
+    int32 id = 1;
+    int32 min = 2;
+    int32 max = 3;
+    string unit = 4;
+}
+
+message GetMilkAgeAllRequest {}
+
+message GetMilkAgeAllResponse {
+    repeated ReadMilkAgeResponse MilkAge = 1;
+}
+
+message UpdateMilkAgeRequest {
+    int32 id = 1;
+    int32 min = 2;
+    int32 max = 3;
+    string unit = 4;
+}
+  
+message UpdateMilkAgeResponse {
+    int32 id = 1;
+}
+  
+message DeleteMilkAgeRequest {
+    int32 id = 1;
+}
+  
+message DeleteMilkAgeResponse {
+    int32 id = 1;
+}
+
+
+
