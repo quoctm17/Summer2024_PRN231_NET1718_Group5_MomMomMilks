@@ -100,7 +100,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -109,7 +109,7 @@
                 <!-- Message will be inserted dynamically -->
             </div>
             <div class="modal-footer">
-                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -163,10 +163,10 @@
             });
             if (response.ok || response.status === 500) {
                 console.log('Address created successfully');
-                showNotification('Address created successfully');
+                showNotification('Tạo địa chỉ mới thành công');
             } else {
                 console.error('Failed to create address');
-                showNotification('Failed to create address');
+                showNotification('Không thể tạo địa chỉ mới');
             }
         } catch (error) {
             console.error('Error create address:', error);

@@ -100,7 +100,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -109,7 +109,7 @@
                 <!-- Message will be inserted dynamically -->
             </div>
             <div class="modal-footer">
-                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -169,14 +169,14 @@
             });
             if (response.ok || response.status === 500) {
                 console.log(response.statusText);
-                showNotification('Address updated successfully'); // Show modal after successful update
+                showNotification('Địa chỉ được cập nhật thành công'); // Show modal after successful update
             } else {
                 console.error('Failed to update address');
-                showNotification('Failed to update address');
+                showNotification('Không thể cập nhật địa chỉ');
             }
         } catch (error) {
             console.error('Error updating address:', error);
-            showNotification('Error updating address');
+            showNotification('Không thể cập nhật địa chỉ');
         }
     }
 
