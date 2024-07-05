@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+option csharp_namespace = "gRPCService";
+
+import "google/api/annotations.proto";
+
+package brand;
+
+service BrandIt {
+    // Create
+    rpc CreateBrand(CreateBrandRequest) returns (CreateBrandResponse) {
+        option (google.api.http) = {
+            post: "/v1/Brand",
+            body: "*"
+        };
+    }
+
+    // Read single
+    rpc ReadBrand(ReadBrandRequest) returns (ReadBrandResponse) {
+        option (google.api.http) = {
+            get: "/v1/Brand/{id}"
+        };
+    }
+
+    // Read list
+    rpc ListBrand(GetAllRequest) returns (GetAllResponse) {
+        option (google.api.http) = {
+            get: "/v1/Brand"
+        };
+    }
+
+    // Update
+    rpc UpdateBrand (UpdateBrandRequest) returns (UpdateBrandResponse) {
+        option (google.api.http) = {
+            put : "/v1/Brand",
+            body: "*"
+        };
+    }
+
+    // Delete
+    rpc DeleteBrand (DeleteBrandRequest) returns (DeleteBrandResponse) {
+        option (google.api.http) = {
+            delete: "/v1/Brand/{id}"
+        };
+    }
+}
+
+message CreateBrandRequest {
+    string name = 1;
+}
+
+message CreateBrandResponse {
+    int32 id = 1;
+}
+
+message ReadBrandRequest {
+    int32 id = 1;
+}
+
+message ReadBrandResponse {
+    int32 id = 1;
+    string name = 2;
+}
+
+message GetAllRequest {}
+
+message GetAllResponse {
+    repeated ReadBrandResponse brand = 1;
+}
+
+message UpdateBrandRequest {
+    int32 id = 1;
+    string name = 2;
+}
+  
+message UpdateBrandResponse {
+    int32 id = 1;
+}
+  
+message DeleteBrandRequest {
+    int32 id = 1;
+}
+  
+message DeleteBrandResponse {
+    int32 id = 1;
+}
+
+
+

@@ -128,6 +128,42 @@
         </div>
     </div>
 </div>
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Xác nhận</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="confirmationModalBody">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="confirmationModalConfirmBtn">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="notificationModalBody">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -191,6 +227,7 @@
             }
         } catch (error) {
             console.error('Error fetching orders:', error);
+            showNotification('Lỗi tải dữ liệu');
         }
     }
 
@@ -295,6 +332,7 @@
             console.error('Error fetching orders:', error);
             // If there was an error, close the opened window
             newWindow.close();
+            showNotification('Lỗi tải dữ liệu thanh toán');
         }
     }
 
@@ -307,63 +345,62 @@
         const cancellationReason = document.getElementById('cancellationReason').value.trim();
         console.log(orderIdForCancellation);
         if (!cancellationReason) {
-            alert('Please provide a reason for cancellation.');
+            showNotification('Hãy đưa ra lý do hủy đơn hàng!');
             return;
         }
 
-        if (!confirm('Are you sure you want to cancel this order?')) {
-            return;
-        }
+        showConfirmation('Bạn có chắc chắn hủy đơn hàng này?', async function () {
+            try {
+                const response = await fetch('http://localhost:5215/api/Payment/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        orderCode: orderIdForCancellation,
+                        cancellationReason: cancellationReason
+                    })
+                });
 
-        try {
-            const response = await fetch('http://localhost:5215/api/Payment/cancel', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    orderCode: orderIdForCancellation,
-                    cancellationReason: cancellationReason
-                })
-            });
-
-            if (response.ok) {
-                $('#cancelOrderModal').modal('hide');
-                window.location.href = `/Customer/OrderHistory?userId=${userId}`;
-                console.log('Order canceled successfully');
-                alert('Order canceled successfully');
-            } else {
-                console.error('Failed to cancel order');
-                alert('Failed to cancel order');
+                if (response.ok) {
+                    $('#cancelOrderModal').modal('hide');
+                    window.location.href = `/Customer/OrderHistory?userId=${userId}`;
+                    console.log('Order canceled successfully');
+                    showNotification('Hủy đơn hàng thành công');
+                } else {
+                    console.error('Failed to cancel order');
+                    showNotification('Không thể hủy đơn hàng');
+                }
+            } catch (error) {
+                console.error('Error canceling order:', error);
+                showNotification('Lỗi hủy đơn hàng');
             }
-        } catch (error) {
-            console.error('Error canceling order:', error);
-        }
+        });
     }
 
     async function cancelOrderInCash(orderId) {
-        if (!confirm('Are you sure you want to cancel this order?')) {
-            return;
-        }
-        try {
-            const response = await fetch(`http://localhost:5215/odata/User/cancel/${orderId}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`
+        showConfirmation('Bạn có chắc chắn hủy đơn hàng này', async function () {
+            try {
+                const response = await fetch(`http://localhost:5215/odata/User/cancel/${orderId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    window.location.href = `/Customer/OrderHistory?userId=${userId}`;
+                    console.log('Order canceled successfully');
+                    showNotification('Hủy đơn hàng thành công');
+                } else {
+                    console.error('Failed to cancel order');
+                    showNotification('Không thể hủy đơn hàng');
                 }
-            });
-            if (response.ok) {
-                window.location.href = `/Customer/OrderHistory?userId=${userId}`;
-                console.log('Order canceled successfully');
-                alert('Order canceled successfully');
-            } else {
-                console.error('Failed to cancel order');
-                alert('Failed to cancel order');
+            } catch (error) {
+                console.error('Error canceling order:', error);
+                showNotification('Lỗi hủy đơn hàng');
             }
-        } catch (error) {
-            console.error('Error canceling order:', error);
-        }
+        });
     }
 
     function getUserIdFromToken() {
@@ -373,5 +410,20 @@
             return payload.nameid;
         }
         return null;
+    }
+    function showNotification(message) {
+        document.getElementById('notificationModalBody').innerText = message;
+        const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+        notificationModal.show();
+    }
+
+    function showConfirmation(message, confirmCallback) {
+        document.getElementById('confirmationModalBody').innerText = message;
+        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        document.getElementById('confirmationModalConfirmBtn').onclick = function () {
+            confirmCallback();
+            confirmationModal.hide();
+        };
+        confirmationModal.show();
     }
 </script>

@@ -83,7 +83,9 @@
                                     <td>@order.Price</td>
                                     <td>@order.Discount</td>
                                     <td>@order.Total</td>
+
                                     <td><input type="checkbox" class="refund-checkbox" data-order-id="@order.Id"></td>
+
                                 </tr>
                             }
                         </tbody>
@@ -122,9 +124,26 @@
     </div>
 </div>
 
-@* <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> *@
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationMessage">
+                <!-- Message will be inserted dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let refundList = [];
     let currentOrderDetailId = null;
@@ -148,21 +167,27 @@
                 }
 
                 const result = await response.json();
-                if (result) {
-                    console.log('Orders refunded successfully:', result);
-                    alert('Orders refunded successfully.');
-                    location.reload();
+
+                if (result == true) {
+                    showNotification('Đơn hàng được hoàn tiền thành công.');
+                    $('#refundModal').modal('hide');
+                  location.reload();
                 } else {
-                    console.log('Failed to refund the orders:', result);
-                    alert('Failed to refund the orders.');
+                    showNotification('Bạn không thể hoàn lại tiền cho sản phẩm này.');
+                    $('#refundModal').modal('hide');
                 }
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
-                alert('Failed to refund your orders.');
+                showNotification('Không hoàn lại tiền cho đơn đặt hàng của bạn.');
             }
         } else {
-            alert('User is not logged in.');
+            showNotification('Người dùng không đăng nhập.');
         }
+    }
+
+    function showNotification(message) {
+        document.getElementById('notificationMessage').innerText = message;
+        $('#notificationModal').modal('show');
     }
 
     document.addEventListener('DOMContentLoaded', function () {

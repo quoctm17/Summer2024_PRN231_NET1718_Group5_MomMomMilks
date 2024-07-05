@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+option csharp_namespace = "FE";
+
+import "google/api/annotations.proto";
+
+package category;
+
+service CategoryIt {
+    // Create
+    rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse) {
+        option (google.api.http) = {
+            post: "/v1/Category",
+            body: "*"
+        };
+    }
+
+    // Read single
+    rpc ReadCategory(ReadCategoryRequest) returns (ReadCategoryResponse) {
+        option (google.api.http) = {
+            get: "/v1/Category/{id}"
+        };
+    }
+
+    // Read list
+    rpc ListCategory(GetAllCategoryRequest) returns (GetAllCategoryResponse) {
+        option (google.api.http) = {
+            get: "/v1/Category"
+        };
+    }
+
+    // Update
+    rpc UpdateCategory (UpdateCategoryRequest) returns (UpdateCategoryResponse) {
+        option (google.api.http) = {
+            put : "/v1/Category",
+            body: "*"
+        };
+    }
+
+    // Delete
+    rpc DeleteCategory (DeleteCategoryRequest) returns (DeleteCategoryResponse) {
+        option (google.api.http) = {
+            delete: "/v1/Category/{id}"
+        };
+    }
+}
+
+message CreateCategoryRequest {
+    string name = 1;
+    string description = 2;
+}
+
+message CreateCategoryResponse {
+    int32 id = 1;
+}
+
+message ReadCategoryRequest {
+    int32 id = 1;
+}
+
+message ReadCategoryResponse {
+    int32 id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message GetAllCategoryRequest {}
+
+message GetAllCategoryResponse {
+    repeated ReadCategoryResponse Category = 1;
+}
+
+message UpdateCategoryRequest {
+    int32 id = 1;
+    string name = 2;
+    string description = 3;
+}
+  
+message UpdateCategoryResponse {
+    int32 id = 1;
+}
+  
+message DeleteCategoryRequest {
+    int32 id = 1;
+}
+  
+message DeleteCategoryResponse {
+    int32 id = 1;
+}
+
+
+

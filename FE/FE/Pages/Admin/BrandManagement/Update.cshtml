@@ -1,0 +1,29 @@
+﻿@page
+@model FE.Pages.Admin.BrandManagement.UpdateModel
+@{
+}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Cập nhật thương hiệu
+    </div>
+    <form id="createForm" method="post" class="m-3">
+        <div class="text-danger" asp-validation-summary="All"></div>
+        <input type="text" class="form-control" hidden required id="createId" asp-for="UpdateBrandRequest.Id">
+        <div class="form-group row">
+            <div class="mb-3">
+                <label for="createName" class="form-label">Tên thương hiệu: </label>
+                <input type="text" class="form-control" required id="createName" asp-for="UpdateBrandRequest.Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="createBrand">Cập nhật</button>
+        </div>
+    </form>
+    <form method="post" class="m-3" asp-page-handler="Delete">
+        <input type="text" class="form-control" hidden required asp-for="UpdateBrandRequest.Id">
+        <div class="form-group">
+            <button type="submit" class="btn btn-danger">Xoá</button>
+        </div>
+    </form>
+</div>

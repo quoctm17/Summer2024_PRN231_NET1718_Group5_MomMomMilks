@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+option csharp_namespace = "gRPCService";
+
+import "google/api/annotations.proto";
+
+package supplier;
+
+service SupplierIt {
+    // Create
+    rpc CreateSupplier(CreateSupplierRequest) returns (CreateSupplierResponse) {
+        option (google.api.http) = {
+            post: "/v1/Supplier",
+            body: "*"
+        };
+    }
+
+    // Read single
+    rpc ReadSupplier(ReadSupplierRequest) returns (ReadSupplierResponse) {
+        option (google.api.http) = {
+            get: "/v1/Supplier/{id}"
+        };
+    }
+
+    // Read list
+    rpc ListSupplier(GetAllSupplierRequest) returns (GetAllSupplierResponse) {
+        option (google.api.http) = {
+            get: "/v1/Supplier"
+        };
+    }
+
+    // Update
+    rpc UpdateSupplier (UpdateSupplierRequest) returns (UpdateSupplierResponse) {
+        option (google.api.http) = {
+            put : "/v1/Supplier",
+            body: "*"
+        };
+    }
+
+    // Delete
+    rpc DeleteSupplier (DeleteSupplierRequest) returns (DeleteSupplierResponse) {
+        option (google.api.http) = {
+            delete: "/v1/Supplier/{id}"
+        };
+    }
+}
+
+message CreateSupplierRequest {
+    string name = 1;
+}
+
+message CreateSupplierResponse {
+    int32 id = 1;
+}
+
+message ReadSupplierRequest {
+    int32 id = 1;
+}
+
+message ReadSupplierResponse {
+    int32 id = 1;
+    string name = 2;
+}
+
+message GetAllSupplierRequest {}
+
+message GetAllSupplierResponse {
+    repeated ReadSupplierResponse supplier = 1;
+}
+
+message UpdateSupplierRequest {
+    int32 id = 1;
+    string name = 2;
+}
+  
+message UpdateSupplierResponse {
+    int32 id = 1;
+}
+  
+message DeleteSupplierRequest {
+    int32 id = 1;
+}
+  
+message DeleteSupplierResponse {
+    int32 id = 1;
+}
+
+
+

@@ -1,0 +1,62 @@
+﻿[
+  {
+    "UserId": 1,
+    "HouseNumber": "123",
+    "Street": "Nguyễn Thị Minh Khai",
+    "WardId": 1,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7773912",
+    "Longitude": "106.7033312"
+  },
+  {
+    "UserId": 1,
+    "HouseNumber": "123A",
+    "Street": "Lê Văn Sỹ",
+    "WardId": 29,
+    "DistrictId": 3,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.781755",
+    "Longitude": "106.690696"
+  },
+  {
+    "UserId": 1,
+    "HouseNumber": "456B",
+    "Street": "Nguyễn Văn Linh",
+    "WardId": 71,
+    "DistrictId": 7,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7319209",
+    "Longitude": "106.7166537"
+  },
+  {
+    "UserId": 2,
+    "HouseNumber": "456",
+    "Street": "Hai Bà Trưng",
+    "WardId": 2,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7782342",
+    "Longitude": "106.7072874"
+  },
+  {
+    "UserId": 3,
+    "HouseNumber": "789",
+    "Street": "Đinh Tiên Hoàng",
+    "WardId": 3,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.783123",
+    "Longitude": "106.702345"
+  },
+  {
+    "UserId": 4,
+    "HouseNumber": "321",
+    "Street": "Lý Tự Trọng",
+    "WardId": 2,
+    "DistrictId": 1,
+    "City": "Hồ Chí Minh",
+    "Latitude": "10.7776543",
+    "Longitude": "106.6987643"
+  }
+]

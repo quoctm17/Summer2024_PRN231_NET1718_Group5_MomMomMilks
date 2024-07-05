@@ -1,0 +1,20 @@
+[
+  {
+    "UserName": "shipper@gmail.com",
+    "Email": "shipper@gmail.com",
+    "Status": "Available",
+    "DistrictId": 1
+  },
+  {
+    "UserName": "shipper2@gmail.com",
+    "Email": "shipper2@gmail.com",
+    "Status": "Unavailable",
+    "DistrictId": 2
+  },
+  {
+    "UserName": "shipper3@gmail.com",
+    "Email": "shipper3@gmail.com",
+    "Status": "Shipping",
+    "DistrictId": 3
+  }
+]
