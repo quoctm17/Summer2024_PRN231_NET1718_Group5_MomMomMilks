@@ -305,6 +305,7 @@
                         <input type="hidden" asp-for="Order.Id"/>
                         <button type="submit" asp-page-handler="ConfirmShipped" class="btn btn-success w-auto me-3">Đã giao</button>
                         <button type="submit" asp-page-handler="ConfirmCancelled" class="btn btn-danger w-auto">Khách hàng hủy</button>
+                        <button type="button" id="btnRefund" class="btn btn-warning w-auto">Trả hàng</button>
                     </form>
                 } 
                 else
@@ -315,4 +316,55 @@
         </div>
     </div>
 
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Trả hàng</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="updateForm" method="post" asp-page-handler="Refund">
+                    <div class="text-danger" asp-validation-summary="All"></div>
+                    <div class="modal-body">
+                        @foreach(var od in Model.Order.OrderDetails)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="milkChecked" value="@od.Id" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    @od.MilkName
+                                </label>
+                            </div>
+                        }
+                        <div class="mb-3">
+                            <label class="form-label">Nguyên nhân: </label>
+                            <input type="text" class="form-control" required asp-for="RefundNote">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary" id="updateSupplier">Xác nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            document.getElementById('btnRefund').addEventListener('click', function () {
+                $('#updateModal').modal('show');
+            });
+            document.getElementById('updateForm').addEventListener('submit', function (event) {
+                const checkboxes = document.querySelectorAll('input[name="milkChecked"]:checked');
+                if (checkboxes.length === 0) {
+                    alert('Please check at least one milk item.');
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+        });
+    </script>
 }

@@ -15,6 +15,9 @@ namespace FE.Pages.Shipper
         }
 
         [BindProperty]
+        public string RefundNote { get; set; }
+
+        [BindProperty]
         public ShipperOrderDetail Order{ get; set; }
         public async Task OnGet(int orderId)
         {
@@ -50,6 +53,19 @@ namespace FE.Pages.Shipper
             }
             Order = await _orderService.GetShipperOrder(orderId);
             return Page();
+        }
+        public async Task<IActionResult> OnPostRefund(List<int> milkChecked)
+        {
+            // milkChecked will contain the names of the checked milk items
+            int checkedCount = milkChecked?.Count ?? 0;
+
+            // Process the checked milk items and the reason here
+            // Example: log the number of checked items
+            Console.WriteLine($"Number of checked milk items: {checkedCount}");
+            Console.WriteLine($"Reason: {RefundNote}");
+
+            // Return a result (e.g., redirect to another page, return a view, etc.)
+            return RedirectToPage("/shipper/index");
         }
     }
 }

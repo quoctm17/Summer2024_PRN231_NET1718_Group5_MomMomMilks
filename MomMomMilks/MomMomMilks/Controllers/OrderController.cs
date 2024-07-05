@@ -1,17 +1,12 @@
 ﻿using BusinessObject.Entities;
-using CloudinaryDotNet.Actions;
-using DataAccess.DAO;
 using DataTransfer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using MomMomMilks.Exceptions;
 using MomMomMilks.Extensions;
-using Repository;
-using Repository.Interface;
 using Service.Interfaces;
 
 namespace MomMomMilks.Controllers
