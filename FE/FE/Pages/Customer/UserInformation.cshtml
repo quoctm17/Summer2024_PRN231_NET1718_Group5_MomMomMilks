@@ -88,7 +88,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -97,7 +97,7 @@
                 <!-- Message will be inserted dynamically -->
             </div>
             <div class="modal-footer">
-                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -141,10 +141,10 @@
             });
             if (response.ok || response.status === 500) {
                 console.log('User updated successfully');
-                showNotification('User updated successfully');
+                showNotification('Cập nhật thành công');
             } else {
                 console.error('Failed to update user');
-                showNotification('Failed to update user');
+                showNotification('Không thể cập nhật');
             }
         } catch (error) {
             console.error('Error update user:', error);

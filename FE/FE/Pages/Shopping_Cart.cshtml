@@ -185,7 +185,7 @@
                         }));
 
                         if (!areCartsEqual(currentCart, dbCartFormatted)) {
-                            if (confirm("Your current cart has changed compared to the data you saved. This action will save the current cart and replace the previously saved cart. Do you still want to proceed?")) {
+                            if (confirm("Giỏ hàng hiện tại của bạn đã thay đổi so với dữ liệu bạn đã lưu. Hành động này sẽ lưu giỏ hàng hiện tại và thay thế giỏ hàng đã lưu trước đó. Bạn vẫn muốn tiếp tục?")) {
                                 await saveCart();
                                 window.location.href = '/checkout';
                             }
@@ -193,7 +193,7 @@
                             window.location.href = '/checkout';
                         }
                     } else if (response.status === 404) {
-                        if (confirm("Your cart is not saved yet. Do you want to save the cart before proceeding to checkout?")) {
+                        if (confirm("Giỏ hàng của bạn chưa được lưu. Bạn có muốn lưu giỏ hàng trước khi tiến hành thanh toán không?")) {
                             await saveCart();
                             window.location.href = '/checkout';
                         }
@@ -257,7 +257,7 @@
             const token = sessionStorage.getItem('token');
 
             if (cart.length === 0) {
-                if (confirm("Your current cart is empty. If you proceed, it can clear the cart you saved before. Are you sure?")) {
+                if (confirm("Giỏ hàng hiện tại của bạn trống. Nếu bạn tiếp tục, nó có thể xóa giỏ hàng bạn đã lưu trước đó. Bạn có chắc không?")) {
                     await clearCartInDatabase(token);
                 }
                 return;
@@ -279,15 +279,15 @@
                 });
 
                 if (response.ok) {
-                    alert('Cart saved successfully!');
+                    alert('Giỏ hàng đã lưu thành công!');
                 } else {
                     const errorText = await response.text();
                     console.error('Failed to save cart:', errorText);
-                    alert(`Failed to save cart: ${errorText}`);
+                    alert(`Không thể lưu giỏ hàng: ${errorText}`);
                 }
             } catch (error) {
                 console.error('Error saving cart:', error);
-                alert('Error saving cart.');
+                alert('Không thể lưu giỏ hàng');
             }
         }
 
@@ -317,21 +317,21 @@
                         updateCartTotalPrice();
                     } else {
                         console.error('Failed to load cart from database.');
-                        alert('Failed to load cart from database.');
+                        alert('Không thể tải giỏ hàng từ cơ sở dữ liệu.');
                     }
                 } catch (error) {
                     console.error('Error loading cart from database:', error);
-                    alert('Error loading cart from database.');
+                    alert('Không thể tải giỏ hàng từ cơ sở dữ liệu.');
                 }
             } else {
-                alert('User is not logged in.');
+                alert('Người dùng không đăng nhập.');
             }
         }
 
         function confirmLoadCartFromDatabase() {
             let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             if (cart.length > 0) {
-                if (confirm("Your current cart is not empty. If you load the cart you save before, the current cart can be lost. Are you sure?")) {
+                if (confirm("Giỏ hàng hiện tại của bạn không trống. Nếu bạn tải giỏ hàng bạn đã lưu trước đó, giỏ hàng hiện tại có thể bị mất. Bạn có chắc không?")) {
                     loadCartFromDatabase();
                 }
             } else {
@@ -349,14 +349,14 @@
                 });
 
                 if (response.ok) {
-                    alert('Cart cleared successfully in the database.');
+                    alert('Giỏ hàng đã xóa thành công trong cơ sở dữ liệu.');
                 } else {
                     console.error('Failed to clear cart in the database.');
-                    alert('Failed to clear cart in the database.');
+                    alert('Không thể xóa giỏ hàng trong cơ sở dữ liệu.');
                 }
             } catch (error) {
                 console.error('Error clearing cart in the database:', error);
-                alert('Error clearing cart in the database.');
+                alert('Lỗi xóa giỏ hàng trong cơ sở dữ liệu.');
             }
         }
 
@@ -377,7 +377,7 @@
         }
 
         function confirmRemoveFromCart(id) {
-            if (confirm("Are you sure you want to remove this item from the cart?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa mặt hàng này khỏi giỏ hàng không?")) {
                 removeFromCart(id);
             }
         }
@@ -391,7 +391,7 @@
         }
 
         function clearCart() {
-            if (confirm("Are you sure you want to clear the cart?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa giỏ hàng không?")) {
                 sessionStorage.removeItem('cart');
                 loadCartFromSessionStorage();
                 updateCartCount();

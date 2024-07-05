@@ -133,15 +133,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                <h5 class="modal-title" id="confirmationModalLabel">Xác nhận</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="confirmationModalBody">
                 <!-- Dynamic content will be loaded here -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="confirmationModalConfirmBtn">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="confirmationModalConfirmBtn">Đồng ý</button>
             </div>
         </div>
     </div>
@@ -152,14 +152,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="notificationModalBody">
                 <!-- Dynamic content will be loaded here -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -227,7 +227,7 @@
             }
         } catch (error) {
             console.error('Error fetching orders:', error);
-            showNotification('Error fetching orders');
+            showNotification('Lỗi tải dữ liệu');
         }
     }
 
@@ -332,7 +332,7 @@
             console.error('Error fetching orders:', error);
             // If there was an error, close the opened window
             newWindow.close();
-            showNotification('Failed to fetch payment details');
+            showNotification('Lỗi tải dữ liệu thanh toán');
         }
     }
 
@@ -345,11 +345,11 @@
         const cancellationReason = document.getElementById('cancellationReason').value.trim();
         console.log(orderIdForCancellation);
         if (!cancellationReason) {
-            showNotification('Please provide a reason for cancellation.');
+            showNotification('Hãy đưa ra lý do hủy đơn hàng!');
             return;
         }
 
-        showConfirmation('Are you sure you want to cancel this order?', async function () {
+        showConfirmation('Bạn có chắc chắn hủy đơn hàng này?', async function () {
             try {
                 const response = await fetch('http://localhost:5215/api/Payment/cancel', {
                     method: 'POST',
@@ -367,20 +367,20 @@
                     $('#cancelOrderModal').modal('hide');
                     window.location.href = `/Customer/OrderHistory?userId=${userId}`;
                     console.log('Order canceled successfully');
-                    showNotification('Order canceled successfully');
+                    showNotification('Hủy đơn hàng thành công');
                 } else {
                     console.error('Failed to cancel order');
-                    showNotification('Failed to cancel order');
+                    showNotification('Không thể hủy đơn hàng');
                 }
             } catch (error) {
                 console.error('Error canceling order:', error);
-                showNotification('Error canceling order');
+                showNotification('Lỗi hủy đơn hàng');
             }
         });
     }
 
     async function cancelOrderInCash(orderId) {
-        showConfirmation('Are you sure you want to cancel this order?', async function () {
+        showConfirmation('Bạn có chắc chắn hủy đơn hàng này', async function () {
             try {
                 const response = await fetch(`http://localhost:5215/odata/User/cancel/${orderId}`, {
                     method: 'PUT',
@@ -391,14 +391,14 @@
                 if (response.ok) {
                     window.location.href = `/Customer/OrderHistory?userId=${userId}`;
                     console.log('Order canceled successfully');
-                    showNotification('Order canceled successfully');
+                    showNotification('Hủy đơn hàng thành công');
                 } else {
                     console.error('Failed to cancel order');
-                    showNotification('Failed to cancel order');
+                    showNotification('Không thể hủy đơn hàng');
                 }
             } catch (error) {
                 console.error('Error canceling order:', error);
-                showNotification('Error canceling order');
+                showNotification('Lỗi hủy đơn hàng');
             }
         });
     }
