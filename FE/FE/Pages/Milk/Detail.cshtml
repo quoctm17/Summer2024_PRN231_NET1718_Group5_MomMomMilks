@@ -156,14 +156,14 @@
                     method: 'POST'
                 });
                 if (response.ok) {
-                    alert('Added to cart successfully!');
+                    alert('Đã thêm vào giỏ hàng thành công!');
                     updateCartCount();
                 } else {
-                    alert('Failed to add to cart.');
+                    alert('Không thể thêm vào giỏ hàng.');
                 }
             } catch (error) {
                 console.error('Error adding to cart:', error);
-                alert('Error adding to cart.');
+                alert('Không thể thêm vào giỏ hàng.');
             }
         }
 
