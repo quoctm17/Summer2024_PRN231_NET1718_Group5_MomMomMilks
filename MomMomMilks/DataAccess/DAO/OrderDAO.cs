@@ -485,86 +485,106 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<bool> RefundOrder(int orderDetailId, string note)
+        public async Task<bool> RefundOrder(List<RefundDTO> refundDTOs)
         {
             try
             {
                 var currentTime = DateTime.Now;
-                var order = await _context.OrderDetails.Include(o => o.Order).Where(od => od.Id == orderDetailId).FirstOrDefaultAsync();
-                if (order != null)
+                int buyerId = 0;
+                int addressId =0 ;
+                int paymentTypeId = 0;
+                int? transactionId = 0;
+                float totalPrice = 0;
+                DateTime createAtOrder = DateTime.Now;
+                int ok = 0;
+                List<RefundDTO> trueRefund = new List<RefundDTO>();
+                foreach (var refund in refundDTOs)
                 {
-                    if ((currentTime - order.CreateAt).TotalDays < 7)
+                    var order = await _context.OrderDetails.Include(o => o.Order).Where(od => od.Id == refund.OrderDetailId).FirstOrDefaultAsync();
+                    buyerId = order.Order.BuyerId;
+                    addressId = order.Order.AddressId;
+                    paymentTypeId = order.Order.PaymentTypeId;
+                    transactionId = order.Order.TransactionId;
+                    totalPrice = order.Order.TotalAmount;
+                    createAtOrder = order.Order.CreateAt;
+
+                    if (order.Status == "Normal")
                     {
-                        if (order.Status == "Normal")
-                        {
-                            order.UpdateAt = currentTime;
-                            order.Status = "Defect";
-                            order.Note = note;
-                            await _context.SaveChangesAsync();
-
-
-                            var orderToAdd = new OrderRefundDTO()
-                            {
-                                CreateAt = currentTime,
-                                UpdateAt = currentTime,
-                                TotalAmount = order.Total,
-                                BuyerId = order.Order.BuyerId,
-                                ShipperId = null,
-                                AddressId = order.Order.AddressId,
-                                PaymentTypeId = order.Order.PaymentTypeId,
-                                TransactionId = (int)order.Order.TransactionId,
-                                OrderStatusId = 6
-                            };
-
-                            int currentTimeHour = DateTime.Now.Hour;
-
-                            if (currentTimeHour < 6)
-                            {
-                                orderToAdd.TimeSlotId = 1;
-                                Console.WriteLine("Chưa bắt đầu bất kỳ khung giờ làm việc nào.");
-                            }
-                            else if (currentTimeHour < 12)
-                            {
-                                orderToAdd.TimeSlotId = 2;
-                                Console.WriteLine("Morning: Đang trong khung giờ '7-10h'.");
-                            }
-                            else if (currentTimeHour < 17)
-                            {
-                                orderToAdd.TimeSlotId = 3;
-                                Console.WriteLine("Afternoon: Đang trong khung giờ '12h - 15h'.");
-                            }
-                            else
-                            {
-                                orderToAdd.TimeSlotId = 1;
-                                Console.WriteLine("Evening: Đang trong khung giờ '17h - 20h'.");
-                            }
-                            var orderAdd = _mapper.Map<Order>(orderToAdd);
-                            await _context.Orders.AddAsync(orderAdd);
-                            await _context.SaveChangesAsync();
-
-                            var orderId = orderAdd.Id;
-
-                            var orderDetail = new OrderDetailRefundDTO()
-                            {
-                                OrderId = orderId,
-                                CreateAt = currentTime,
-                                UpdateAt = currentTime,
-                                MilkId = order.MilkId,
-                                Discount = order.Discount,
-                                Price = order.Price,
-                                Quantity = order.Quantity,
-                                Total = order.Total,
-                                BatchId = order.BatchId,
-                                Note = note,
-                                Status = "Refunding"
-                            };
-                            await _context.OrderDetails.AddAsync(_mapper.Map<OrderDetail>(orderDetail));
-                            await _context.SaveChangesAsync();
-
-                            return true;
-                        }
+                        order.UpdateAt = currentTime;
+                        order.Status = "Defect";
+                        order.Note = refund.note;
+                        await _context.SaveChangesAsync();
+                        trueRefund.Add(refund);
+                        ok = 1;
                     }
                 }
+
+                if ((currentTime - createAtOrder).TotalDays < 7 && ok == 1)
+                {
+
+                    var orderToAdd = new OrderRefundDTO()
+                    {
+                        CreateAt = currentTime,
+                        UpdateAt = currentTime,
+                        TotalAmount = totalPrice,
+                        BuyerId = buyerId,
+                        ShipperId = null,
+                        AddressId = addressId,
+                        PaymentTypeId = paymentTypeId,
+                        TransactionId = transactionId,
+                        OrderStatusId = 6
+                    };
+
+                    int currentTimeHour = DateTime.Now.Hour;
+
+                    if (currentTimeHour < 6)
+                    {
+                        orderToAdd.TimeSlotId = 1;
+                        Console.WriteLine("Chưa bắt đầu bất kỳ khung giờ làm việc nào.");
+                    }
+                    else if (currentTimeHour < 12)
+                    {
+                        orderToAdd.TimeSlotId = 2;
+                        Console.WriteLine("Morning: Đang trong khung giờ '7-10h'.");
+                    }
+                    else if (currentTimeHour < 17)
+                    {
+                        orderToAdd.TimeSlotId = 3;
+                        Console.WriteLine("Afternoon: Đang trong khung giờ '12h - 15h'.");
+                    }
+                    else
+                    {
+                        orderToAdd.TimeSlotId = 1;
+                        Console.WriteLine("Evening: Đang trong khung giờ '17h - 20h'.");
+                    }
+                    var orderAdd = _mapper.Map<Order>(orderToAdd);
+                    await _context.Orders.AddAsync(orderAdd);
+                    await _context.SaveChangesAsync();
+
+                    var orderId = orderAdd.Id;
+                    foreach (var refund in trueRefund)
+                    {
+                        var order = await _context.OrderDetails.Include(o => o.Order).Where(od => od.Id == refund.OrderDetailId).FirstOrDefaultAsync();
+                        var orderDetail = new OrderDetailRefundDTO()
+                        {
+                            OrderId = orderId,
+                            CreateAt = currentTime,
+                            UpdateAt = currentTime,
+                            MilkId = order.MilkId,
+                            Discount = order.Discount,
+                            Price = order.Price,
+                            Quantity = order.Quantity,
+                            Total = order.Total,
+                            BatchId = order.BatchId,
+                            Note = refund.note,
+                            Status = "Refunding"
+                        };
+                        await _context.OrderDetails.AddAsync(_mapper.Map<OrderDetail>(orderDetail));
+                        await _context.SaveChangesAsync();
+                    }
+                    return true;
+            }
+                
                 return false;
             }
             catch (Exception ex)

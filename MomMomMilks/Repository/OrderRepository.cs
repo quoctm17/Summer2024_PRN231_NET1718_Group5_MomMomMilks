@@ -164,9 +164,9 @@ namespace Repository
         {
             return await OrderDAO.Instance.GetTopProducts(topN);
         }
-        public async Task<bool> RefundOrder(int orderDetailId, string note)
+        public async Task<bool> RefundOrder(List<RefundDTO> refundDTOs)
         {
-            return await OrderDAO.Instance.RefundOrder(orderDetailId, note);
+            return await OrderDAO.Instance.RefundOrder(refundDTOs);
         }
     }
 }

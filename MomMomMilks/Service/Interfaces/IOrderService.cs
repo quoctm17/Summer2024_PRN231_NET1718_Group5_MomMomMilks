@@ -32,6 +32,6 @@ namespace Service.Interfaces
         Task<List<OrderRevenueDTO>> GetOrdersToCalculateRevenue();
         Task UpdateOrderStatusWhenOverDateAsync();
         Task<List<TopProduct>> GetTopProducts(int topN);
-        Task<bool> RefundOrder(int orderDetailId, string note);
+        Task<bool> RefundOrder(List<RefundDTO> refundDTOs);
     }
 }

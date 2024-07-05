@@ -221,9 +221,9 @@ namespace MomMomMilks.Controllers
         }
         [HttpPut("Refund")]
         //[Authorize]
-        public async Task<IActionResult> ManagerAssignOrder([FromQuery] int orderDetailId, [FromQuery] string note)
+        public async Task<IActionResult> ManagerAssignOrder([FromBody] List<RefundDTO> refundDTOs)
         {
-            var result = await _orderService.RefundOrder(orderDetailId, note);
+            var result = await _orderService.RefundOrder(refundDTOs);
             return Ok(result);
         }
         [EnableQuery]
