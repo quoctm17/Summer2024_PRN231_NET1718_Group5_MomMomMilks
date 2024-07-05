@@ -83,11 +83,13 @@
                                     <td>@order.Price</td>
                                     <td>@order.Discount</td>
                                     <td>@order.Total</td>
-                                    <td><a class="btn btn-primary refund-btn" data-order-id="@order.Id">Hoàn trả</a></td>
+                                    <td><input type="checkbox" class="refund-checkbox" data-order-id="@order.Id"></td>
                                 </tr>
                             }
                         </tbody>
                     </table>
+                    <button id="submitRefunds" class="btn btn-primary mt-4">Hoàn trả</button>
+                <hr/>
                 }
                 <a href="/Customer/OrderHistory?userId=@account.Id" class="btn btn-primary">Trở về lịch sử đơn hàng</a>
             </div>
@@ -124,17 +126,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> *@
 <script>
-    async function refundOrder(orderDetailId, reason) {
-        const url = `http://localhost:5215/odata/Order/Refund?orderDetailId=${orderDetailId}&note=${reason}`;
+    let refundList = [];
+    let currentOrderDetailId = null;
+
+    async function submitRefundList(refundList) {
+        const url = `http://localhost:5215/odata/Order/Refund`;
         const token = sessionStorage.getItem('token');
         if (token) {
             try {
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ reason })
+                    body: JSON.stringify(refundList)
                 });
 
                 if (!response.ok) {
@@ -142,18 +148,17 @@
                 }
 
                 const result = await response.json();
-                if (result == true) {
-                    console.log('Order refunded successfully:', result);
-                    alert('Order refunded successfully.');
-                    $('#refundModal').modal('hide');
+                if (result) {
+                    console.log('Orders refunded successfully:', result);
+                    alert('Orders refunded successfully.');
+                    location.reload();
                 } else {
-                    console.log('You can not refund this product:', result);
-                    alert('You can not refund this product.');
-                    $('#refundModal').modal('hide');
+                    console.log('Failed to refund the orders:', result);
+                    alert('Failed to refund the orders.');
                 }
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
-                alert('Failed to refund your order.');
+                alert('Failed to refund your orders.');
             }
         } else {
             alert('User is not logged in.');
@@ -161,12 +166,14 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const refundButtons = document.querySelectorAll('.refund-btn');
-        refundButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const orderDetailId = this.getAttribute('data-order-id');
-                document.getElementById('orderDetailId').value = orderDetailId;
-                $('#refundModal').modal('show');
+        const refundCheckboxes = document.querySelectorAll('.refund-checkbox');
+        refundCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                if (this.checked) {
+                    currentOrderDetailId = this.getAttribute('data-order-id');
+                    document.getElementById('orderDetailId').value = currentOrderDetailId;
+                    $('#refundModal').modal('show');
+                }
             });
         });
 
@@ -175,7 +182,35 @@
             event.preventDefault();
             const orderDetailId = document.getElementById('orderDetailId').value;
             const reason = document.getElementById('refundReason').value;
-            refundOrder(orderDetailId, reason);
+
+            
+            refundList.push({ OrderDetailId: orderDetailId, note: reason });
+
+            
+            document.querySelector(`.refund-checkbox[data-order-id="${orderDetailId}"]`).checked = true;
+            $('#refundModal').modal('hide');
+        });
+
+        $('#refundModal').on('hide.bs.modal', function () {
+            if (!refundList.find(refund => refund.OrderDetailId == currentOrderDetailId)) {
+                
+                document.querySelector(`.refund-checkbox[data-order-id="${currentOrderDetailId}"]`).checked = false;
+            }
+            
+            document.getElementById('refundReason').value = '';
+            currentOrderDetailId = null;
+        });
+
+        const submitRefundsButton = document.getElementById('submitRefunds');
+        submitRefundsButton.addEventListener('click', function () {
+            if (refundList.length > 0) {
+                submitRefundList(refundList);
+            } else {
+                alert('No orders selected for refund.');
+            }
         });
     });
 </script>
+
+
+

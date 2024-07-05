@@ -1,0 +1,8 @@
+﻿namespace FE.Models
+{
+    public class Refund
+    {
+        public int OrderDetailId { get; set; }
+        public string note { get; set; }
+    }
+}
