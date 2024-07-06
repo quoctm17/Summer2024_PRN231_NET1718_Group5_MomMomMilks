@@ -41,6 +41,11 @@ namespace DataAccess.DAO
             var coupons = await _context.CouponUsageHistories.ToListAsync();
             return _mapper.Map<List<CouponUsageDTO>>(coupons);
         }
+        public async Task<List<CouponDTO>> GetAllAvailableCouponAsync()
+        {
+            var coupons = await _context.Coupons.Where(c => c.Status == 1).ToListAsync();
+            return _mapper.Map<List<CouponDTO>>(coupons);
+        }
 
         public async Task<Coupon> GetCouponByIdAsync(int couponId)
         {
@@ -54,14 +59,17 @@ namespace DataAccess.DAO
         }
         public async Task AddOrderCouponAsync(string code, int orderId)
         {
-            var coupon = await _context.Coupons.Where(c => c.Code == code).FirstOrDefaultAsync();
-            var useCoupon = new CouponUsageHistory()
+            var coupon = await _context.Coupons.Where(c => c.Status == 1).Where(c => c.Code == code).FirstOrDefaultAsync();
+            if (coupon != null)
             {
-                OrderId = orderId,
-                CouponId = coupon.Id
-            };
-            await _context.CouponUsageHistories.AddAsync(useCoupon);
-            await _context.SaveChangesAsync();
+                var useCoupon = new CouponUsageHistory()
+                {
+                    OrderId = orderId,
+                    CouponId = coupon.Id
+                };
+                await _context.CouponUsageHistories.AddAsync(useCoupon);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateCouponAsync(Coupon coupon)

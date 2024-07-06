@@ -50,6 +50,12 @@ namespace MomMomMilks.Controllers
             await _couponService.AddCouponAsync(coupon);
             return Created(coupon);
         }
+        [HttpPost("usage")]
+        public async Task<IActionResult> Post([FromQuery] string code, int orderId)
+        {
+            await _couponService.AddOrderCouponAsync(code, orderId);
+            return Ok();
+        }
 
         [HttpPut("{key}")]
         public async Task<IActionResult> Put([FromODataUri] int key, [FromBody] CouponDTO update)

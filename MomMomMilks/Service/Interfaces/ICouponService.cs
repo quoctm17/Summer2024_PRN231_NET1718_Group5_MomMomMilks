@@ -11,6 +11,7 @@ namespace Service.Interfaces
     public interface ICouponService
     {
         Task<List<CouponDTO>> GetAllCouponsAsync();
+        Task<List<CouponDTO>> GetAllAvailableCouponsAsync();
         Task<List<CouponUsageDTO>> GetAllCouponUsagesAsync();
         Task<Coupon> GetCouponByIdAsync(int couponId);
         Task AddCouponAsync(Coupon coupon);

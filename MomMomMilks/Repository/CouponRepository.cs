@@ -11,6 +11,10 @@ namespace Repository
         {
             return await CouponDAO.Instance.GetAllCouponsAsync();
         }
+        public async Task<List<CouponDTO>> GetAllAvailableCouponsAsync()
+        {
+            return await CouponDAO.Instance.GetAllAvailableCouponAsync();
+        }
         public async Task<List<CouponUsageDTO>> GetAllCouponUsagesAsync()
         {
             return await CouponDAO.Instance.GetAllCouponUsagesAsync();
