@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -34,6 +35,7 @@ namespace MomMomMilks.Controllers
             return Ok(await _batchService.GetSingleBatch(id));
         }
         [HttpPost]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Post([FromBody] CreateBatchDTO batchDTO)
         {
             var batch = _mapper.Map<Batch>(batchDTO);
@@ -42,6 +44,7 @@ namespace MomMomMilks.Controllers
             return Ok(result);
         }
         [HttpPut]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Put([FromBody] UpdateBatchDTO batchDTO)
         {
             var batch = _mapper.Map<Batch>(batchDTO);
@@ -50,6 +53,7 @@ namespace MomMomMilks.Controllers
             return Ok(result);
         }
         [HttpDelete("{id}")]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _batchService.DeleteBatch(id);

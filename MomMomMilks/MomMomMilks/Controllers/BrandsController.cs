@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -28,12 +29,13 @@ namespace MomMomMilks.Controllers
 			return Ok(result);
 		}
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetSingleBatch(int id)
+		public async Task<IActionResult> GetSingleBrand(int id)
 		{
 			return Ok(await _brandService.GetSingleBrand(id));
 		}
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] BrandDTO brandDTO)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Post([FromBody] BrandDTO brandDTO)
 		{
 			var supplier = _mapper.Map<Brand>(brandDTO);
 			var result = await _brandService.CreateBrand(supplier);
@@ -41,7 +43,8 @@ namespace MomMomMilks.Controllers
 			return Ok(result);
 		}
 		[HttpPut]
-		public async Task<IActionResult> Put([FromBody] BrandDTO brandDTO)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Put([FromBody] BrandDTO brandDTO)
 		{
 			var supplier = _mapper.Map<Brand>(brandDTO);
 			var result = await _brandService.UpdateBrand(supplier);
@@ -49,7 +52,8 @@ namespace MomMomMilks.Controllers
 			return Ok(result);
 		}
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> Delete(int id)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Delete(int id)
 		{
 			var result = await _brandService.DeleteBrand(id);
 			if (!result) return BadRequest();

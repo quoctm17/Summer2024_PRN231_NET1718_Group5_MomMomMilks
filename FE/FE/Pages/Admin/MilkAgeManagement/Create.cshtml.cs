@@ -1,3 +1,6 @@
+using FE.Helpers;
+using FE.Models;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,7 +24,16 @@ namespace FE.Pages.Admin.MilkAgeManagement
                 }
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new MilkAgeIt.MilkAgeItClient(channel);
-                var response = client.CreateMilkAge(CreateMilkAgeRequest);
+
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
+
+                var response = client.CreateMilkAge(CreateMilkAgeRequest, headers);
                 return RedirectToPage("/admin/milkagemanagement/index");
             }
             catch

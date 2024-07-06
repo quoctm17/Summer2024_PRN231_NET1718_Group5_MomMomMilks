@@ -1,3 +1,6 @@
+using FE.Helpers;
+using FE.Models;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -22,7 +25,14 @@ namespace FE.Pages.Admin.BrandManagement
                 }
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new BrandIt.BrandItClient(channel);
-                var response = client.CreateBrand(CreateBrandRequest);
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
+                var response = client.CreateBrand(CreateBrandRequest, headers);
                 return RedirectToPage("/admin/brandmanagement/index");
             }
             catch

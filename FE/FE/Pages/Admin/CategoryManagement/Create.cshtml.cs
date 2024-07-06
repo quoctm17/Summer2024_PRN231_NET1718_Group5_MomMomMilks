@@ -1,3 +1,6 @@
+using FE.Helpers;
+using FE.Models;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,7 +24,14 @@ namespace FE.Pages.Admin.CategoryManagement
                 }
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new CategoryIt.CategoryItClient(channel);
-                var response = client.CreateCategory(CreateCategoryRequest);
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
+                var response = client.CreateCategory(CreateCategoryRequest, headers);
                 return RedirectToPage("/admin/categorymanagement/index");
             }
             catch

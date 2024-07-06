@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
@@ -45,6 +46,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Post([FromBody] CategoryDTO create)
         {
             var category = _mapper.Map<Category>(create);
@@ -53,6 +55,7 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPut("{key}")]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Put([FromODataUri] int key, [FromBody] CategoryDTO update)
         {
             var category = _mapper.Map<Category>(update);
@@ -61,7 +64,9 @@ namespace MomMomMilks.Controllers
             return Updated(update);
         }
 
+
         [HttpDelete("{key}")]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Delete([FromODataUri] int key)
         {
             var existingCategory = await _categoryService.GetCategoryByIdAsync(key);

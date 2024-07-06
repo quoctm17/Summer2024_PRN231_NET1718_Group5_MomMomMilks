@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Service.Interfaces;
@@ -33,7 +34,8 @@ namespace MomMomMilks.Controllers
 			return Ok(await _milkAgeService.GetSingleMilkAge(id));
 		}
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] MilkAgeDTO milkAgeDTO)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Post([FromBody] MilkAgeDTO milkAgeDTO)
 		{
 			var supplier = _mapper.Map<MilkAge>(milkAgeDTO);
 			var result = await _milkAgeService.CreateMilkAge(supplier);
@@ -41,7 +43,8 @@ namespace MomMomMilks.Controllers
 			return Ok(result);
 		}
 		[HttpPut]
-		public async Task<IActionResult> Put([FromBody] MilkAgeDTO milkAgeDTO)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Put([FromBody] MilkAgeDTO milkAgeDTO)
 		{
 			var supplier = _mapper.Map<MilkAge>(milkAgeDTO);
 			var result = await _milkAgeService.UpdateMilkAge(supplier);
@@ -49,7 +52,8 @@ namespace MomMomMilks.Controllers
 			return Ok(result);
 		}
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> Delete(int id)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Delete(int id)
 		{
 			var result = await _milkAgeService.DeleteMilkAge(id);
 			if (!result) return BadRequest();

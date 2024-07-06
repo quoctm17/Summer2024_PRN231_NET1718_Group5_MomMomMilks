@@ -1,3 +1,6 @@
+using FE.Helpers;
+using FE.Models;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,7 +32,15 @@ namespace FE.Pages.Admin.BrandManagement
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new BrandIt.BrandItClient(channel);
 
-                client.UpdateBrand(UpdateBrandRequest);
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
+
+                client.UpdateBrand(UpdateBrandRequest, headers);
                 return RedirectToPage("/admin/brandmanagement/index");
             }
             catch
@@ -45,8 +56,15 @@ namespace FE.Pages.Admin.BrandManagement
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new BrandIt.BrandItClient(channel);
 
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
                 var request = new DeleteBrandRequest { Id = UpdateBrandRequest.Id };
-                client.DeleteBrand(request);
+                client.DeleteBrand(request, headers);
                 return RedirectToPage("/admin/brandmanagement/index");
             }
             catch

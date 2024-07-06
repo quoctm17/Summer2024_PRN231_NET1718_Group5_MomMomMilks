@@ -50,6 +50,7 @@ namespace MomMomMilks.Extensions
             {
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Manager"));
+                options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Shipper"));
             });
             return services;
         }

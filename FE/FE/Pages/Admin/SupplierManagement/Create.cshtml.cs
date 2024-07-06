@@ -1,3 +1,6 @@
+using FE.Helpers;
+using FE.Models;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -22,7 +25,16 @@ namespace FE.Pages.Admin.SupplierManagement
                 }
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new SupplierIt.SupplierItClient(channel);
-                var response = client.CreateSupplier(CreateSupplierRequest);
+
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
+
+                var response = client.CreateSupplier(CreateSupplierRequest, headers);
                 return RedirectToPage("/admin/suppliermanagement/index");
             }
             catch

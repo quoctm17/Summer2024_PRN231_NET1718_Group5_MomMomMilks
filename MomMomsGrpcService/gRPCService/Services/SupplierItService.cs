@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entities;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Service.Interfaces;
 
 namespace gRPCService.Services
@@ -12,6 +13,7 @@ namespace gRPCService.Services
         {
             _supplierService = supplierService;
         }
+        [Authorize(Policy = "RequireAdminRole")]
         public override async Task<CreateSupplierResponse> CreateSupplier(CreateSupplierRequest request, ServerCallContext context)
         {
             if (request.Name == string.Empty)
@@ -69,6 +71,7 @@ namespace gRPCService.Services
             return await Task.FromResult(response);
         }
 
+        [Authorize(Policy = "RequireAdminRole")]
         public override async Task<UpdateSupplierResponse> UpdateSupplier(UpdateSupplierRequest request, ServerCallContext context)
         {
             if (request.Id <= 0 || request.Name == string.Empty)
@@ -93,6 +96,7 @@ namespace gRPCService.Services
             });
         }
 
+        [Authorize(Policy = "RequireAdminRole")]
         public override async Task<DeleteSupplierResponse> DeleteSupplier(DeleteSupplierRequest request, ServerCallContext context)
         {
             if (request.Id <= 0)

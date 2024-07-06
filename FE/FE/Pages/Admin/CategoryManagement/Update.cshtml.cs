@@ -1,3 +1,6 @@
+using FE.Helpers;
+using FE.Models;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -30,7 +33,15 @@ namespace FE.Pages.Admin.CategoryManagement
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new CategoryIt.CategoryItClient(channel);
 
-                client.UpdateCategory(UpdateCategoryRequest);
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
+
+                client.UpdateCategory(UpdateCategoryRequest, headers);
                 return RedirectToPage("/admin/categorymanagement/index");
             }
             catch
@@ -46,8 +57,16 @@ namespace FE.Pages.Admin.CategoryManagement
                 var channel = GrpcChannel.ForAddress("https://localhost:7269");
                 var client = new CategoryIt.CategoryItClient(channel);
 
+                var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                var token = user.Token;
+
+                var headers = new Metadata
+                {
+                    { "Authorization", $"Bearer {token}" }
+                };
+
                 var request = new DeleteCategoryRequest { Id = UpdateCategoryRequest.Id };
-                client.DeleteCategory(request);
+                client.DeleteCategory(request, headers);
                 return RedirectToPage("/admin/categorymanagement/index");
             }
             catch
