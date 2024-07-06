@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entities;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Service.Interfaces;
 
@@ -14,7 +15,8 @@ namespace gRPCService.Services
 			_brandService = brandService;
 		}
 
-		public override async Task<CreateBrandResponse> CreateBrand(CreateBrandRequest request, ServerCallContext context)
+        [Authorize(Policy = "RequireAdminRole")]
+        public override async Task<CreateBrandResponse> CreateBrand(CreateBrandRequest request, ServerCallContext context)
 		{
 			if (request.Name == string.Empty)
 				throw new RpcException(new Status(StatusCode.InvalidArgument, "You must suppply a valid object"));
@@ -71,7 +73,8 @@ namespace gRPCService.Services
 			return await Task.FromResult(response);
 		}
 
-		public override async Task<UpdateBrandResponse> UpdateBrand(UpdateBrandRequest request, ServerCallContext context)
+        [Authorize(Policy = "RequireAdminRole")]
+        public override async Task<UpdateBrandResponse> UpdateBrand(UpdateBrandRequest request, ServerCallContext context)
 		{
 			if (request.Id <= 0 || request.Name == string.Empty)
 				throw new RpcException(new Status(StatusCode.InvalidArgument, "You must suppply a valid object"));
@@ -95,7 +98,8 @@ namespace gRPCService.Services
 			});
 		}
 
-		public override async Task<DeleteBrandResponse> DeleteBrand(DeleteBrandRequest request, ServerCallContext context)
+        [Authorize(Policy = "RequireAdminRole")]
+        public override async Task<DeleteBrandResponse> DeleteBrand(DeleteBrandRequest request, ServerCallContext context)
 		{
 			if (request.Id <= 0)
 				throw new RpcException(new Status(StatusCode.InvalidArgument, "resouce index must be greater than 0"));

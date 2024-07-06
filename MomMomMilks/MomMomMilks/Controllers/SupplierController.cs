@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -34,7 +35,8 @@ namespace MomMomMilks.Controllers
 			return Ok(await _supplierService.GetSingleSupplier(id));
 		}
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] SupplierDTO supplierDto)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Post([FromBody] SupplierDTO supplierDto)
 		{
 			var supplier = _mapper.Map<Supplier>(supplierDto);
 			var result = await _supplierService.CreateSupplier(supplier);
@@ -42,7 +44,8 @@ namespace MomMomMilks.Controllers
 			return Ok(result);
 		}
 		[HttpPut]
-		public async Task<IActionResult> Put([FromBody] SupplierDTO supplierDTO)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Put([FromBody] SupplierDTO supplierDTO)
 		{
 			var supplier = _mapper.Map<Supplier>(supplierDTO);
 			var result = await _supplierService.UpdateSupplier(supplier);
@@ -50,7 +53,8 @@ namespace MomMomMilks.Controllers
 			return Ok(result);
 		}
 		[HttpDelete("{id}")]
-		public async Task<IActionResult> Delete(int id)
+        [Authorize(Policy = "RequireAdminRole")]
+        public async Task<IActionResult> Delete(int id)
 		{
 			var result = await _supplierService.DeleteSupplier(id);
 			if (!result) return BadRequest();

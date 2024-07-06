@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Entities;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Service.Interfaces;
 
 namespace gRPCService.Services
@@ -12,6 +13,7 @@ namespace gRPCService.Services
         {
             _MilkAgeService = MilkAgeService;
         }
+        [Authorize(Policy = "RequireAdminRole")]
         public override async Task<CreateMilkAgeResponse> CreateMilkAge(CreateMilkAgeRequest request, ServerCallContext context)
         {
             if (request.Min == 0 || request.Max == 0 || string.IsNullOrEmpty(request.Unit))
@@ -75,6 +77,7 @@ namespace gRPCService.Services
             return await Task.FromResult(response);
         }
 
+        [Authorize(Policy = "RequireAdminRole")]
         public override async Task<UpdateMilkAgeResponse> UpdateMilkAge(UpdateMilkAgeRequest request, ServerCallContext context)
         {
             if (request.Id <= 0 || request.Min == 0 || request.Max == 0 || string.IsNullOrEmpty(request.Unit))
@@ -101,6 +104,7 @@ namespace gRPCService.Services
             });
         }
 
+        [Authorize(Policy = "RequireAdminRole")]
         public override async Task<DeleteMilkAgeResponse> DeleteMilkAge(DeleteMilkAgeRequest request, ServerCallContext context)
         {
             if (request.Id <= 0)
