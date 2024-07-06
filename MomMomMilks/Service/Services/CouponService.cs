@@ -23,6 +23,10 @@ namespace Service.Services
         {
             return await _couponRepository.GetAllCouponsAsync();
         }
+        public async Task<List<CouponDTO>> GetAllAvailableCouponsAsync()
+        {
+            return await _couponRepository.GetAllAvailableCouponsAsync();
+        }
         public async Task<List<CouponUsageDTO>> GetAllCouponUsagesAsync()
         {
             return await _couponRepository.GetAllCouponUsagesAsync();

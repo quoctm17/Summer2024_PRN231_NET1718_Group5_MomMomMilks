@@ -220,7 +220,7 @@ namespace MomMomMilks.Controllers
             return Ok(result);
         }
         [HttpPut("Refund")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> ManagerAssignOrder([FromBody] List<RefundDTO> refundDTOs)
         {
             var result = await _orderService.RefundOrder(refundDTOs);
