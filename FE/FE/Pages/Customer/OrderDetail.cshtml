@@ -143,7 +143,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let refundList = [];
     let currentOrderDetailId = null;
@@ -231,10 +231,40 @@
             if (refundList.length > 0) {
                 submitRefundList(refundList);
             } else {
-                alert('No orders selected for refund.');
+                alert('Không có sản phẩm nào được chọn.');
             }
         });
+
+        const orderId = 2; // Replace with the actual order ID you want to check
+        submitRefundsButton.hidden = true;
+
+        console.log('Button found:', submitRefundsButton); // Debug log
+
+        fetch(`http://localhost:5215/odata/Order/IsCompleted?orderId=${orderId}`)
+            .then(response => {
+                console.log('Fetch response:', response); // Debug log
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('API response:', data); // Debug log
+                if (data === true) {
+                    console.log('Showing button');
+                    submitRefundsButton.hidden = false; // Show the button
+                } else {
+                    console.log('Hiding button');
+                    submitRefundsButton.hidden = true; // Hide the button
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching order status:', error);
+                submitRefundsButton.hidden = true; // Hide the button in case of error
+            });
     });
+    });
+    
 </script>
 
 

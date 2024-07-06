@@ -16,9 +16,11 @@ namespace MomMomMilks.Controllers
     public class OrderController : ODataController
     {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly ICouponService _couponService;
+        public OrderController(IOrderService orderService, ICouponService couponService)
         {
             _orderService = orderService;
+            _couponService = couponService;
         }
 
         [EnableQuery]
@@ -75,6 +77,7 @@ namespace MomMomMilks.Controllers
             {
                 Console.WriteLine("Start PostSimpleOrder");
                 await _orderService.CreateOrderAsync(order, order.OrderDetails.ToList());
+                await _couponService.AddOrderCouponAsync(orderDto.Code, order.Id);
                 Console.WriteLine("Order created successfully");
                 return CreatedAtAction(nameof(Get), new { key = order.Id }, order);
             }
@@ -110,6 +113,17 @@ namespace MomMomMilks.Controllers
         public async Task<IActionResult> GetStatus()
         {
             var orderStatus = await _orderService.GetAllStatus();
+            if (orderStatus == null)
+            {
+                return NotFound();
+            }
+            return Ok(orderStatus);
+        }
+
+        [HttpGet("IsCompleted")]
+        public async Task<IActionResult> IsCompletedOrder([FromQuery] int orderId)
+        {
+            var orderStatus = await _orderService.IsCompletedOrder(orderId);
             if (orderStatus == null)
             {
                 return NotFound();
