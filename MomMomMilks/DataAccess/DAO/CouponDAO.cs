@@ -57,18 +57,43 @@ namespace DataAccess.DAO
             await _context.Coupons.AddAsync(coupon);
             await _context.SaveChangesAsync();
         }
-        public async Task AddOrderCouponAsync(string code, int orderId)
+        public async Task<bool> IsUseCoupon(int couponId, int userId)
         {
-            var coupon = await _context.Coupons.Where(c => c.Status == 1).Where(c => c.Code == code).FirstOrDefaultAsync();
+            var coupon = await _context.Coupons.Where(c => c.Status == 1).Where(c => c.Id == couponId).FirstOrDefaultAsync();
             if (coupon != null)
             {
-                var useCoupon = new CouponUsageHistory()
+                var usageCoupon = await _context.CouponUsageHistories
+                    .Include(c => c.Order)
+                    .Where(c => c.Order.BuyerId == userId)
+                    .Where(c => c.CouponId == coupon.Id)
+                    .AnyAsync();
+                return usageCoupon;
+            }
+            return true;
+        }
+        public async Task AddOrderCouponAsync(string code, int orderId)
+        {            
+            var coupon = await _context.Coupons.Where(c => c.Status == 1).Where(c => c.Code == code).FirstOrDefaultAsync();
+            var order = await _context.Orders.Where(c => c.Id == orderId).FirstOrDefaultAsync();
+            var userId = order.BuyerId;
+            bool? usageCoupon = true;
+            usageCoupon = await IsUseCoupon(coupon.Id, userId);
+
+            if (coupon != null)
+            {
+                if ((bool)!usageCoupon)
                 {
-                    OrderId = orderId,
-                    CouponId = coupon.Id
-                };
-                await _context.CouponUsageHistories.AddAsync(useCoupon);
-                await _context.SaveChangesAsync();
+                    var useCoupon = new CouponUsageHistory()
+                    {
+                        OrderId = orderId,
+                        CouponId = coupon.Id
+                    };
+                    await _context.CouponUsageHistories.AddAsync(useCoupon);
+                    await _context.SaveChangesAsync();
+
+                    coupon.NumberOfUse -= 1;
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 

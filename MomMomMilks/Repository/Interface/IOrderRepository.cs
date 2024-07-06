@@ -33,5 +33,6 @@ namespace Repository.Interface
         Task UpdateOrderStatusWhenOverDateAsync();
         Task<List<TopProduct>> GetTopProducts(int topN);
         Task<bool> RefundOrder(List<RefundDTO> refundDTOs);
+        Task<bool> IsConpletedOrder(int orderId);
     }
 }

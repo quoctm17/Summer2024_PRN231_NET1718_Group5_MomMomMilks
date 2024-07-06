@@ -112,12 +112,12 @@
                                 </div>
                             </div>
                             
-                            @* <div class="checkout__input">
+                            <div class="checkout__input">
                                 <p>Chọn mã giảm giá</p>
                                 <select id="couponSelect" name="couponSelect">
                                     <option value="" disabled selected>Chọn mã giảm giá</option>
                                 </select>
-                            </div> *@
+                            </div>
                             <!-- Hidden fields for UserName, Phone, and Email -->
                             <input type="hidden" id="firstName" name="firstName" required>
                             <input type="hidden" id="phone" name="phone" required>
@@ -167,6 +167,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            
+            $(document).on('change', '#couponSelect', function () {
+                applyCouponDiscount();
+            });
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
             loadOrderSummary();
             loadUserDetails();
             loadTimeSlots();
@@ -174,11 +183,8 @@
             loadCoupons();
 
             document.getElementById('placeOrderButton').addEventListener('click', validateOrderAmount);
-            const couponSelect = document.getElementById('couponSelect');
-            couponSelect.addEventListener('change', function () {
-                console.log('Coupon selected'); // Debug log to check event listener
-                applyCouponDiscount();
-            });
+            //debugger;
+            
             //document.querySelector('.shoping__discount form').addEventListener('click', applyCoupon);
 
             // Check if orderCode is present in URL and call confirmPayment
@@ -361,6 +367,7 @@
             const timeSlotSelect = document.getElementById('timeSlot');
             const paymentTypeSelect = document.getElementById('paymentType');
             const orderDateInput = document.getElementById('orderDate');
+            const couponUsage = document.getElementById("couponSelect");
 
             const orderDetails = Array.from(document.querySelectorAll('.checkout__order__item')).map(item => {
                 return {
@@ -391,6 +398,7 @@
                 paymentTypeId: paymentTypeId,
                 orderStatusId: orderStatusId,
                 timeSlotId: parseInt(timeSlotSelect.value),
+                code: couponUsage.value,
                 orderDetails: orderDetails
             };
 
@@ -573,38 +581,6 @@
             return null;
         }
 
-        async function applyCoupon(event) {
-            //event.preventDefault();
-            const couponCode = document.querySelector('#shoping_discount_Id').value;
-            const token = sessionStorage.getItem('token');
-
-            try {
-                let response = await fetch(`http://localhost:5215/odata/Coupon?$filter=code eq '${couponCode}'`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    let data = await response.json();
-                    if (data.$values && data.$values.length > 0) {
-                        console.log('Coupon applied:', data);
-                        applyCouponDiscount(data.$values[0]);
-                    } else {
-                        console.error('Invalid coupon code.');
-                        alert('Invalid coupon code.');
-                    }
-                } else {
-                    console.error('Failed to apply coupon.');
-                    alert('Failed to apply coupon.');
-                }
-            } catch (error) {
-                console.error('Error applying coupon:', error);
-                alert('Error applying coupon.');
-            }
-        }
-
         async function loadCoupons() {
             const token = sessionStorage.getItem('token');
             try {
@@ -621,10 +597,20 @@
                     couponSelect.innerHTML = '<option value="" disabled selected>Chọn mã giảm giá</option>';
                     for (let i = 0; i < coupons.$values.length; i++) {
                         let coupon = coupons.$values[i];
+                        console.log('Coupon:', coupon); // Log each coupon to inspect structure
+
                         let option = document.createElement('option');
                         option.value = coupon.id;
                         option.text = coupon.code;
-                        option.dataset.discount = coupon.discountAmount; // Store discount amount in data attribute
+
+                        // Debugging: Ensure discount property exists
+                        if (coupon.hasOwnProperty('discount')) {
+                            option.setAttribute('data-discount', coupon.discount);
+                            console.log('Set data-discount:', coupon.discount); // Log the discount amount being set
+                        } else {
+                            console.error('Discount amount is undefined for coupon:', coupon);
+                        }
+
                         couponSelect.appendChild(option);
                     }
 
@@ -640,20 +626,32 @@
         function applyCouponDiscount() {
             const selectedOption = document.getElementById('couponSelect').selectedOptions[0];
             if (selectedOption) {
-                const discountAmount = parseFloat(selectedOption.dataset.discount);
-                console.log('Selected discount:', discountAmount);
+                console.log('Selected option:', selectedOption); // Log selected option
 
-                const subtotal = parseFloat(document.getElementById('order-subtotal').innerText.replace(/[^0-9]/g, '')) * 1000;
-                console.log('Subtotal:', subtotal);
+                const discountAmount = parseFloat(selectedOption.getAttribute('data-discount')); // Ensure proper parsing
+                console.log('Selected discount:', discountAmount); // Log selected discount amount
 
-                const discountInCurrency = discountAmount * 1000;
-                const total = subtotal - discountInCurrency;
+                if (isNaN(discountAmount)) {
+                    console.error('Discount amount is not a number:', selectedOption.getAttribute('data-discount'));
+                    return;
+                }
 
-                console.log('Discount in currency:', discountInCurrency);
-                console.log('New total:', total);
+                const subtotalElement = document.getElementById('order-subtotal');
+                if (subtotalElement) {
+                    const subtotal = parseFloat(subtotalElement.innerText.replace(/[^0-9]/g, ''));
+                    console.log('Subtotal:', subtotal);
 
-                document.getElementById('order-discount').innerText = `${formatCurrency(discountInCurrency)} đ`;
-                document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
+                    const discountInCurrency = discountAmount * 1000;
+                    const total = subtotal - discountInCurrency;
+
+                    console.log('Discount in currency:', discountInCurrency); // Log the discount in currency
+                    console.log('New total:', total); // Log the new total
+
+                    document.getElementById('order-discount').innerText = `${formatCurrency(discountInCurrency)} đ`;
+                    document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
+                } else {
+                    console.error('Subtotal element not found');
+                }
             } else {
                 console.error('No discount selected');
             }

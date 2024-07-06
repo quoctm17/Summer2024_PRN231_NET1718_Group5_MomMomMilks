@@ -127,5 +127,9 @@ namespace Service.Services
         {
             return await _orderRepository.RefundOrder(refundDTOs);
         }
+        public async Task<bool> IsCompletedOrder(int orderId)
+        {
+            return await _orderRepository.IsConpletedOrder(orderId);
+        }
     }
 }
