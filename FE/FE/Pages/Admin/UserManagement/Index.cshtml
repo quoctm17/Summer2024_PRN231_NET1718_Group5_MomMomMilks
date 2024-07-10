@@ -180,235 +180,236 @@
     }
 
 <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            getUser();
-            document.getElementById('btnCreateUser').addEventListener('click', showCreate);
-            document.getElementById('createUser').addEventListener('click', createUser);
-        });
-
-        async function getUser() {
-            try {
-                const response = await fetch(`http://localhost:5215/odata/User/userAdmin`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + '@token'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                console.log('API response:', data);
-
-                const users = data.value || data.$values;
-                const userList = document.getElementById('userList');
-
-                for (const user of users) {
-                    const tr = document.createElement('tr');
-                    const phone = user.phoneNumber || "Không có";
-                    const status = user.status === 1 ? "Hoạt động" : "Không hoạt động";
-                    tr.innerHTML = `<td>${user.id}</td>
-                                    <td>${user.userName}</td>
-                                    <td>${phone}</td>
-                                    <td>${user.email}</td>
-                                    <td>${user.role}</td>
-                                    <td>${status}</td>
-                                    <td>
-                                        <a href="#" class="updateUser" data-id="${user.id}">Sửa</a> |
-                                        <a href="#" class="deleteUser" data-id="${user.id}">Xóa</a>
-                                    </td>`;
-                    userList.appendChild(tr);
-                }
-
-                // Initialize DataTable after populating the table
-                $(document).ready(function () {
-                    $('#userTable').DataTable();
-                });
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        }
-
-    async function createUser() {
-    // Get form values
-    const userName = document.getElementById('createName').value;
-    const phoneNumber = document.getElementById('createPhoneNumber').value;
-    const email = document.getElementById('createEmail').value;
-    const role = document.getElementById('createRole');
-
-    // Validation
-    const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
-    if (!usernameRegex.test(userName)) {
-                showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt.');
-        return;
-    }
-
-    const phoneNumberRegex = /^\d{10}$/;
-    if (!phoneNumberRegex.test(phoneNumber)) {
-                showNotification('Số điện thoại phải có chính xác 10 chữ số.');
-        return;
-    }
-    const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-    if (!emailRegex.test(email)) {
-                showNotification('Vui lòng nhập địa chỉ email hợp lệ.');
-        return;
-    }
-
-    const user = {
-        userName: userName,
-        phoneNumber: phoneNumber,
-        email: email,
-        role: parseInt(role.value),
-    }
-
-    try {
-        let response = await fetch(`http://localhost:5215/odata/User`, {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + '@token',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        });
-        if (response.ok || response.status === 500) {
-            showNotification('Tạo mới người dùng thành công');
-            window.location.href = './';
-        } else {
-            showNotification('Lỗi tạo người dùng');
-        }
-    } catch (error) {
-        console.error('Error create user:', error);
-        showNotification('Không thể tạo người dùng');
-    }
-}
-
-function showCreate() {
-    $('#exampleModal').modal('show');
-}
-
-function showNotification(message) {
-    document.getElementById('notificationMessage').innerText = message;
-    $('#notificationModal').modal('show');
-}
-
-function showConfirmation(message, onConfirm) {
-    document.getElementById('confirmationModal').querySelector('.modal-body').innerText = message;
-    const confirmButton = document.getElementById('confirmButton');
-    
-    // Remove existing event listeners
-    confirmButton.replaceWith(confirmButton.cloneNode(true));
-    document.getElementById('confirmButton').addEventListener('click', onConfirm);
-    
-    $('#confirmationModal').modal('show');
-}
-
-$(document).ready(function () {
-    $('#userTable').on('click', '.updateUser', function () {
-        const userId = $(this).data('id');
-        $.ajax({
-            url: `http://localhost:5215/odata/User/${userId}`,
-            type: 'get',
-            contentType: 'application/json',
-            headers: {
-                'Authorization': 'Bearer ' + '@token'
-            },
-            success: function (result, status, xhr) {
-                $('#updateId').val(result.id);
-                $('#updateName').val(result.userName);
-                $('#updatePhoneNumber').val(result.phoneNumber);
-                $('#updateEmail').val(result.email);
-                const roleMap = {
-                    'Admin': 2,
-                    'Manager': 3,
-                    'Shipper': 4,
-                    'Customer': 1
-                };
-                $('#updateRole').val(roleMap[result.role]);
-                $('#updateStatus').val(result.status);
-                $('#updateModal').modal('show');
-            },
-            error: function (xhr, status, error) {
-                        showNotification('Lỗi tìm nạp chi tiết người dùng');
-            }
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+        getUser();
+        document.getElementById('btnCreateUser').addEventListener('click', showCreate);
+        document.getElementById('createUser').addEventListener('click', createUser);
     });
 
-    var updateUser = {};
-    document.getElementById('btnUpdateUser').addEventListener('click', function () {
-        updateUser = {
-            id: $("#updateId").val(),
-            userName: $("#updateName").val(),
-            email: $("#updateEmail").val(),
-            phoneNumber: $("#updatePhoneNumber").val(),
-            status: $("#updateStatus").val(),
-            role: $("#updateRole").val()
-        };
+    async function getUser() {
+        try {
+            const response = await fetch(`http://localhost:5215/odata/User/userAdmin`, {
+                headers: {
+                    'Authorization': 'Bearer @token'
+                }
+            });
 
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('API response:', data);
+
+            const users = data.value || data.$values;
+            const userList = document.getElementById('userList');
+
+            for (const user of users) {
+                const tr = document.createElement('tr');
+                const phone = user.phoneNumber || "Không có";
+                const status = user.status === 1 ? "Hoạt động" : "Không hoạt động";
+                tr.innerHTML = `<td>${user.id}</td>
+                                <td>${user.userName}</td>
+                                <td>${phone}</td>
+                                <td>${user.email}</td>
+                                <td>${user.role}</td>
+                                <td>${status}</td>
+                                <td>
+                                    <a href="#" class="updateUser" data-id="${user.id}">Sửa</a> |
+                                    <a href="#" class="deleteUser" data-id="${user.id}">Xóa</a>
+                                </td>`;
+                userList.appendChild(tr);
+            }
+
+            // Initialize DataTable after populating the table
+            $(document).ready(function () {
+                $('#userTable').DataTable();
+            });
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    }
+
+    async function createUser() {
+        // Get form values
+        const userName = document.getElementById('createName').value;
+        const phoneNumber = document.getElementById('createPhoneNumber').value;
+        const email = document.getElementById('createEmail').value;
+        const role = document.getElementById('createRole');
+
+        // Validation
         const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
-        if (!usernameRegex.test(updateUser.userName)) {
-                    showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt.');
+        if (!usernameRegex.test(userName)) {
+            showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt.');
             return;
         }
 
         const phoneNumberRegex = /^\d{10}$/;
-        if (!phoneNumberRegex.test(updateUser.phoneNumber)) {
-                    showNotification('Số điện thoại phải có chính xác 10 chữ số.');
+        if (!phoneNumberRegex.test(phoneNumber)) {
+            showNotification('Số điện thoại phải có chính xác 10 chữ số.');
             return;
         }
 
         const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-        if (!emailRegex.test(updateUser.email)) {
-                    showNotification('Vui lòng nhập địa chỉ email hợp lệ.');
+        if (!emailRegex.test(email)) {
+            showNotification('Vui lòng nhập địa chỉ email hợp lệ.');
             return;
         }
 
-        if (!updateUser.id || !updateUser.userName || !updateUser.email || !updateUser.phoneNumber || !updateUser.status || !updateUser.role) {
-            showNotification("Hãy điền đủ thông tin");
-        } else {
-            $.ajax({
-                url: `http://localhost:5215/odata/User/updateUser/${updateUser.id}`,
-                type: 'put',
-                data: JSON.stringify(updateUser),
-                processData: false,
-                contentType: "application/json",
-                headers: {
-                    'Authorization': 'Bearer ' + '@token'
-                },
-                success: function (result, status, xhr) {
-                    window.location.reload(true);
-                    $('#updateModal').modal('hide');
-                },
-                error: function (xhr, status, error) {
-                    showNotification("Không thể cập nhật thông tin người dùng");
-                }
-            });
+        const user = {
+            userName: userName,
+            phoneNumber: phoneNumber,
+            email: email,
+            role: parseInt(role.value),
         }
-    });
 
-    $('#userTable').on('click', '.deleteUser', function () {
-        const userId = $(this).data('id');
+        try {
+            let response = await fetch(`http://localhost:5215/odata/User`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer @token',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+            if (response.ok || response.status === 500) {
+                showNotification('Tạo mới người dùng thành công');
+                window.location.href = './';
+            } else {
+                showNotification('Lỗi tạo người dùng');
+            }
+        } catch (error) {
+            console.error('Error create user:', error);
+            showNotification('Không thể tạo người dùng');
+        }
+    }
 
-        // Show confirmation modal
-                showConfirmation("Bạn có chắc chắn muốn xóa người dùng này không?", function () {
+    function showCreate() {
+        $('#exampleModal').modal('show');
+    }
+
+    function showNotification(message) {
+        document.getElementById('notificationMessage').innerText = message;
+        $('#notificationModal').modal('show');
+    }
+
+    function showConfirmation(message, onConfirm) {
+        document.getElementById('confirmationModal').querySelector('.modal-body').innerText = message;
+        const confirmButton = document.getElementById('confirmButton');
+        
+        // Remove existing event listeners
+        confirmButton.replaceWith(confirmButton.cloneNode(true));
+        document.getElementById('confirmButton').addEventListener('click', onConfirm);
+        
+        $('#confirmationModal').modal('show');
+    }
+
+    $(document).ready(function () {
+        $('#userTable').on('click', '.updateUser', function () {
+            const userId = $(this).data('id');
             $.ajax({
                 url: `http://localhost:5215/odata/User/${userId}`,
-                type: 'DELETE',
-                processData: false,
-                contentType: "application/json",
-                    'Authorization': 'Bearer ' + '@token'
+                type: 'get',
+                contentType: 'application/json',
                 headers: {
+                    'Authorization': 'Bearer @token'
                 },
                 success: function (result, status, xhr) {
-                    showNotification("Người dùng đã xóa thành công");
-                    window.location.reload(true);
+                    $('#updateId').val(result.id);
+                    $('#updateName').val(result.userName);
+                    $('#updatePhoneNumber').val(result.phoneNumber);
+                    $('#updateEmail').val(result.email);
+                    const roleMap = {
+                        'Admin': 2,
+                        'Manager': 3,
+                        'Shipper': 4,
+                        'Customer': 1
+                    };
+                    $('#updateRole').val(roleMap[result.role]);
+                    $('#updateStatus').val(result.status);
+                    $('#updateModal').modal('show');
                 },
                 error: function (xhr, status, error) {
-                    showNotification("Không thể xóa người dùng");
+                    showNotification('Lỗi tìm nạp chi tiết người dùng');
                 }
             });
         });
+
+        var updateUser = {};
+        document.getElementById('btnUpdateUser').addEventListener('click', function () {
+            updateUser = {
+                id: $("#updateId").val(),
+                userName: $("#updateName").val(),
+                email: $("#updateEmail").val(),
+                phoneNumber: $("#updatePhoneNumber").val(),
+                status: $("#updateStatus").val(),
+                role: $("#updateRole").val()
+            };
+
+            const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
+            if (!usernameRegex.test(updateUser.userName)) {
+                showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt.');
+                return;
+            }
+
+            const phoneNumberRegex = /^\d{10}$/;
+            if (!phoneNumberRegex.test(updateUser.phoneNumber)) {
+                showNotification('Số điện thoại phải có chính xác 10 chữ số.');
+                return;
+            }
+
+            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (!emailRegex.test(updateUser.email)) {
+                showNotification('Vui lòng nhập địa chỉ email hợp lệ.');
+                return;
+            }
+
+            if (!updateUser.id || !updateUser.userName || !updateUser.email || !updateUser.phoneNumber || !updateUser.status || !updateUser.role) {
+                showNotification("Hãy điền đủ thông tin");
+            } else {
+                $.ajax({
+                    url: `http://localhost:5215/odata/User/updateUser/${updateUser.id}`,
+                    type: 'put',
+                    data: JSON.stringify(updateUser),
+                    processData: false,
+                    contentType: "application/json",
+                    headers: {
+                        'Authorization': 'Bearer @token'
+                    },
+                    success: function (result, status, xhr) {
+                        window.location.reload(true);
+                        $('#updateModal').modal('hide');
+                    },
+                    error: function (xhr, status, error) {
+                        showNotification("Không thể cập nhật thông tin người dùng");
+                    }
+                });
+            }
+        });
+
+        $('#userTable').on('click', '.deleteUser', function () {
+            const userId = $(this).data('id');
+
+            // Show confirmation modal
+            showConfirmation("Bạn có chắc chắn muốn xóa người dùng này không?", function () {
+                $.ajax({
+                    url: `http://localhost:5215/odata/User/${userId}`,
+                    type: 'DELETE',
+                    processData: false,
+                    contentType: "application/json",
+                    headers: {
+                        'Authorization': 'Bearer @token'
+                    },
+                    success: function (result, status, xhr) {
+                        showNotification("Người dùng đã xóa thành công");
+                        window.location.reload(true);
+                    },
+                    error: function (xhr, status, error) {
+                        showNotification("Không thể xóa người dùng");
+                    }
+                });
+            });
+        });
     });
-});
 </script>
 }
