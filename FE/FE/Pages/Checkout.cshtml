@@ -294,7 +294,7 @@
             }
 
             try {
-                let response = await fetch(`http://localhost:5215/odata/User/me`, {
+                let response = await fetch(`http://localhost:5215/odata/User/me?$expand=Addresses($expand=District,Ward)`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -303,18 +303,18 @@
                     let user = await response.json();
                     console.log('User with Addresses:', user);
 
-                    document.getElementById('firstName').value = user.userName || '';
-                    document.getElementById('phone').value = user.phoneNumber || '';
-                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('firstName').value = user.UserName || '';
+                    document.getElementById('phone').value = user.PhoneNumber || '';
+                    document.getElementById('email').value = user.Email || '';
 
-                    if (user.addresses && user.addresses.$values.length > 0) {
+                    if (user.Addresses && user.Addresses.$values.length > 0) {
                         let addressDropdown = document.getElementById('addressSelect');
                         addressDropdown.innerHTML = '<option value="" disabled selected>Chọn địa chỉ</option>'; // Clear previous options
-                        for (let i = 0; i < user.addresses.$values.length; i++) {
-                            let address = user.addresses.$values[i];
+                        for (let i = 0; i < user.Addresses.$values.length; i++) {
+                            let address = user.Addresses.$values[i];
                             let option = document.createElement('option');
-                            option.value = address.id;
-                            option.text = `${address.houseNumber} ${address.street}, ${address.ward.name}, ${address.ward.district.name}`;
+                            option.value = address.Id;
+                            option.text = `${address.HouseNumber} ${address.Street}, ${address.Ward.Name}, ${address.District.Name}`;
                             addressDropdown.appendChild(option);
                         }
 
