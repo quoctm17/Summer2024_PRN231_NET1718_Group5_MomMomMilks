@@ -11,7 +11,6 @@
         <div class="loader"></div>
     </div>
 
-
     <!-- Hero Section Begin -->
     <section class="hero hero-normal">
         <div class="container">
@@ -27,7 +26,9 @@
                             {
                                 <form method="post" asp-page-handler="Filter" id="form-@category.Id">
                                     <input type="hidden" name="categoryId" value="@category.Id" />
-                                <li><a href="javascript:void(0);" onclick="submitForm('@category.Id')">@category.Name</a></li>
+                                    <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                                    <input type="hidden" name="IsAscending" value="@Model.IsAscending" />
+                                    <li><a href="javascript:void(0);" onclick="submitForm('@category.Id')">@category.Name</a></li>
                                 </form>
                             }
                         </ul>
@@ -38,6 +39,8 @@
                         <div class="hero__search__form">
                             <form id="searchForm" method="post" asp-page="/Milk/Index" asp-page-handler="Index">
                                 <input type="text" id="search-title" name="title" placeholder="Bạn cần tìm gì?">
+                                <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                                <input type="hidden" name="IsAscending" value="@Model.IsAscending" />
                                 <button type="submit" class="site-btn">Tìm kiếm</button>
                             </form>
                             <div class="search-results row"></div>
@@ -58,6 +61,7 @@
         </div>
     </section>
     <!-- Hero Section End -->
+
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-section set-bg" data-setbg="img/hero/banner.jpg" style="background-image: url('img/hero/banner.jpg'); background-color: #000000;">
         <div class="container">
@@ -75,6 +79,7 @@
         </div>
     </section>
     <!-- Breadcrumb Section End -->
+
     <!-- Product Section Begin -->
     <section class="product spad">
         <div class="container">
@@ -88,7 +93,9 @@
                                 {
                                     <form method="post" asp-page-handler="Filter" id="form-@category.Id">
                                         <input type="hidden" name="categoryId" value="@category.Id" />
-                                    <li><a href="javascript:void(0);" onclick="submitForm('@category.Id')">@category.Name</a></li>
+                                        <input type="hidden" name="SortBy" value="@Model.SortBy" />
+                                        <input type="hidden" name="IsAscending" value="@Model.IsAscending" />
+                                        <li><a href="javascript:void(0);" onclick="submitForm('@category.Id')">@category.Name</a></li>
                                     </form>
                                 }
                             </ul>
@@ -96,68 +103,73 @@
                     </div>
                 </div>
                 <div class="col-lg-9 col-md-7">
-                    
                     <div class="filter__item">
                         <div class="row">
                             <div class="col-lg-4 col-md-5">
                                 <div class="filter__sort">
-                                    <span>Lọc theo</span>
-                                    <select>
-                                        <option value="0">Mặc định</option>
-                                        <option value="0">Mặc định</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4">
-                                <div class="filter__found">
-                                    <h6><span>@Model.Count</span> Sản phẩm</h6>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-3">
-                                <div class="filter__option">
-                                    <span class="icon_grid-2x2"></span>
-                                    <span class="icon_ul"></span>
+                                    <div>
+                                        <label for="sort-by">Lọc theo</label>
+                                        <select id="sort-by" name="SortBy" onchange="updateSorting()">
+                                            <option value="Name" selected="@((Model.SortBy == "Name"))">Tên</option>
+                                            <option value="Price" selected="@((Model.SortBy == "Price"))">Giá</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="is-ascending">Thứ tự</label>
+                                        <select id="is-ascending" name="IsAscending" onchange="updateSorting()">
+                                            <option value="true" selected="@((Model.IsAscendingString == "true"))">Tăng dần</option>
+                                            <option value="false" selected="@((Model.IsAscendingString == "false"))">Giảm dần</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="listMilk" class="row">
+                    <div class="row">
                         @foreach (var milk in Model.Milks)
                         {
-                            <div class="col-lg-3 col-md-4 col-sm-6 mix milk">
-                                <div class="featured__item">
-                                    <div class="featured__item__pic set-bg" data-setbg="@milk.ImageUrl">
-                                        <ul class="featured__item__pic__hover">
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="@milk.ImageUrl" style="background-image: url('@milk.ImageUrl'); background-color: #000000;">
+                                        <ul class="product__item__pic__hover">
                                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                            <li><a href="javascript:void(0)" onclick="addToCart(@milk.Id, '@milk.Name', @milk.Price, '@milk.ImageUrl')"><i class="fa fa-shopping-cart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                                         </ul>
                                     </div>
-                                    <div class="featured__item__text">
-                                        <h6><a href="/Milk/Detail?milkId=@milk.Id">@milk.Name</a></h6>
-                                        <h5>@String.Format("{0:0,0} đ", milk.Price)</h5>
+                                    <div class="product__item__text">
+                                        <h6><a href="#">@milk.Name</a></h6>
+                                        <h5>@milk.Price.ToString("C")</h5>
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
                     <div class="product__pagination">
-                        <ul class="pagination">
-                            @for (var i = 1; i <= Model.TotalPages; i++)
-                            {
-                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                                    <a asp-page="/Milk/Index" asp-route-currentpage="@i" class="page-link">@i</a>
-                                </li>
-                            }
-                        </ul>
+                        @for (var i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <a class="page-item @(i == Model.CurrentPage ? "active" : "")" asp-page="/Milk/Index" asp-route-currentPage="@i" asp-route-SortBy="@Model.SortBy" asp-route-IsAscending="@Model.IsAscending">@i</a>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- Product Section End -->
-
+</body>
+@section Scripts{
     <script>
+        function updateSorting() {
+            var sortBy = document.getElementById('sort-by').value;
+            var isAscending = document.getElementById('is-ascending').value === "true"; // Convert to boolean
+            var url = new URL(window.location.href);
+            url.searchParams.set("SortBy", sortBy);
+            url.searchParams.set("IsAscending", isAscending.toString()); // Convert boolean to string
+            window.location.href = url.href;
+        }
+
+
+
         async function addToCart(id, name, price, imageUrl) {
             try {
                 let response = await fetch(`http://localhost:5215/odata/Cart/AddItem?milkId=${id}&quantity=1`, {
@@ -184,7 +196,7 @@
         function submitForm(categoryId) {
             document.getElementById('form-' + categoryId).submit();
         }
-        
+
         async function updateCartCount() {
             try {
                 let response = await fetch('http://localhost:5215/odata/Cart');
@@ -215,4 +227,4 @@
         });
 
     </script>
-</body>
+}
