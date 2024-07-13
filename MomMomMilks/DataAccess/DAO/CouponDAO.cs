@@ -33,7 +33,7 @@ namespace DataAccess.DAO
 
         public async Task<List<CouponDTO>> GetAllCouponsAsync()
         {
-            var coupons = await _context.Coupons.Where(c => c.Status == 1).ToListAsync();
+            var coupons = await _context.Coupons.ToListAsync();
             return _mapper.Map<List<CouponDTO>>(coupons);
         }
         public async Task<List<CouponUsageDTO>> GetAllCouponUsagesAsync()
@@ -54,8 +54,17 @@ namespace DataAccess.DAO
 
         public async Task AddCouponAsync(Coupon coupon)
         {
-            await _context.Coupons.AddAsync(coupon);
-            await _context.SaveChangesAsync();
+            try
+            {
+                coupon.Status = 1;
+                coupon.UpdateAt = DateTime.Now;
+                coupon.CreateAt = DateTime.Now;
+                await _context.Coupons.AddAsync(coupon);
+                await _context.SaveChangesAsync();
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
         public async Task<bool> IsUseCoupon(int couponId, int userId)
         {
@@ -72,35 +81,52 @@ namespace DataAccess.DAO
             return true;
         }
         public async Task AddOrderCouponAsync(string code, int orderId)
-        {            
-            var coupon = await _context.Coupons.Where(c => c.Status == 1).Where(c => c.Code == code).FirstOrDefaultAsync();
-            var order = await _context.Orders.Where(c => c.Id == orderId).FirstOrDefaultAsync();
-            var userId = order.BuyerId;
-            bool? usageCoupon = true;
-            usageCoupon = await IsUseCoupon(coupon.Id, userId);
-
-            if (coupon != null)
+        {
+            if (code != null)
             {
-                if ((bool)!usageCoupon)
-                {
-                    var useCoupon = new CouponUsageHistory()
-                    {
-                        OrderId = orderId,
-                        CouponId = coupon.Id
-                    };
-                    await _context.CouponUsageHistories.AddAsync(useCoupon);
-                    await _context.SaveChangesAsync();
+                var coupon = await _context.Coupons.Where(c => c.Status == 1).Where(c => c.Code == code).FirstOrDefaultAsync();
+                var order = await _context.Orders.Where(c => c.Id == orderId).FirstOrDefaultAsync();
+                var userId = order.BuyerId;
+                bool? usageCoupon = true;
+                usageCoupon = await IsUseCoupon(coupon.Id, userId);
 
-                    coupon.NumberOfUse -= 1;
-                    await _context.SaveChangesAsync();
+                if (coupon != null)
+                {
+                    if ((bool)!usageCoupon)
+                    {
+                        var useCoupon = new CouponUsageHistory()
+                        {
+                            OrderId = orderId,
+                            CouponId = coupon.Id
+                        };
+                        await _context.CouponUsageHistories.AddAsync(useCoupon);
+                        await _context.SaveChangesAsync();
+
+                        coupon.NumberOfUse -= 1;
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
         }
 
         public async Task UpdateCouponAsync(Coupon coupon)
         {
-            _context.Coupons.Update(coupon);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var existingCoupon = await _context.Coupons.FindAsync(coupon.Id);
+                if (existingCoupon != null)
+                {
+                    _context.Entry(existingCoupon).State = EntityState.Detached;
+                }
+
+                coupon.UpdateAt = DateTime.Now;
+
+                _context.Coupons.Update(coupon);
+                await _context.SaveChangesAsync();
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task DeleteCouponAsync(int couponId)

@@ -1,0 +1,377 @@
+﻿@page
+@model FE.Pages.Admin.CouponManagement.IndexModel
+@{
+    ViewData["Title"] = "Coupon Management";
+}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Quản lý mã giảm giá
+    </div>
+    <div class="p-4">
+        <button class="btn btn-success" id="btnCreateCoupon">
+            Tạo mới mã giảm giá
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table" id="couponTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Giảm giá</th>
+                    <th>Ngày hết hạn</th>
+                    <th>Số lần sử dụng</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="couponList" class="font-weight-light">
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="createCouponModal" tabindex="-1" role="dialog" aria-labelledby="createCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCouponModalLabel">Tạo mã giảm giá</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createCouponForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="createCode" class="form-label">Mã: </label>
+                        <input type="text" class="form-control" required id="createCode">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createName" class="form-label">Tên: </label>
+                        <input type="text" class="form-control" required id="createName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createDiscount" class="form-label">Giảm giá: </label>
+                        <input type="number" class="form-control" required id="createDiscount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createExpiryDate" class="form-label">Ngày hết hạn: </label>
+                        <input type="date" class="form-control" required id="createExpiryDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="createNumberOfUse" class="form-label">Số lần sử dụng: </label>
+                        <input type="number" class="form-control" required id="createNumberOfUse">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="button" class="btn btn-primary" id="createCoupon">Tạo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateCouponModal" tabindex="-1" role="dialog" aria-labelledby="updateCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateCouponModalLabel">Sửa thông tin mã giảm giá</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="updateCouponForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="updateId" class="form-label">Id: </label>
+                        <input type="text" class="form-control" disabled id="updateId">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateCode" class="form-label">Mã: </label>
+                        <input type="text" class="form-control" required id="updateCode">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateName" class="form-label">Tên: </label>
+                        <input type="text" class="form-control" required id="updateName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateDiscount" class="form-label">Giảm giá: </label>
+                        <input type="number" class="form-control" required id="updateDiscount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateExpiryDate" class="form-label">Ngày hết hạn: </label>
+                        <input type="date" class="form-control" required id="updateExpiryDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateNumberOfUse" class="form-label">Số lần sử dụng: </label>
+                        <input type="number" class="form-control" required id="updateNumberOfUse">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateStatus" class="form-label">Trạng thái: </label>
+                        <select class="form-select" required id="updateStatus">
+                            <option value="1">Hoạt động</option>
+                            <option value="0">Không hoạt động</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="button" class="btn btn-primary" id="btnUpdateCoupon">Sửa</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Xác nhận</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn tiếp tục?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="confirmButton">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationMessage">
+                <!-- Message will be inserted dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    @using Helpers;
+    @using Models;
+
+        var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+        string token = null;
+        if (user != null)
+        {
+            token = user.Token;
+        }
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            getCoupons();
+            document.getElementById('btnCreateCoupon').addEventListener('click', showCreate);
+            document.getElementById('createCoupon').addEventListener('click', createCoupon);
+        });
+
+        async function getCoupons() {
+            try {
+                const response = await fetch(`http://localhost:5215/odata/Coupon`, {
+                    headers: {
+                        'Authorization': 'Bearer @token'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('API response:', data);
+
+                const coupons = data.value || data.$values;
+                const couponList = document.getElementById('couponList');
+
+                // Clear the current list to prevent duplication
+                couponList.innerHTML = '';
+
+                for (const coupon of coupons) {
+                    const tr = document.createElement('tr');
+                    const status = coupon.status === 1 ? "Hoạt động" : "Không hoạt động";
+                    const expiryDate = new Date(coupon.epiryDate).toLocaleDateString('vi-VN');
+                    tr.innerHTML = `<td>${coupon.id}</td>
+                                    <td>${coupon.code}</td>
+                                    <td>${coupon.name}</td>
+                                    <td>${coupon.discount}</td>
+                                    <td>${expiryDate}</td>
+                                    <td>${coupon.numberOfUse}</td>
+                                    <td>${status}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm btnEdit" data-coupon='${JSON.stringify(coupon)}'>Sửa</button>
+                                    </td>`;
+                    couponList.appendChild(tr);
+                }
+
+                const editButtons = document.querySelectorAll('.btnEdit');
+                editButtons.forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const coupon = JSON.parse(event.target.getAttribute('data-coupon'));
+                        showUpdate(coupon);
+                    });
+                });
+            } catch (error) {
+                console.error('Failed to fetch coupons:', error);
+                showErrorNotification('Không thể tải mã giảm giá.');
+            }
+        }
+
+        function showCreate() {
+            const createModal = new bootstrap.Modal(document.getElementById('createCouponModal'));
+            createModal.show();
+        }
+
+        async function createCoupon() {
+            const code = document.getElementById('createCode').value;
+            const name = document.getElementById('createName').value;
+            const discount = document.getElementById('createDiscount').value;
+            const expiryDate = document.getElementById('createExpiryDate').value;
+            const numberOfUse = document.getElementById('createNumberOfUse').value;
+
+            if (discount > 1000) {
+                showErrorNotification('Số tiền giảm quá cao, vui lòng giảm xuống.');
+                return;
+            }
+
+            if (numberOfUse > 100) {
+                showErrorNotification('Số lần sử dụng quá cao, vui lòng giảm xuống.');
+                return;
+            }
+
+            if (!code || !name || !discount || !expiryDate || !numberOfUse) {
+                showErrorNotification('Vui lòng điền đầy đủ thông tin.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5215/odata/Coupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer @token'
+                    },
+                    body: JSON.stringify({
+                        code,
+                        name,
+                        discount,
+                        epiryDate: new Date(expiryDate).toISOString(),
+                        numberOfUse
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                // Hide the create modal before showing the notification
+                const createModal = bootstrap.Modal.getInstance(document.getElementById('createCouponModal'));
+                createModal.hide();
+
+                showSuccessNotification('Tạo mã giảm giá thành công.');
+                getCoupons();
+            } catch (error) {
+                console.error('Failed to create coupon:', error);
+                showErrorNotification('Không thể tạo mã giảm giá.');
+            }
+        }
+
+        function showUpdate(coupon) {
+            document.getElementById('updateId').value = coupon.id;
+            document.getElementById('updateCode').value = coupon.code;
+            document.getElementById('updateName').value = coupon.name;
+            document.getElementById('updateDiscount').value = coupon.discount;
+            document.getElementById('updateExpiryDate').value = new Date(coupon.epiryDate).toISOString().split('T')[0];
+            document.getElementById('updateNumberOfUse').value = coupon.numberOfUse;
+            document.getElementById('updateStatus').value = coupon.status;
+            const updateModal = new bootstrap.Modal(document.getElementById('updateCouponModal'));
+            updateModal.show();
+
+            document.getElementById('btnUpdateCoupon').addEventListener('click', updateCoupon);
+        }
+
+        async function updateCoupon() {
+            const id = document.getElementById('updateId').value;
+            const code = document.getElementById('updateCode').value;
+            const name = document.getElementById('updateName').value;
+            const discount = document.getElementById('updateDiscount').value;
+            const expiryDate = document.getElementById('updateExpiryDate').value;
+            const numberOfUse = document.getElementById('updateNumberOfUse').value;
+            const status = document.getElementById('updateStatus').value;
+
+            if (discount > 1000) {
+                showErrorNotification('Số tiền giảm quá cao, vui lòng giảm xuống.');
+                return;
+            }
+
+            if (!code || !name || !discount || !expiryDate || !numberOfUse || !status) {
+                showErrorNotification('Vui lòng điền đầy đủ thông tin.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5215/odata/Coupon/${id}?key=${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer @token'
+                    },
+                    body: JSON.stringify({
+                        code,
+                        name,
+                        discount,
+                        epiryDate: new Date(expiryDate).toISOString(),
+                        numberOfUse,
+                        status
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                // Hide the update modal before showing the notification
+                const updateModal = bootstrap.Modal.getInstance(document.getElementById('updateCouponModal'));
+                updateModal.hide();
+
+                showSuccessNotification('Cập nhật mã giảm giá thành công.');
+                getCoupons();
+            } catch (error) {
+                console.error('Failed to update coupon:', error);
+                showErrorNotification('Không thể cập nhật mã giảm giá.');
+            }
+        }
+
+        function showErrorNotification(message) {
+            document.getElementById('notificationMessage').textContent = message;
+            const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+            notificationModal.show();
+        }
+
+        function showSuccessNotification(message) {
+            document.getElementById('notificationMessage').textContent = message;
+            const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+            notificationModal.show();
+        }
+
+    </script>
+}

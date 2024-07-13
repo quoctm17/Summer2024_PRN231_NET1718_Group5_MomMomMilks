@@ -15,6 +15,7 @@ namespace DataAccess.DAO
 
         private static OrderDAO instance;
 
+
         public OrderDAO()
         {
             _context = new AppDbContext();
@@ -587,8 +588,11 @@ namespace DataAccess.DAO
                             Note = refund.note,
                             Status = "Refunding"
                         };
-                        await _context.OrderDetails.AddAsync(_mapper.Map<OrderDetail>(orderDetail));
+                        var orderDetails = _mapper.Map<OrderDetail>(orderDetail);
+                        await _context.OrderDetails.AddAsync(orderDetails);
                         await _context.SaveChangesAsync();
+                        await HandleBatchQuantity(orderDetails);
+                        
                     }
                     return true;
             }
@@ -600,6 +604,32 @@ namespace DataAccess.DAO
                 throw new Exception(ex.Message);
             }
         }
+
+        private async Task HandleBatchQuantity(OrderDetail detail)
+        {
+            var remainingQuantity = detail.Quantity;
+            var batches = await BatchDAO.Instance.GetBatchesByMilkId(detail.MilkId);
+
+            foreach (var batch in batches)
+            {
+                if (remainingQuantity <= 0)
+                {
+                    break;
+                }
+
+                var batchQuantityToDeduct = Math.Min(batch.Quantity, remainingQuantity);
+                batch.Quantity -= batchQuantityToDeduct;
+                remainingQuantity -= batchQuantityToDeduct;
+
+                await BatchDAO.Instance.UpdateBatch(batch);
+            }
+
+            if (remainingQuantity > 0)
+            {
+                return;
+            }
+        }
+
         public async Task<bool> IsConpletedOrder(int orderId)
         {
             var order = await _context.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();

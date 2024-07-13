@@ -48,7 +48,7 @@ namespace MomMomMilks.Controllers
         {
             var coupon = _mapper.Map<Coupon>(create);
             await _couponService.AddCouponAsync(coupon);
-            return Created(coupon);
+            return Ok(coupon);
         }
         [HttpPost("usage")]
         public async Task<IActionResult> Post([FromQuery] string code, int orderId)
@@ -60,10 +60,11 @@ namespace MomMomMilks.Controllers
         [HttpPut("{key}")]
         public async Task<IActionResult> Put([FromODataUri] int key, [FromBody] CouponDTO update)
         {
+            update.Id = key;
             var coupon = _mapper.Map<Coupon>(update);
             await _couponService.UpdateCouponAsync(coupon);
 
-            return Updated(update);
+            return Ok(update);
         }
 
         [HttpDelete("{key}")]
