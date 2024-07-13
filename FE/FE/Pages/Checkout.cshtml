@@ -431,8 +431,8 @@
                 }
 
                 if (orderData) {
-                    console.log('Order placed successfully', orderData);
-                    alert('Order placed successfully');
+                    console.log('Đặt hàng thành công!', orderData);
+                    alert('Đặt hàng thành công');
                     await clearCart();
 
                     if (paymentTypeId === 1) { // OnlinePayment
@@ -441,12 +441,12 @@
                         window.location.href = './index';
                     }
                 } else {
-                    console.error('Failed to place order');
-                    alert('Failed to place order');
+                    console.error('Đặt hàng không thành công');
+                    alert('Đặt hàng không thành công');
                 }
             } catch (error) {
-                console.error('Error placing order:', error);
-                alert('Error placing order');
+                console.error('Lỗi đặt hàng:', error);
+                alert('Lỗi đặt hàng');
             }
         }
 

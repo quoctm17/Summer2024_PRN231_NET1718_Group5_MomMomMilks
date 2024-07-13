@@ -16,22 +16,28 @@ namespace Repository
 
         public async Task AddOrderAsync(Order order, List<OrderDetail> orderDetails)
         {
-
             try
             {
                 Console.WriteLine("Start AddOrderAsync in OrderRepository");
+
+                // Kiểm tra số lượng hàng tồn kho trước
+                foreach (var detail in orderDetails)
+                {
+                    await HandleBatchQuantity(detail);
+                }
+
+                // Sau khi đã kiểm tra và đủ số lượng, tiến hành tạo đơn hàng và chi tiết đơn hàng
                 await OrderDAO.Instance.AddOrderAsync(order);
                 Console.WriteLine("Order added in OrderRepository");
 
                 foreach (var detail in orderDetails)
                 {
                     detail.OrderId = order.Id;
-                    await HandleBatchQuantity(detail);
                     await OrderDetailsDAO.Instance.AddOrderDetailAsync(detail);
                     Console.WriteLine($"OrderDetail added: {detail.Id}");
                 }
 
-                // Create a transaction with default status as Pending
+                // Tạo giao dịch với trạng thái mặc định là Pending
                 var transaction = new Transaction
                 {
                     Status = "Pending",
@@ -42,7 +48,6 @@ namespace Repository
 
                 await TransactionDAO.Instance.AddTransaction(transaction);
                 Console.WriteLine("Transaction created successfully");
-
             }
             catch (Exception ex)
             {
@@ -60,6 +65,16 @@ namespace Repository
             var remainingQuantity = detail.Quantity;
             var batches = await BatchDAO.Instance.GetBatchesByMilkId(detail.MilkId);
 
+            // Tính tổng số lượng hàng tồn kho
+            var totalAvailableQuantity = batches.Sum(b => b.Quantity);
+
+            // Nếu tổng số lượng hàng tồn kho nhỏ hơn số lượng yêu cầu, ném ra ngoại lệ
+            if (totalAvailableQuantity < remainingQuantity)
+            {
+                throw new OutOfStockException("Not enough stock available to fulfill the order.");
+            }
+
+            // Trừ đi số lượng hàng tồn kho từng lô
             foreach (var batch in batches)
             {
                 if (remainingQuantity <= 0)
@@ -73,12 +88,9 @@ namespace Repository
 
                 await BatchDAO.Instance.UpdateBatch(batch);
             }
-
-            if (remainingQuantity > 0)
-            {
-                throw new OutOfStockException("Not enough stock available to fulfill the order.");
-            }
         }
+
+
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
