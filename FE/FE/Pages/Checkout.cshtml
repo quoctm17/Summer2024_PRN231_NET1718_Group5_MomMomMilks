@@ -196,7 +196,7 @@
         });
 
         async function validateOrderAmount() {
-            const totalAmount = parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', '')) * 1000;
+            const totalAmount = parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', ''));
             if (totalAmount > 5000000) {
                 alert('Tổng tiền không được vượt quá 5 triệu đồng.');
             } else {
@@ -385,7 +385,7 @@
                 orderStatusId = 2;
             }
 
-            const totalAmount = parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', '')) * 1000;
+            const totalAmount = parseFloat(document.getElementById('order-total').innerText.replace(' đ', '').replace('.', ''));
             const createAt = new Date().toISOString();
 
             const order = {
@@ -398,7 +398,7 @@
                 paymentTypeId: paymentTypeId,
                 orderStatusId: orderStatusId,
                 timeSlotId: parseInt(timeSlotSelect.value),
-                code: couponUsage.value,
+                code: couponUsage.text,
                 orderDetails: orderDetails
             };
 
@@ -584,7 +584,7 @@
         async function loadCoupons() {
             const token = sessionStorage.getItem('token');
             try {
-                let response = await fetch('http://localhost:5215/odata/Coupon', {
+                let response = await fetch('http://localhost:5215/odata/Coupon?$filter=status eq 1', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -642,13 +642,24 @@
                     console.log('Subtotal:', subtotal);
 
                     const discountInCurrency = discountAmount * 1000;
-                    const total = subtotal - discountInCurrency;
+                    if (subtotal > discountInCurrency) {
 
-                    console.log('Discount in currency:', discountInCurrency); // Log the discount in currency
-                    console.log('New total:', total); // Log the new total
+                        const total = subtotal - discountInCurrency;
 
-                    document.getElementById('order-discount').innerText = `${formatCurrency(discountInCurrency)} đ`;
-                    document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
+                        console.log('Discount in currency:', discountInCurrency); // Log the discount in currency
+                        console.log('New total:', total); // Log the new total
+
+                        document.getElementById('order-discount').innerText = `${formatCurrency(discountInCurrency)} đ`;
+                        document.getElementById('order-total').innerText = `${formatCurrency(total)} đ`;
+                    } else {
+                        console.log('Discount overprice subtotal');
+                        document.getElementById('order-discount').innerText = `${formatCurrency(0)} đ`;
+                        document.getElementById('order-total').innerText = `${formatCurrency(subtotal)} đ`;
+                        alert('Tổng tiền không đủ đề sử dụng mã giảm này');
+                        //reset coupon select
+                        document.getElementById('couponSelect').value = "";
+                        $('#couponSelect').niceSelect('update');
+                    }
                 } else {
                     console.error('Subtotal element not found');
                 }

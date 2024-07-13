@@ -1,0 +1,164 @@
+﻿@page
+@model FE.Pages.Customer.UserCouponModel
+@{
+    ViewData["Title"] = "My Coupons";
+}
+
+<style>
+    .sidebar {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        height: fit-content;
+    }
+
+    .main-content {
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+    }
+
+    .sidebar a:hover {
+        background-color: #ddd;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3 sidebar bg-light pt-4">
+            <div class="text-center mb-4">
+                @{
+                    @using Helpers
+                    @using Models
+                    var account = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+                }
+                @if (account != null)
+                {
+                    <h5>@account.UserName</h5>
+                }
+                else
+                {
+                    <script>
+                        window.location.href = '/Login';
+                    </script>
+                }
+            </div>
+            <div class="list-group list-group-flush">
+                <a asp-page="/Customer/UserInformation" asp-route-userId="@account?.Id" class="list-group-item list-group-item-action rounded">Thông tin của tôi</a>
+                <a href="/Customer/OrderHistory?userId=@account?.Id" class="list-group-item list-group-item-action rounded">Đơn hàng</a>
+                <a asp-page="/Customer/UserAddress" class="list-group-item list-group-item-action rounded">Địa chỉ</a>
+                <a asp-page="/Customer/UserCoupon" class="list-group-item list-group-item-action rounded">Coupon</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-lg-10 col-md-9 main-content pt-4">
+            <h2 class="mb-4">Mã giảm giá của tôi</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Giảm giá</th>
+                        <th>Ngày hết hạn</th>
+                        <th>Số lần sử dụng</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody id="couponList">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Thông báo</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationMessage">
+                <!-- Message will be inserted dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button id="closeNotificationModal" type="button" class="btn btn-primary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        getUserCoupons();
+    });
+
+    const token = sessionStorage.getItem('token');
+
+    async function getUserCoupons() {
+        const userId = getUserIdFromToken();
+
+        try {
+            let response = await fetch('http://localhost:5215/odata/Coupon?$filter=status eq 1', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            let data = await response.json();
+            console.log('API response:', data);
+            const coupons = data.value || data.$values;
+            const couponList = document.getElementById('couponList');
+            let sequenceNumber = 1;
+            for (const coupon of coupons) {
+                const expiryDate = new Date(coupon.epiryDate).toLocaleDateString('vi-VN');
+                const status = coupon.status === 1 ? "Hoạt động" : "Không hoạt động";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${sequenceNumber}</td>
+                                <td>${coupon.code}</td>
+                                <td>${coupon.name}</td>
+                                <td>${coupon.discount}</td>
+                                <td>${expiryDate}</td>
+                                <td>${coupon.numberOfUse}</td>
+                                <td>${status}</td>`;
+                couponList.appendChild(tr);
+                sequenceNumber++;
+            }
+        } catch (error) {
+            console.error('Error fetching user coupons:', error);
+            showErrorNotification('Không thể tải mã giảm giá.');
+        }
+    }
+
+    function showErrorNotification(message) {
+        document.getElementById('notificationMessage').innerText = message;
+        const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+        notificationModal.show();
+
+        document.getElementById('closeNotificationModal').addEventListener('click', function () {
+            window.location.href = './UserCoupon';
+        }, { once: true });
+    }
+
+    function getUserIdFromToken() {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.nameid;
+        }
+        return null;
+    }
+</script>
