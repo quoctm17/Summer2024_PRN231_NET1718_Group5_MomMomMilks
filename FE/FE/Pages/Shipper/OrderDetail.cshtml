@@ -265,27 +265,28 @@
         </div>
         <div class="progress-track">
             <ul id="progressbar">
-                @if (Model.Order.OrderStatusName == "Paying")
+                @if (Model.Order.OrderStatusName == "Chờ thanh toán")
                 {
                     <li class="step0 active" id="step1">Chờ thanh toán</li>
                     <li class="step0 active text-center" id="step2">Đã thanh toán</li>
                     <li class="step0 text-right" id="step3">Đang vận chuyển</li>
                     <li class="step0 text-right" id="step4">Hoàn thành</li>
-                } else if(Model.Order.OrderStatusName == "Shipping")
+                }
+                else if (Model.Order.OrderStatusName == "Đang vận chuyển")
                 {
                     <li class="step0 active" id="step1">Chờ thanh toán</li>
                     <li class="step0 active text-center" id="step2">Đã thanh toán</li>
                     <li class="step0 active text-right" id="step3">Đang vận chuyển</li>
                     <li class="step0 text-right" id="step4">Hoàn thành</li>
                 }
-                else if (Model.Order.OrderStatusName == "Completed")
+                else if (Model.Order.OrderStatusName == "Hoàn thành")
                 {
                     <li class="step0 active" id="step1">Chờ thanh toán</li>
                     <li class="step0 active text-center" id="step2">Đã thanh toán</li>
                     <li class="step0 active text-right" id="step3">Đang vận chuyển</li>
                     <li class="step0 active text-right" id="step4">Hoàn thành</li>
                 }
-                else if (Model.Order.OrderStatusName == "Cancelled")
+                else if (Model.Order.OrderStatusName == "Hủy")
                 {
                     <li class="step0 active" id="step1">Chờ thanh toán</li>
                     <li class="step0 active text-center" id="step2">Đã thanh toán</li>
@@ -299,7 +300,7 @@
 
         <div class="footer">
             <div class="row">
-                @if(Model.Order.OrderStatusName == "Shipping")
+                @if (Model.Order.OrderStatusName == "Đang vận chuyển")
                 {
                     <form method="post">
                         <input type="hidden" asp-for="Order.Id"/>
