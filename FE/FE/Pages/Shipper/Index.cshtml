@@ -36,25 +36,39 @@
                     <p class="fw-normal mb-1">@order.ScheduleTimeSlot</p>
                 </td>
                 <td>
-                    @if(order.OrderStatusName == "Paying")
+                    @if (order.OrderStatusName == "Chờ thanh toán")
                     {
                         <span class="badge badge-warning rounded-pill d-inline">
                             Đang chờ thanh toán
                         </span>
-                    } else if(order.OrderStatusName == "Shipping")
+                    }
+                    else if (order.OrderStatusName == "Đang vận chuyển")
                     {
                         <span class="badge badge-info rounded-pill d-inline">
                             Đang vận chuyển
                         </span>
-                    } else if(order.OrderStatusName == "Completed")
+                    }
+                    else if (order.OrderStatusName == "Hoàn thành")
                     {
                         <span class="badge badge-success rounded-pill d-inline">
                             Đã hoàn thành
                         </span>
-                    } else if(order.OrderStatusName == "Cancelled")
+                    }
+                    else if (order.OrderStatusName == "Hủy")
                     {
                         <span class="badge badge-danger rounded-pill d-inline">
                             Đã hủy
+                        </span>
+                    }
+                    else if (order.OrderStatusName == "Hoàn trả")
+                    {
+                        <span class="badge badge-danger rounded-pill d-inline">
+                            Hoàn trả
+                        </span>
+                    } else
+                    {
+                        <span class="badge badge-info rounded-pill d-inline">
+                            @order.OrderStatusName
                         </span>
                     }
 
