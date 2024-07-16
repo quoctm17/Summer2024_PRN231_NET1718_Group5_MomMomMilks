@@ -50,7 +50,7 @@ namespace MomMomMilks.Extensions
                 initialDelay = new TimeSpan(24, 0, 0) - now + _morningStart;
             }
 
-            _timer = new Timer(RunTaskIfInTimeWindow, null, initialDelay, TimeSpan.FromMinutes(1));
+            _timer = new Timer(RunTaskIfInTimeWindow, null, initialDelay, Timeout.InfiniteTimeSpan);
         }
         private async void RunTaskIfInTimeWindow(object? state)
         {

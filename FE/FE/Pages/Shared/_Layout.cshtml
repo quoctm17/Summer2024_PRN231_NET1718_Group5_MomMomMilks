@@ -159,6 +159,13 @@
                                     Đơn hàng của bạn
                                 </a>
                             }
+                            @if (account.Role == "Manager")
+                            {
+                                <a class="nav-link" href="/Manager/ManageOrder/index">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                    Quản lý đơn hàng
+                                </a>
+                            }
 
                         </div>
                     </div>

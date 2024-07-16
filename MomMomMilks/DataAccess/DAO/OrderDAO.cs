@@ -44,6 +44,7 @@ namespace DataAccess.DAO
                 var order = await _context.Orders
                     .Include(o => o.OrderDetails)
                     .ThenInclude(o => o.Milk)
+                    .Include(o => o.Buyer)
                     .ToListAsync();
                 orderDTO = _mapper.Map<List<OrderDTO>>(order);
             }
@@ -349,7 +350,8 @@ namespace DataAccess.DAO
         private int GetDistrictIdFromOrderAddress(Order order)
         {
             // Retrieve DistrictId from the order's Address
-            return order.Address.DistrictId;
+            var address = _context.Addresses.Where(a => a.Id == order.AddressId).Include(c => c.District).FirstOrDefault();
+            return address.District.Id;
         }
 
         private List<Shipper> GetAvailableShippersByDistrictId(int districtId)
