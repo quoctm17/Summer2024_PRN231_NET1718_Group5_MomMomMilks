@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Pages\Account\" />
+    <Folder Include="Pages\Manager\ManageCoupon\" />
   </ItemGroup>
 
 </Project>
