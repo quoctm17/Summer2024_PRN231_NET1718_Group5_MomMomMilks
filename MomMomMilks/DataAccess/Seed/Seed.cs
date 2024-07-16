@@ -209,10 +209,10 @@ namespace DataAccess.Seed
 
             var list = new List<Category>
             {
-                new Category {Name="Chilren Milk", Description = "Powdered milk for infants or children over 12 months old"},
-                new Category {Name="Baby Milk", Description = "Milk for children from 3 to 12 years old"},
-                new Category {Name="Dairy Cow", Description = "Milk for children from 12 years old and adults"},
-                new Category {Name="Pregnant Milk", Description="Powdered milk for pregnant mothers"}
+                new Category {Name="Sữa trẻ em", Description = "Sữa bột cho trẻ sơ sinh hoặc trẻ em trên 12 tháng tuổi"},
+                new Category {Name="Sữa cho bé", Description = "Sữa cho trẻ từ 3 đến 12 tuổi"},
+                new Category {Name="Sữa bò tươi", Description = "Sữa cho trẻ từ 12 tuổi và người lớn"},
+                new Category {Name="Sữa cho mẹ bầu", Description="Sữa bột cho các mẹ bầu"}
             };
 
             foreach (var i in list)

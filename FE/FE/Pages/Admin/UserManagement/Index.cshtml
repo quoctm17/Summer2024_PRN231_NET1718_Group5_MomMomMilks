@@ -237,24 +237,25 @@
         const email = document.getElementById('createEmail').value;
         const role = document.getElementById('createRole');
 
-        // Validation
-        const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
-        if (!usernameRegex.test(userName)) {
-            showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt.');
-            return;
-        }
+            // Validation
+            const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
+            if (!userName || userName[0] === ' ' || !usernameRegex.test(userName)) {
+                showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt, và không bắt đầu bằng dấu cách.');
+                return;
+            }
 
-        const phoneNumberRegex = /^\d{10}$/;
-        if (!phoneNumberRegex.test(phoneNumber)) {
-            showNotification('Số điện thoại phải có chính xác 10 chữ số.');
-            return;
-        }
+            const phoneNumberRegex = /^\d{10}$/;
+            if (!phoneNumber || phoneNumber[0] === ' ' || !phoneNumberRegex.test(phoneNumber)) {
+                showNotification('Số điện thoại phải có chính xác 10 chữ số và không bắt đầu bằng dấu cách.');
+                return;
+            }
 
-        const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-        if (!emailRegex.test(email)) {
-            showNotification('Vui lòng nhập địa chỉ email hợp lệ.');
-            return;
-        }
+            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (!email || email[0] === ' ' || !emailRegex.test(email)) {
+                showNotification('Vui lòng nhập địa chỉ email hợp lệ và không bắt đầu bằng dấu cách.');
+                return;
+            }
+
 
         const user = {
             userName: userName,
@@ -346,23 +347,24 @@
                 role: $("#updateRole").val()
             };
 
-            const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
-            if (!usernameRegex.test(updateUser.userName)) {
-                showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt.');
-                return;
-            }
+                const usernameRegex = /^[A-Za-zÀ-Ỹà-ỹ\s]+$/;
+                if (!updateUser.userName || updateUser.userName[0] === ' ' || !usernameRegex.test(updateUser.userName)) {
+                    showNotification('Tên người dùng chỉ có thể chứa chữ cái, dấu cách và ký tự tiếng Việt, và không bắt đầu bằng dấu cách.');
+                    return;
+                }
 
-            const phoneNumberRegex = /^\d{10}$/;
-            if (!phoneNumberRegex.test(updateUser.phoneNumber)) {
-                showNotification('Số điện thoại phải có chính xác 10 chữ số.');
-                return;
-            }
+                const phoneNumberRegex = /^\d{10}$/;
+                if (!updateUser.phoneNumber || updateUser.phoneNumber[0] === ' ' || !phoneNumberRegex.test(updateUser.phoneNumber)) {
+                    showNotification('Số điện thoại phải có chính xác 10 chữ số và không bắt đầu bằng dấu cách.');
+                    return;
+                }
 
-            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-            if (!emailRegex.test(updateUser.email)) {
-                showNotification('Vui lòng nhập địa chỉ email hợp lệ.');
-                return;
-            }
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if (!updateUser.email || updateUser.email[0] === ' ' || !emailRegex.test(updateUser.email)) {
+                    showNotification('Vui lòng nhập địa chỉ email hợp lệ và không bắt đầu bằng dấu cách.');
+                    return;
+                }
+
 
             if (!updateUser.id || !updateUser.userName || !updateUser.email || !updateUser.phoneNumber || !updateUser.status || !updateUser.role) {
                 showNotification("Hãy điền đủ thông tin");
