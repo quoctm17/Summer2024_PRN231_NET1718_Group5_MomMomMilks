@@ -47,6 +47,7 @@
                         <span class="text-danger" asp-validation-for="Credential.Password"></span>
                     </div>
 
+
                     <div class="flex-sb-m w-full p-t-3 p-b-32">
                         <div>
                             <a href="/forgotpassword" class="txt1">
@@ -84,6 +85,23 @@
     <script src="js/main.js"></script>
 
     <script>
+        $(document).ready(function () {
+            $('.input100').each(function () {
+                if ($(this).val().trim() !== "") {
+                    $(this).addClass('has-val');
+                }
+            });
+
+            $('.input100').on('blur', function () {
+                if ($(this).val().trim() !== "") {
+                    $(this).addClass('has-val');
+                } else {
+                    $(this).removeClass('has-val');
+                }
+            });
+        });
+
+
         document.addEventListener('DOMContentLoaded', function () {
             const token = sessionStorage.getItem('token');
             console.log('Token from sessionStorage:', token);
