@@ -184,5 +184,9 @@ namespace Repository
         {
             return await OrderDAO.Instance.IsConpletedOrder(orderId);
         }
+        public async Task<bool> ConfirmRefund(int orderId)
+        {
+            return await OrderDAO.Instance.ConfirmRefund(orderId);
+        }
     }
 }

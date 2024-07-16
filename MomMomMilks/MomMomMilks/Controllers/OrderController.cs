@@ -249,5 +249,13 @@ namespace MomMomMilks.Controllers
 
             return Ok(topProductsDto);
         }
+
+        [HttpPut("confirm-refund")]
+        [Authorize(Policy = "RequireManagerRole")]
+        public async Task<IActionResult> ConfirmRefund([FromQuery] int orderId)
+        {
+            var result = await _orderService.ConfirmRefund(orderId);
+            return Ok(result);
+        }
     }
 }
