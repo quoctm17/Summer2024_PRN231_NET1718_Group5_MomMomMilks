@@ -65,7 +65,7 @@
     </section>
     <!-- Hero Section End -->
     <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
+    <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg" style="background-image: url('img/breadcrumb.jpg'); background-color: #000000;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -256,10 +256,25 @@
             const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             const token = sessionStorage.getItem('token');
 
+            //if (cart.length === 0) {
+            //    if (confirm("Giỏ hàng hiện tại của bạn trống. Nếu bạn tiếp tục, nó có thể xóa giỏ hàng bạn đã lưu trước đó. Bạn có chắc không?")) {
+            //        await clearCartInDatabase(token);
+            //    }
+            //    return;
+            //}
             if (cart.length === 0) {
-                if (confirm("Giỏ hàng hiện tại của bạn trống. Nếu bạn tiếp tục, nó có thể xóa giỏ hàng bạn đã lưu trước đó. Bạn có chắc không?")) {
-                    await clearCartInDatabase(token);
-                }
+                Swal.fire({
+                    title: 'Giỏ hàng trống!',
+                    text: 'Giỏ hàng hiện tại của bạn trống. Nếu bạn tiếp tục, nó có thể xóa giỏ hàng bạn đã lưu trước đó. Bạn có chắc không?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Không'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await clearCartInDatabase(token);
+                    }
+                });
                 return;
             }
 
@@ -279,15 +294,32 @@
                 });
 
                 if (response.ok) {
-                    alert('Giỏ hàng đã lưu thành công!');
+                    //alert('Giỏ hàng đã lưu thành công!');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Giỏ hàng đã lưu thành công!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 } else {
                     const errorText = await response.text();
                     console.error('Failed to save cart:', errorText);
-                    alert(`Không thể lưu giỏ hàng: ${errorText}`);
+                    //alert(`Không thể lưu giỏ hàng: ${errorText}`);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: `Không thể lưu giỏ hàng: ${errorText}`
+                    });
                 }
             } catch (error) {
                 console.error('Error saving cart:', error);
-                alert('Không thể lưu giỏ hàng');
+                //alert('Không thể lưu giỏ hàng');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Không thể lưu giỏ hàng'
+                });
             }
         }
 
@@ -317,23 +349,50 @@
                         updateCartTotalPrice();
                     } else {
                         console.error('Failed to load cart from database.');
-                        alert('Không thể tải giỏ hàng từ cơ sở dữ liệu.');
+                        //alert('Không thể tải giỏ hàng từ cơ sở dữ liệu.');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Không thể tải giỏ hàng từ cơ sở dữ liệu.'
+                        });
                     }
                 } catch (error) {
                     console.error('Error loading cart from database:', error);
-                    alert('Không thể tải giỏ hàng từ cơ sở dữ liệu.');
+                    //alert('Không thể tải giỏ hàng từ cơ sở dữ liệu.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Không thể tải giỏ hàng từ cơ sở dữ liệu.'
+                    });
                 }
             } else {
-                alert('Người dùng không đăng nhập.');
+                //alert('Người dùng không đăng nhập.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Chưa đăng nhập!',
+                    text: 'Người dùng không đăng nhập.'
+                });
             }
         }
 
         function confirmLoadCartFromDatabase() {
             let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             if (cart.length > 0) {
-                if (confirm("Giỏ hàng hiện tại của bạn không trống. Nếu bạn tải giỏ hàng bạn đã lưu trước đó, giỏ hàng hiện tại có thể bị mất. Bạn có chắc không?")) {
-                    loadCartFromDatabase();
-                }
+                //if (confirm("Giỏ hàng hiện tại của bạn không trống. Nếu bạn tải giỏ hàng bạn đã lưu trước đó, giỏ hàng hiện tại có thể bị mất. Bạn có chắc không?")) {
+                //    loadCartFromDatabase();
+                //}
+                Swal.fire({
+                    title: 'Tải giỏ hàng đã lưu?',
+                    text: 'Giỏ hàng hiện tại của bạn không trống. Nếu bạn tải giỏ hàng bạn đã lưu trước đó, giỏ hàng hiện tại có thể bị mất. Bạn có chắc không?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Không'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        loadCartFromDatabase();
+                    }
+                });
             } else {
                 loadCartFromDatabase();
             }
@@ -349,14 +408,31 @@
                 });
 
                 if (response.ok) {
-                    alert('Giỏ hàng đã xóa thành công trong cơ sở dữ liệu.');
+                    /*alert('Giỏ hàng đã xóa thành công trong cơ sở dữ liệu.');*/
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Giỏ hàng đã xóa thành công trong cơ sở dữ liệu!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 } else {
                     console.error('Failed to clear cart in the database.');
-                    alert('Không thể xóa giỏ hàng trong cơ sở dữ liệu.');
+                    //alert('Không thể xóa giỏ hàng trong cơ sở dữ liệu.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Không thể xóa giỏ hàng trong cơ sở dữ liệu.'
+                    });
                 }
             } catch (error) {
                 console.error('Error clearing cart in the database:', error);
-                alert('Lỗi xóa giỏ hàng trong cơ sở dữ liệu.');
+                //alert('Lỗi xóa giỏ hàng trong cơ sở dữ liệu.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Lỗi xóa giỏ hàng trong cơ sở dữ liệu.'
+                });
             }
         }
 
@@ -377,9 +453,21 @@
         }
 
         function confirmRemoveFromCart(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa mặt hàng này khỏi giỏ hàng không?")) {
-                removeFromCart(id);
-            }
+            //if (confirm("Bạn có chắc chắn muốn xóa mặt hàng này khỏi giỏ hàng không?")) {
+            //    removeFromCart(id);
+            //}
+            Swal.fire({
+                title: 'Xóa sản phẩm?',
+                text: 'Bạn có chắc chắn muốn xóa mặt hàng này khỏi giỏ hàng không?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    removeFromCart(id);
+                }
+            });
         }
 
         function removeFromCart(id) {
@@ -391,12 +479,28 @@
         }
 
         function clearCart() {
-            if (confirm("Bạn có chắc chắn muốn xóa giỏ hàng không?")) {
-                sessionStorage.removeItem('cart');
-                loadCartFromSessionStorage();
-                updateCartCount();
-                updateCartTotalPrice();
-            }
+            //if (confirm("Bạn có chắc chắn muốn xóa giỏ hàng không?")) {
+            //    sessionStorage.removeItem('cart');
+            //    loadCartFromSessionStorage();
+            //    updateCartCount();
+            //    updateCartTotalPrice();
+            //}
+
+            Swal.fire({
+                title: 'Xóa giỏ hàng?',
+                text: 'Bạn có chắc chắn muốn xóa giỏ hàng không?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sessionStorage.removeItem('cart');
+                    loadCartFromSessionStorage();
+                    updateCartCount();
+                    updateCartTotalPrice();
+                }
+            });
         }
 
         function updateCartTotal(cartItems) {
