@@ -14,13 +14,16 @@ namespace FE.Pages.Customer
         }
         
         public List<OrderDetailHistory> OrderDetailHistory { get; set; }
-
+        [BindProperty]
+        public int OrderId { get; set; } = default(int);
         public async Task<IActionResult> OnGetAsync(int id)
         {
             if(id == null)
             {
                 return NotFound();
             }
+
+            OrderId = id;
 
             OrderDetailHistory = await _orderService.GetAllOrderDetailHistory(id);
             if(OrderDetailHistory == null)

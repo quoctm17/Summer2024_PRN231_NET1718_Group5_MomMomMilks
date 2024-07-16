@@ -1,0 +1,261 @@
+﻿@page
+@model FE.Pages.Manager.ManageOrder.IndexModel
+@{
+    ViewData["Title"] = "Order Management";
+}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Quản lý đơn hàng
+    </div>
+    <div class="p-4">
+        <button class="btn btn-success" id="btnCreateOrder">
+            Tạo mới đơn hàng
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table" id="orderTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ngày tạo</th>
+                    <th>Ngày cập nhật</th>
+                    <th>Số tiền</th>
+                    <th>Khách hàng</th>
+                    <th>Địa chỉ</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="orderList" class="font-weight-light">
+            </tbody>
+        </table>
+    </div>
+</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            getOrders();
+            document.getElementById('btnCreateOrder').addEventListener('click', showCreate);
+        });
+
+        async function getOrders() {
+            try {
+            const token = sessionStorage.getItem('token');
+                const response = await fetch(`http://localhost:5215/odata/Order`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                const orders = data.value || data.$values;
+                const orderList = document.getElementById('orderList');
+
+                // Clear the current list to prevent duplication
+                orderList.innerHTML = '';
+
+                let sequenceNumber = 1;
+                for (const order of orders) {
+                    const createAt = new Date(order.createAt).toLocaleDateString('vi-VN');
+                    const updateAt = new Date(order.updateAt).toLocaleDateString('vi-VN');
+                    const address = await getOrderAddress(order.addressId);
+                    const statusName = await getOrderStatus(order.orderStatusId);
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${sequenceNumber}</td>
+                                                    <td>${createAt}</td>
+                                                    <td>${updateAt}</td>
+                                                    <td>${order.totalAmount}</td>
+                                                    <td>${order.buyerId}</td>
+                                                    <td>${address}</td>
+                                                    <td>${statusName}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
+                                                    </td>
+                                                        <td>
+                                                            <button class="btn btn-primary btn-sm btnRefund" data-order='${JSON.stringify(order)}'>Xác nhận hoàn trả</button>
+                                                        </td>`;
+                    orderList.appendChild(tr);
+                    sequenceNumber++;
+                }
+
+                const editButtons = document.querySelectorAll('.btnEdit');
+                editButtons.forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const order = JSON.parse(event.target.getAttribute('data-order'));
+                        showUpdate(order);
+                    });
+                });
+            } catch (error) {
+                console.error('Failed to fetch orders:', error);
+                showErrorNotification('Không thể tải đơn hàng.');
+            }
+        }
+
+        async function getOrderAddress(addressId) {
+            try {
+            const token = sessionStorage.getItem('token');
+                let response = await fetch(`http://localhost:5215/odata/Address?$filter=id eq ${addressId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                let data = await response.json();
+                const address = data.value ? data.value[0] : data.$values[0];
+                const districtName = await fetchDistrictName(address.districtId);
+                const wardName = await fetchWardName(address.wardId);
+                return `${address.houseNumber} ${address.street}, ${wardName}, ${districtName}`;
+            } catch (error) {
+                console.error('Error fetching address:', error);
+                return 'Không tìm thấy địa chỉ';
+            }
+        }
+
+        async function getOrderStatus(orderStatusId) {
+            try {
+            const token = sessionStorage.getItem('token');
+                const response = await fetch(`http://localhost:5215/odata/Order/OrderStatus?$filter=id eq ${orderStatusId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch status: ${response.status} - ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.$values && data.$values.length > 0) {
+                    return data.$values[0].name;
+                } else {
+                    throw new Error('Empty response or invalid data format');
+                }
+            } catch (error) {
+                console.error('Error fetching status:', error);
+                throw error;
+            }
+        }
+
+        async function fetchDistrictName(districtId) {
+            const apiUrl = `http://localhost:5215/odata/Districts?$filter=id eq ${districtId}`;
+        const token = sessionStorage.getItem('token');
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                const district = data.value ? data.value[0] : data.$values[0];
+                return district ? district.name : 'Không tìm thấy';
+            } catch (error) {
+                console.error('Error fetching district name:', error);
+                return 'Không tìm thấy';
+            }
+        }
+
+        async function fetchWardName(wardId) {
+            const apiUrl = `http://localhost:5215/odata/Wards?$filter=id eq ${wardId}`;
+            try {
+            const token = sessionStorage.getItem('token');
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                const ward = data.value ? data.value[0] : data.$values[0];
+                return ward ? ward.name : 'Không tìm thấy';
+            } catch (error) {
+                console.error('Error fetching ward name:', error);
+                return 'Không tìm thấy';
+            }
+        }
+
+        function showCreate() {
+            const createModal = new bootstrap.Modal(document.getElementById('createOrderModal'));
+            createModal.show();
+        }
+
+        function showUpdate(order) {            
+            document.getElementById('updateId').value = order.id;
+            document.getElementById('updateBuyerId').value = order.buyerId;
+            document.getElementById('updateAddressId').value = order.addressId;
+            document.getElementById('updateTotalAmount').value = order.totalAmount;
+            document.getElementById('updateOrderStatusId').value = order.orderStatusId;
+            const updateModal = new bootstrap.Modal(document.getElementById('updateOrderModal'));
+            updateModal.show();
+
+            document.getElementById('btnUpdateOrder').addEventListener('click', updateOrder);
+        }
+
+        async function updateOrder() {
+            const id = document.getElementById('updateId').value;
+            const buyerId = document.getElementById('updateBuyerId').value;
+            const addressId = document.getElementById('updateAddressId').value;
+            const totalAmount = document.getElementById('updateTotalAmount').value;
+            const orderStatusId = document.getElementById('updateOrderStatusId').value;
+
+            try {
+                const response = await fetch(`http://localhost:5215/odata/Order/${id}?key=${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        id,
+                        buyerId,
+                        addressId,
+                        totalAmount,
+                        orderStatusId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }                
+                const updateModal = bootstrap.Modal.getInstance(document.getElementById('updateOrderModal'));
+                updateModal.hide();
+
+                showSuccessNotification('Cập nhật đơn hàng thành công.');
+                getOrders();
+            } catch (error) {
+                console.error('Failed to update order:', error);
+                showErrorNotification('Không thể cập nhật đơn hàng.');
+            }
+        }
+
+        function showErrorNotification(message) {
+            document.getElementById('notificationMessage').textContent = message;
+            const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+            notificationModal.show();
+        }
+
+        function showSuccessNotification(message) {
+            document.getElementById('notificationMessage').textContent = message;
+            const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+            notificationModal.show();
+        }
+
+    </script>
+}

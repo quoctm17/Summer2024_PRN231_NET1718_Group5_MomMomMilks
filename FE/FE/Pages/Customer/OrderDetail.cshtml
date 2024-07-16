@@ -26,6 +26,11 @@
         .sidebar a:hover {
             background-color: #ddd;
         }
+
+    .hidden-column {
+        display: none;
+    }
+
 </style>
 @{
     @using Helpers
@@ -69,7 +74,7 @@
                                 <th>Tiền</th>
                                 <th>Giảm giá</th>
                                 <th>Tổng tiền</th>
-                                <th>Hoàn trả</th>
+                                <th class="refund-column">Hoàn trả</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -84,7 +89,7 @@
                                     <td>@order.Discount</td>
                                     <td>@order.Total</td>
 
-                                    <td><input type="checkbox" class="refund-checkbox" data-order-id="@order.Id"></td>
+                                    <td class="refund-column"><input type="checkbox" class="refund-checkbox" data-order-id="@order.Id"></td>
 
                                 </tr>
                             }
@@ -149,7 +154,7 @@
     let currentOrderDetailId = null;
 
     async function submitRefundList(refundList) {
-        const url = `http://localhost:5215/odata/Order/Refund`;
+        const url = 'http://localhost:5215/odata/Order/Refund';
         const token = sessionStorage.getItem('token');
         if (token) {
             try {
@@ -235,7 +240,7 @@
             }
         });
 
-        const orderId = 2; // Replace with the actual order ID you want to check
+        const orderId = @Model.OrderId; // Replace with the actual order ID you want to check
         submitRefundsButton.hidden = true;
 
         console.log('Button found:', submitRefundsButton); // Debug log
@@ -256,13 +261,16 @@
                 } else {
                     console.log('Hiding button');
                     submitRefundsButton.hidden = true; // Hide the button
+                        var refundColumns = document.querySelectorAll('.refund-column');
+                        refundColumns.forEach(function (column) {
+                            column.classList.add('hidden-column');
+                        });
                 }
             })
             .catch(error => {
                 console.error('Error fetching order status:', error);
                 submitRefundsButton.hidden = true; // Hide the button in case of error
             });
-    });
     });
     
 </script>
