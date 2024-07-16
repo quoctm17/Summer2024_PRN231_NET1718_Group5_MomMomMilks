@@ -134,7 +134,7 @@
                                         <ul class="product__item__pic__hover">
                                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                            <li><a href="javascript:void(0)" onclick="addToCart(@milk.Id, '@milk.Name', @milk.Price, '@milk.ImageUrl')"><i class="fa fa-shopping-cart"></i></a></li>
+                                            <li><a href="javascript:void(0);" onclick="addToCart(@milk.Id, '@milk.Name', @milk.Price, '@milk.ImageUrl')"><i class="fa fa-shopping-cart"></i></a></li>
                                         </ul>
                                     </div>
                                     <div class="product__item__text">
@@ -171,20 +171,24 @@
 
 
         async function addToCart(id, name, price, imageUrl) {
-            try {
-                let response = await fetch(`http://localhost:5215/odata/Cart/AddItem?milkId=${id}&quantity=1`, {
-                    method: 'POST'
-                });
-                if (response.ok) {
-                    alert('Added to cart successfully!');
-                    updateCartCount(); // Cập nhật số lượng sản phẩm trong giỏ hàng sau khi thêm
-                } else {
-                    alert('Failed to add to cart.');
-                }
-            } catch (error) {
-                console.error('Error adding to cart:', error);
-                alert('Error adding to cart.');
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            let existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, imageUrl, quantity: 1 });
             }
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            // Sử dụng SweetAlert2 để hiển thị thông báo
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Thêm vào giỏ hàng thành công!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            updateCartCount();
+            updateCartTotalPrice();
         }
 
         $(function () {
@@ -197,33 +201,10 @@
             document.getElementById('form-' + categoryId).submit();
         }
 
-        async function updateCartCount() {
-            try {
-                let response = await fetch('http://localhost:5215/odata/Cart');
-                if (response.ok) {
-                    let cart = await response.json();
-                    console.log('API response:', cart); // Check the response from the API
-
-                    // Get cart data from $values ​​property
-                    let cartItems = cart.$values || [];
-
-                    // Check if cartItems is an array
-                    if (Array.isArray(cartItems)) {
-                        let count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                        document.getElementById('cart-count').innerText = count;
-                    } else {
-                        console.error('Cart items is not an array:', cartItems);
-                    }
-                } else {
-                    console.error('Failed to fetch cart count.');
-                }
-            } catch (error) {
-                console.error('Error fetching cart count:', error);
-            }
-        }
 
         document.addEventListener('DOMContentLoaded', function () {
-            updateCartCount(); // Update the number of products in the cart when the page reloads
+            updateCartCount();
+            updateCartTotalPrice();
         });
 
     </script>
