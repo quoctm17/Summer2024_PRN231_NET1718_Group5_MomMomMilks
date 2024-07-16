@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     @if (account != null && (account.Role == "Admin" || account.Role == "Manager" || account.Role == "Shipper"))
     {
         <link rel="stylesheet" href="~/css/admin.css" type="text/css">
@@ -237,7 +238,7 @@ else
                             </div>
                             <div class="header__top__right__language">
                                 <img src="~/img/language.png" alt="">
-                                <div>English</div>
+                                <div>Tiếng Việt</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
                                     <li><a href="#">Tiếng Việt</a></li>
@@ -404,6 +405,7 @@ else
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/main.js"></script>
     <script src="~/lib/datatables/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
