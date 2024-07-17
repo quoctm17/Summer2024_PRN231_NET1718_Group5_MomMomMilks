@@ -247,5 +247,21 @@ namespace MomMomMilks.Controllers
 
             return Ok(topProductsDto);
         }
+
+        // Test method to manually trigger auto-assign for testing
+        [HttpPost("AutoAssignTest")]
+        //[Authorize(Policy = "RequireManagerRole")]
+        public async Task<IActionResult> AutoAssignTest([FromQuery] DateTime orderDate, [FromQuery] string timeSlot)
+        {
+            try
+            {
+                await _orderService.AutoAssignOrdersToShippers(orderDate, timeSlot);
+                return Ok(new { message = "Auto assign completed successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
     }
 }

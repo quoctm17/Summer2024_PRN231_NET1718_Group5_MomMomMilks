@@ -329,7 +329,7 @@ namespace DataAccess.DAO
                     UpdateTimeSlotAndOrderDate(ref orderDate, ref timeSlot);
 
                     // Save changes to the database
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync(); // Ensure async save
 
                     // Exit the loop after assigning Shipper to the order
                     break;
@@ -377,7 +377,6 @@ namespace DataAccess.DAO
             _shippedOrdersCounts[shipper.Id]++;
         }
 
-
         private void UpdateShipperStatus(Shipper shipper, DateTime orderDate, string timeSlot)
         {
             // Check if shipper has been assigned all orders in current time slot
@@ -416,9 +415,13 @@ namespace DataAccess.DAO
                 orderDate = orderDate.AddDays(1); // Next day
                 timeSlot = "Morning"; // Morning of the next day
             }
-            else
+            else if (timeSlot == "Morning")
             {
                 timeSlot = "Afternoon"; // Afternoon for other times
+            }
+            else if (timeSlot == "Afternoon")
+            {
+                timeSlot = "Evening"; // Evening for other times
             }
         }
 
