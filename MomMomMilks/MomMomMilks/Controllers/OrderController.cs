@@ -262,6 +262,7 @@ namespace MomMomMilks.Controllers
             {
                 return StatusCode(500, new { message = ex.Message });
             }
+        }
 
         [HttpPut("confirm-refund")]
         [Authorize(Policy = "RequireManagerRole")]
