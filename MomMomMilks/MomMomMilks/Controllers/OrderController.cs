@@ -263,6 +263,14 @@ namespace MomMomMilks.Controllers
             }
         }
 
+        [HttpPut("cancel-order")]
+        [Authorize]
+        public async Task<IActionResult> CancelOrder([FromQuery] int orderId)
+        {
+            await _orderService.CancelOrder(orderId);
+            return Ok("Cancel Order Successfully");
+        }
+
         [HttpPut("confirm-refund")]
         [Authorize/*(Policy = "RequireManagerRole")*/]
         public async Task<IActionResult> ConfirmRefund([FromQuery] int orderId)

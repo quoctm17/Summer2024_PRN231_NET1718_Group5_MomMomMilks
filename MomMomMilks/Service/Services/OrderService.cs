@@ -131,6 +131,10 @@ namespace Service.Services
         {
             return await _orderRepository.IsConpletedOrder(orderId);
         }
+        public async Task CancelOrder(int orderId)
+        {
+            await _orderRepository.CancelOrder(orderId);
+        }
         public async Task<bool> ConfirmRefund(int orderId)
         {
             return await _orderRepository.ConfirmRefund(orderId);
