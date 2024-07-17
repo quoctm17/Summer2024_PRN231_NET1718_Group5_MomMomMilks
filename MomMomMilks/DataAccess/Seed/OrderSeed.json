@@ -300,10 +300,10 @@
     "UpdateAt": "2024-07-17T18:00:00",
     "OrderDate": "2024-07-17T18:00:00",
     "TotalAmount": 1200000,
-    "BuyerId": 3,
-    "AddressId": 6,
+    "BuyerId": 1,
+    "AddressId": 1,
     "PaymentTypeId": 2,
-    "OrderStatusId": 2,
+    "OrderStatusId": 4,
     "TimeSlotId": 3
   }
 ]
