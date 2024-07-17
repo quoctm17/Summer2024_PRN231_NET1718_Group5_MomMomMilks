@@ -303,11 +303,12 @@
                 @if (Model.Order.OrderStatusName == "Đang vận chuyển" || Model.Order.OrderStatusName == "Hoàn trả")
                 {
                     <form method="post">
-                        <input type="hidden" asp-for="Order.Id"/>
+                        @* <input type="hidden" asp-for="Order.Id"> *@
                         <button type="submit" asp-page-handler="ConfirmShipped" class="btn btn-success w-auto me-3">Đã giao</button>
+                        @* <button type="submit" class="btn btn-success w-auto me-3">Đã giao</button> *@
                         <button type="submit" asp-page-handler="ConfirmCancelled" class="btn btn-danger w-auto">Khách hàng hủy</button>
-                        <button type="button" id="btnRefund" class="btn btn-warning w-auto">Trả hàng</button>
                     </form>
+                    <button type="button" id="btnRefund" class="btn btn-warning w-auto">Trả hàng</button>
                 } 
                 else
                 {
@@ -354,7 +355,7 @@
 }
 
 @section Scripts {
-    <script>
+    @* <script>
         $(document).ready(function () {
             document.getElementById('btnRefund').addEventListener('click', function () {
                 $('#updateModal').modal('show');
@@ -390,5 +391,5 @@
                 }   
             });
         });
-    </script>
+    </script> *@
 }
