@@ -300,7 +300,7 @@
 
         <div class="footer">
             <div class="row">
-                @if (Model.Order.OrderStatusName == "Đang vận chuyển")
+                @if (Model.Order.OrderStatusName == "Đang vận chuyển" || Model.Order.OrderStatusName == "Hoàn trả")
                 {
                     <form method="post">
                         <input type="hidden" asp-for="Order.Id"/>
