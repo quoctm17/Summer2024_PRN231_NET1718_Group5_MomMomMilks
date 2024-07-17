@@ -302,7 +302,8 @@ namespace DataAccess.Seed
                 new OrderStatus{Name="Đang vận chuyển"},
                 new OrderStatus{Name="Hoàn thành"},
                 new OrderStatus{Name="Hủy"},
-                new OrderStatus{Name="Hoàn trả"}
+                new OrderStatus{Name="Hoàn trả"},
+                new OrderStatus{Name="Đã hoàn trả" }
             };
 
             foreach (var i in list)

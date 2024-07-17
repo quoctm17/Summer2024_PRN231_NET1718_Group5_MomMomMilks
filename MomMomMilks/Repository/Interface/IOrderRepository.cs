@@ -34,5 +34,6 @@ namespace Repository.Interface
         Task<List<TopProduct>> GetTopProducts(int topN);
         Task<bool> RefundOrder(List<RefundDTO> refundDTOs);
         Task<bool> IsConpletedOrder(int orderId);
+        Task<bool> ConfirmRefund(int orderId);
     }
 }
