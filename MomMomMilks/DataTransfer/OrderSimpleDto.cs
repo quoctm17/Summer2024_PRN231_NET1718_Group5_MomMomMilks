@@ -17,7 +17,7 @@ namespace DataTransfer
         public int PaymentTypeId { get; set; }
         public int OrderStatusId { get; set; }
         public int TimeSlotId { get; set; }
-        public string Code { get; set; }
+        public string? Code { get; set; }
         public List<OrderDetailSimpleDto> OrderDetails { get; set; }
     }
 
