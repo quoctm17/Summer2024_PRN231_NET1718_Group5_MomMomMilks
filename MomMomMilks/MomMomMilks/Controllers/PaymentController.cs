@@ -157,7 +157,7 @@ namespace MomMomMilks.Controllers
                 // Update order status based on current status
                 if (order.OrderStatusId == 1) // Assuming 1 is 'Paying'
                 {
-                    order.OrderStatusId = 5; // Assuming 5 represents 'Cancelled'
+                    await _orderService.CancelOrder(order.Id);
                 }
                 else if (order.OrderStatusId == 2) // Assuming 2 is 'Assigning'
                 {
