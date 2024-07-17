@@ -103,7 +103,7 @@ namespace DataAccess.Seed
                     Point = 0,
                     Shipper = new Shipper
                     {
-                        Status = i % 3 == 0 ? "Shipping" : i % 2 == 0 ? "Unavailable" : "Available",
+                        Status = "Available",
                         DistrictId = i
                     }
                 });
