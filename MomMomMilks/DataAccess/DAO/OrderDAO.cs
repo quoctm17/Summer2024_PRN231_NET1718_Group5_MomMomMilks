@@ -656,6 +656,44 @@ namespace DataAccess.DAO
             }
             return false;
         }
+
+        public async Task CancelOrder(int orderId)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            try
+            {
+                if (order != null)
+                {
+                    if (order.OrderStatusId == 2)
+                    {
+                        var od = await _context.OrderDetails.Where(x => x.OrderId == order.Id).ToListAsync();
+                        if (od.Count > 0)
+                        {
+                            foreach (var d in od)
+                            {
+                                var batch = await _context.Batches.FirstOrDefaultAsync(x => x.Id == d.BatchId);
+                                batch.Quantity += d.Quantity;
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                        order.OrderStatusId = 5;
+                        _context.Orders.Update(order);
+                        await _context.SaveChangesAsync();
+                    }
+                    else if (order.OrderStatusId == 1)
+                    {
+                        order.OrderStatusId = 6;
+                        _context.Orders.Update(order);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<bool> ConfirmRefund(int orderId)
         {
             var order = await _context.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();

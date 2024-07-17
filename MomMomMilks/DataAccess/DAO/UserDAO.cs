@@ -155,6 +155,16 @@ namespace DataAccess.DAO
                 {
                     if(order.OrderStatusId == 2)
                     {
+                        var od = await _context.OrderDetails.Where(x => x.OrderId == order.Id).ToListAsync();
+                        if (od.Count > 0)
+                        {
+                            foreach (var d in od)
+                            {
+                                var batch = await _context.Batches.FirstOrDefaultAsync(x => x.Id == d.BatchId);
+                                batch.Quantity += d.Quantity;
+                                await _context.SaveChangesAsync();
+                            }
+                        }
                         order.OrderStatusId = 5;
                         _context.Orders.Update(order);
                         await _context.SaveChangesAsync();
