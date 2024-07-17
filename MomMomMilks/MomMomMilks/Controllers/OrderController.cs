@@ -47,10 +47,6 @@ namespace MomMomMilks.Controllers
         [HttpPost("simple")]
         public async Task<IActionResult> PostSimpleOrder([FromBody] OrderSimpleDto orderDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var order = new Order
             {
@@ -69,7 +65,8 @@ namespace MomMomMilks.Controllers
                     Quantity = od.Quantity,
                     Discount = od.Discount,
                     Price = od.Price,
-                    Total = od.Total
+                    Total = od.Total,
+                    Status = od.Status
                 }).ToList()
             };
 
@@ -96,6 +93,7 @@ namespace MomMomMilks.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request.", details = ex.Message, innerDetails = ex.InnerException?.Message });
             }
         }
+
 
         [EnableQuery]
         [HttpGet("{key}")]
@@ -173,7 +171,7 @@ namespace MomMomMilks.Controllers
         public async Task<IActionResult> GetOrderDetailHistory([FromRoute] int orderId)
         {
             var orderDetail = await _orderService.GetDetailHistory(orderId);
-            if(orderDetail == null)
+            if (orderDetail == null)
             {
                 return NotFound();
             }
