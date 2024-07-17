@@ -664,7 +664,7 @@ namespace DataAccess.DAO
             {
                 if (order != null)
                 {
-                    if (order.OrderStatusId == 2)
+                    if (order.OrderStatusId == 2 || order.OrderStatusId == 1)
                     {
                         var od = await _context.OrderDetails.Where(x => x.OrderId == order.Id).ToListAsync();
                         if (od.Count > 0)
@@ -677,12 +677,6 @@ namespace DataAccess.DAO
                             }
                         }
                         order.OrderStatusId = 5;
-                        _context.Orders.Update(order);
-                        await _context.SaveChangesAsync();
-                    }
-                    else if (order.OrderStatusId == 1)
-                    {
-                        order.OrderStatusId = 6;
                         _context.Orders.Update(order);
                         await _context.SaveChangesAsync();
                     }
