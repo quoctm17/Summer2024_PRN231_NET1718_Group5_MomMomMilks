@@ -19,18 +19,39 @@ namespace MomMomMilks.Controllers
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
 
         public AccountController(UserManager<AppUser> userManager, 
-            ITokenService tokenService, IMapper mapper, IEmailService emailService)
+            ITokenService tokenService, IMapper mapper, IEmailService emailService, IConfiguration configuration)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _mapper = mapper;
             _emailService = emailService;
+            _configuration = configuration;
         }
         [HttpPost("login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDto)
         {
+            var superAdminEmail = _configuration["SuperAdminCredential:Email"];
+            var superAdminPassword = _configuration["SuperAdminCredential:Password"];
+
+            // Check if the login email and password match the super admin credentials
+            if (loginDto.Email.Equals(superAdminEmail, StringComparison.OrdinalIgnoreCase) &&
+                loginDto.Password == superAdminPassword)
+            {
+                // If credentials match, create a super admin user DTO
+                return new UserDTO
+                {
+                    Id = 0, // You can set a fixed ID or any identifier
+                    UserName = "SuperAdmin",
+                    Email = superAdminEmail,
+                    Status = 1, // Set the status as needed
+                    Role = "Admin",
+                    Token = await _tokenService.GenerateToken(new AppUser { UserName = "SuperAdmin", Email = superAdminEmail })
+                };
+            }
+
             var user = await _userManager.Users
                 .SingleOrDefaultAsync(x => x.Email.Equals(loginDto.Email));
             if (user == null) return Unauthorized("Invalid Email");

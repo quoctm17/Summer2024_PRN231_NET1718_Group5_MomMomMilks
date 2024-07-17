@@ -104,6 +104,10 @@ namespace DataAccess.DAO
                     string password = "Pa$$w0rd";
                     await _userManager.CreateAsync(user, password);
                 }
+                else
+                {
+                    throw new Exception("User is already exist");
+                }
             }
             catch (Exception ex)
             {
