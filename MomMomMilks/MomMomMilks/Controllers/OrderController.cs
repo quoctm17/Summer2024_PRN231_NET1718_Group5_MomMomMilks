@@ -220,7 +220,6 @@ namespace MomMomMilks.Controllers
             return Ok(result);
         }
         [HttpPut("ManagerOrders/Assign/{shipperId}/{orderId}")]
-        [Authorize(Policy = "RequireManagerRole")]
         public async Task<IActionResult> ManagerAssignOrder([FromODataUri] int orderId, [FromODataUri] int shipperId)
         {
             var result = await _orderService.ManagerAssignOrder(orderId, shipperId);

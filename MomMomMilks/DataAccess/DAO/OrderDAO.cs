@@ -304,6 +304,16 @@ namespace DataAccess.DAO
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .FirstOrDefaultAsync();
+                var od = await _context.OrderDetails.Where(x => x.OrderId == order.Id).ToListAsync();
+                if (od.Count > 0)
+                {
+                    foreach(var d in od)
+                    {
+                        var batch = await _context.Batches.FirstOrDefaultAsync(x => x.Id == d.BatchId);
+                        batch.Quantity += d.Quantity;
+                        await _context.SaveChangesAsync();
+                    }
+                }
                 order.OrderStatusId = 5;
                 return await _context.SaveChangesAsync() > 0;
             }
@@ -440,6 +450,7 @@ namespace DataAccess.DAO
             {
                 var existedOrder = await _context.Orders.FindAsync(orderId);
                 existedOrder.ShipperId = shipperId;
+                existedOrder.OrderStatusId = 3;
                 return await _context.SaveChangesAsync() > 0;
             }
             catch (Exception ex)
