@@ -264,7 +264,7 @@ namespace MomMomMilks.Controllers
             }
             }
         [HttpPut("confirm-refund")]
-        [Authorize(Policy = "RequireManagerRole")]
+        [Authorize/*(Policy = "RequireManagerRole")*/]
         public async Task<IActionResult> ConfirmRefund([FromQuery] int orderId)
 
         {

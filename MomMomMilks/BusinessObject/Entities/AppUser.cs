@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,6 +15,7 @@ namespace BusinessObject.Entities
         public int Point { get; set; }
         public Shipper Shipper { get; set; }
         public Cart Cart { get; set; }
+        [JsonIgnore]
         public ICollection<AppUserRole> UserRoles { get; set; }
         public ICollection<Address> Addresses { get; set; }
         public ICollection<Order> Orders { get; set; }
