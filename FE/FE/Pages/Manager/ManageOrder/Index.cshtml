@@ -116,7 +116,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         getOrders();
         getUsers();
-        getOrderStatusModal();
         document.getElementById('btnCreateOrder').addEventListener('click', showCreate);
         document.getElementById('createUserId').addEventListener('change', function () {
             getAddresses(this.value, 'createAddressId');
@@ -185,7 +184,6 @@
                                             <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
                                         </td>
                                         <td>
-                                            <button class="btn btn-primary btn-sm btnRefund" data-order='${JSON.stringify(order)}'>Xác nhận hoàn trả</button>
                                             <button class="btn btn-primary btn-sm btnRefund" id="btnRefund" data-order-id='${order.id}'>Xác nhận hoàn trả</button>
                                         </td>`;
                 orderList.appendChild(tr);
@@ -206,7 +204,7 @@
     $(document).ready(function () {
         // Sử dụng sự kiện 'click' với jQuery để xác nhận hoàn trả
         const token = sessionStorage.getItem('token');
-        $(document).on('click', '.btnRefund', async function () {
+        $(document).on('click', '#btnRefund', async function () {
             try {
                 // Lấy thông tin orderId từ thuộc tính data-order-id của button
                 const orderId = $(this).data('order-id');
@@ -612,8 +610,12 @@
         });
     }
     async function confirmRefund(orderId) {
-        try {
-            const token = sessionStorage.getItem('token'); // Lấy token từ sessionStorage
+        try {     
+            const token = sessionStorage.getItem('token');
+            console.log('Token:', token);
+            if (!token) {
+                throw new Error('Token not found in sessionStorage');
+            }
             const url = `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`;
             const response = await fetch(url, {
                 method: 'PUT',

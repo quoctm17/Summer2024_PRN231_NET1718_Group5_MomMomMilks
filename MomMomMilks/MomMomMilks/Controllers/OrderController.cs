@@ -262,9 +262,11 @@ namespace MomMomMilks.Controllers
             {
                 return StatusCode(500, new { message = ex.Message });
             }
+        }
+
 
         [HttpPut("confirm-refund")]
-        [Authorize(Policy = "RequireManagerRole")]
+        [Authorize/*(Policy = "RequireManagerRole")*/]
         public async Task<IActionResult> ConfirmRefund([FromQuery] int orderId)
         {
             var result = await _orderService.ConfirmRefund(orderId);
