@@ -1,5 +1,5 @@
 ﻿@page
-@model FE.Pages.Shipper.OrderDetailModel
+@model FE.Pages.Shipper.ConfirmOrderModel
 @{
 }
 <style>
@@ -193,8 +193,7 @@
             background: rgb(252, 103, 49);
         }
 </style>
-
-@if(Model.Order != null)
+@if (Model.Order != null)
 {
     <div class="card">
         <div class="title">Đơn hàng của @Model.Order.BuyerName</div>
@@ -235,7 +234,7 @@
                 </div>
             </div>
             <hr />
-            @foreach(var item in Model.Order.OrderDetails)
+            @foreach (var item in Model.Order.OrderDetails)
             {
                 <div class="row">
                     <div class="col-6">
@@ -293,7 +292,7 @@
                     <li class="step0 active text-right" id="step3">Đang vận chuyển</li>
                     <li class="step0 active text-right" id="step4">Đã hủy</li>
                 }
-                
+
             </ul>
         </div>
 
@@ -301,10 +300,10 @@
         <div class="footer">
             <div class="row">
                 @* <form method="post">
-                    @* <input type="hidden" asp-for="Order.Id"> *@
-                    @* <button type="submit" asp-page-handler="ConfirmShipped" class="btn btn-success w-auto me-3">Đã giao</button> *@
-                    @* <button type="submit" class="btn btn-success w-auto me-3">Đã giao</button> *@
-                    @* <button type="submit" asp-page-handler="ConfirmCancelled" class="btn btn-danger w-auto">Khách hàng hủy</button> *@
+            @* <input type="hidden" asp-for="Order.Id"> *@
+                @* <button type="submit" asp-page-handler="ConfirmShipped" class="btn btn-success w-auto me-3">Đã giao</button> *@
+                @* <button type="submit" class="btn btn-success w-auto me-3">Đã giao</button> *@
+                @* <button type="submit" asp-page-handler="ConfirmCancelled" class="btn btn-danger w-auto">Khách hàng hủy</button> *@
                 @* </form> *@
                 @if (Model.Order.OrderStatusName == "Đang vận chuyển" || Model.Order.OrderStatusName == "Hoàn trả")
                 {
@@ -313,10 +312,10 @@
                     @* <button type="submit" class="btn btn-success w-auto me-3">Đã giao</button> *@
                     <button type="button" id="btnCancel" class="btn btn-danger w-auto">Khách hàng hủy</button>
                     @* <form id="cancelForm" method="post" asp-asp-page-handler="ConfirmCancelled">
-            <input type="hidden" asp-for="Order.Id">
-            </form> *@
+                        <input type="hidden" asp-for="Order.Id">
+                    </form> *@
                     <button type="button" id="btnRefund" class="btn btn-warning w-auto">Trả hàng</button>
-                } 
+                }
                 else
                 {
                     <div>Đơn đã được giao</div>
@@ -337,7 +336,7 @@
                 <form id="updateForm" method="post" asp-page-handler="Refund">
                     <div class="text-danger" asp-validation-summary="All"></div>
                     <div class="modal-body">
-                        @foreach(var od in Model.Order.OrderDetails)
+                        @foreach (var od in Model.Order.OrderDetails)
                         {
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="milkChecked[@od.Id].IsChecked" value="true" id="flexCheckDefault_@od.Id">
@@ -367,9 +366,6 @@
             document.getElementById('btnRefund').addEventListener('click', function () {
                 $('#updateModal').modal('show');
             });
-            document.getElementById('btnConfirm').addEventListener('click', function () {
-                document.getElementById('confirmForm').submit();
-            });
             document.getElementById('updateForm').addEventListener('submit', function (event) {
                 let valid = true;
                 let atLeastOneChecked = false;
@@ -398,7 +394,7 @@
 
                 if (!valid) {
                     return;
-                }   
+                }
             });
         });
     </script>

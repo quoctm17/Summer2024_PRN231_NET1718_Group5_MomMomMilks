@@ -45,7 +45,7 @@ namespace FE.Pages.Shipper
         }
         public async Task<IActionResult> OnPostConfirmCancelled()
         {
-            var orderId = Order.Id;
+            var orderId = 26;
 
 
             var result = await _orderService.ConfirmCancelledShipperOrder(orderId);

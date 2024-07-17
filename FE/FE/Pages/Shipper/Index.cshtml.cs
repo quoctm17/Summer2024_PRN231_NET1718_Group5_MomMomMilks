@@ -33,7 +33,7 @@ namespace FE.Pages.Shipper
         }
         public async Task<IActionResult> OnPostConfirmShipped()
         {
-            var orderId = OrderId;
+            var orderId = 26;
             var result = await _orderService.ConfirmShippedShipperOrder(orderId);
             if (!result)
             {
@@ -43,7 +43,7 @@ namespace FE.Pages.Shipper
         }
         public async Task<IActionResult> OnPostConfirmCancelled()
         {
-            var orderId = OrderId;
+            var orderId = 26;
 
 
             var result = await _orderService.ConfirmCancelledShipperOrder(orderId);
