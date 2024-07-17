@@ -35,7 +35,7 @@ namespace FE.Pages.Admin.BatchManagement
                 var result = await _batchService.CreateBatch(Batch);
                 if(result)
                 {
-                    return RedirectToPage("/admin/batchmanagement");
+                    return RedirectToPage("/admin/batchmanagement/index");
                 }
                 ModelState.AddModelError("batch", "An error occured. No change is made");
                 return Page();
