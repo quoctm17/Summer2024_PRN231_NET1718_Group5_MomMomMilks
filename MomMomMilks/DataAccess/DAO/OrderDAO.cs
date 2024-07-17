@@ -647,5 +647,19 @@ namespace DataAccess.DAO
             }
             return false;
         }
+        public async Task<bool> ConfirmRefund(int orderId)
+        {
+            var order = await _context.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();
+            if (order != null)
+            {
+                if (order.OrderStatusId == 6)
+                {
+                    order.OrderStatusId = 7;
+                    await UpdateOrder(order);
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

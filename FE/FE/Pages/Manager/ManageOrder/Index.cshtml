@@ -32,230 +32,608 @@
         </table>
     </div>
 </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            getOrders();
-            document.getElementById('btnCreateOrder').addEventListener('click', showCreate);
+<!-- Modal Tạo Đơn Hàng -->
+<div class="modal fade" id="createOrderModal" tabindex="-1" aria-labelledby="createOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createOrderModalLabel">Tạo mới đơn hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createOrderForm">
+                    <div class="mb-3">
+                        <label for="createUserId" class="form-label">Khách hàng</label>
+                        <select class="form-select" id="createUserId" required>
+                            <option value="">Chọn khách hàng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createAddressId" class="form-label">Địa chỉ</label>
+                        <select class="form-select" id="createAddressId" required>
+                            <option value="">Chọn địa chỉ</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createTotalAmount" class="form-label">Số tiền</label>
+                        <input type="number" class="form-control" id="createTotalAmount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createOrderStatusId" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="createOrderStatusId" required>
+                            <option value="">Chọn trạng thái</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Tạo đơn hàng</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Chỉnh Sửa Đơn Hàng -->
+<div class="modal fade" id="updateOrderModal" tabindex="-1" aria-labelledby="updateOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateOrderModalLabel">Chỉnh sửa đơn hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateOrderForm">
+                    <input type="hidden" id="updateId">
+                    <div class="mb-3">
+                        <label for="updateUserId" class="form-label">Khách hàng</label>
+                        <select class="form-select" id="updateUserId" required>
+                            <option value="">Chọn khách hàng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateAddressId" class="form-label">Địa chỉ</label>
+                        <select class="form-select" id="updateAddressId" required>
+                            <option value="">Chọn địa chỉ</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateTotalAmount" class="form-label">Số tiền</label>
+                        <input type="number" class="form-control" id="updateTotalAmount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateOrderStatusId" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="updateOrderStatusId" required>
+                            <option value="">Chọn trạng thái</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cập nhật đơn hàng</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        getOrders();
+        getUsers();
+        getOrderStatusModal();
+        document.getElementById('btnCreateOrder').addEventListener('click', showCreate);
+        document.getElementById('createUserId').addEventListener('change', function () {
+            getAddresses(this.value, 'createAddressId');
         });
+        document.getElementById('updateUserId').addEventListener('change', function () {
+            getAddresses(this.value, 'updateAddressId');
+        });
+        document.getElementById('createOrderForm').addEventListener('submit', createOrder);
+        document.getElementById('updateOrderForm').addEventListener('submit', updateOrder);
+        const refundButtons = document.querySelectorAll('#btnRefund');
+        // Duyệt qua từng button và thêm sự kiện click
+        refundButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                try {
+                    // Lấy thông tin đơn hàng từ thuộc tính data-order của button
+                    const orderId = JSON.parse(button.getAttribute('data-order-id'));
 
-        async function getOrders() {
-            try {
+                    // Gọi hàm confirmRefund để xác nhận hoàn trả
+                    const result = await confirmRefund(orderId);
+                    // Xử lý kết quả nếu cần
+                    console.log('Confirmed refund successfully:', result);
+                    showSuccessNotification('Thành công hoàn trả');
+                } catch (error) {
+                    console.error('Failed to confirm refund:', error);
+                    // Xử lý lỗi nếu cần
+                    // Ví dụ: hiển thị thông báo lỗi cho người dùng, ghi log, ...
+                    // Hiển thị thông báo lỗi cho người dùng
+                    showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
+                }
+            });
+        });
+    });
+
+    async function getOrders() {
+        try {
             const token = sessionStorage.getItem('token');
-                const response = await fetch(`http://localhost:5215/odata/Order`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+            const response = await fetch('http://localhost:5215/odata/Order', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
-
-                const data = await response.json();
-
-                const orders = data.value || data.$values;
-                const orderList = document.getElementById('orderList');
-
-                // Clear the current list to prevent duplication
-                orderList.innerHTML = '';
-
-                let sequenceNumber = 1;
-                for (const order of orders) {
-                    const createAt = new Date(order.createAt).toLocaleDateString('vi-VN');
-                    const updateAt = new Date(order.updateAt).toLocaleDateString('vi-VN');
-                    const address = await getOrderAddress(order.addressId);
-                    const statusName = await getOrderStatus(order.orderStatusId);
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${sequenceNumber}</td>
-                                                    <td>${createAt}</td>
-                                                    <td>${updateAt}</td>
-                                                    <td>${order.totalAmount}</td>
-                                                    <td>${order.buyerId}</td>
-                                                    <td>${address}</td>
-                                                    <td>${statusName}</td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
-                                                    </td>
-                                                        <td>
-                                                            <button class="btn btn-primary btn-sm btnRefund" data-order='${JSON.stringify(order)}'>Xác nhận hoàn trả</button>
-                                                        </td>`;
-                    orderList.appendChild(tr);
-                    sequenceNumber++;
-                }
-
-                const editButtons = document.querySelectorAll('.btnEdit');
-                editButtons.forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        const order = JSON.parse(event.target.getAttribute('data-order'));
-                        showUpdate(order);
-                    });
-                });
-            } catch (error) {
-                console.error('Failed to fetch orders:', error);
-                showErrorNotification('Không thể tải đơn hàng.');
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        }
-
-        async function getOrderAddress(addressId) {
-            try {
-            const token = sessionStorage.getItem('token');
-                let response = await fetch(`http://localhost:5215/odata/Address?$filter=id eq ${addressId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                let data = await response.json();
-                const address = data.value ? data.value[0] : data.$values[0];
-                const districtName = await fetchDistrictName(address.districtId);
-                const wardName = await fetchWardName(address.wardId);
-                return `${address.houseNumber} ${address.street}, ${wardName}, ${districtName}`;
-            } catch (error) {
-                console.error('Error fetching address:', error);
-                return 'Không tìm thấy địa chỉ';
+            const data = await response.json();
+            console.log('Order Respone: ', data);
+            const orders = data.value || data.$values;
+            const orderList = document.getElementById('orderList');
+            orderList.innerHTML = '';
+            let sequenceNumber = 1;
+            for (const order of orders) {
+                const createAt = new Date(order.createAt).toLocaleDateString('vi-VN');
+                const updateAt = new Date(order.updateAt).toLocaleDateString('vi-VN');
+                const address = await getOrderAddress(order.addressId);
+                const statusName = await getOrderStatus(order.orderStatusId);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${sequenceNumber}</td>
+                                        <td>${createAt}</td>
+                                        <td>${updateAt}</td>
+                                        <td>${order.totalAmount}</td>
+                                        <td>${order.buyerId}</td>
+                                        <td>${address}</td>
+                                        <td>${statusName}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm btnRefund" data-order='${JSON.stringify(order)}'>Xác nhận hoàn trả</button>
+                                            <button class="btn btn-primary btn-sm btnRefund" id="btnRefund" data-order-id='${order.id}'>Xác nhận hoàn trả</button>
+                                        </td>`;
+                orderList.appendChild(tr);
+                sequenceNumber++;
             }
-        }
-
-        async function getOrderStatus(orderStatusId) {
-            try {
-            const token = sessionStorage.getItem('token');
-                const response = await fetch(`http://localhost:5215/odata/Order/OrderStatus?$filter=id eq ${orderStatusId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+            const editButtons = document.querySelectorAll('.btnEdit');
+            editButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const order = JSON.parse(event.target.getAttribute('data-order'));
+                    showUpdate(order);
                 });
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch status: ${response.status} - ${response.statusText}`);
-                }
-
-                const data = await response.json();
-
-                if (data.$values && data.$values.length > 0) {
-                    return data.$values[0].name;
-                } else {
-                    throw new Error('Empty response or invalid data format');
-                }
-            } catch (error) {
-                console.error('Error fetching status:', error);
-                throw error;
-            }
+            });
+        } catch (error) {
+            console.error('Failed to fetch orders:', error);
+            showErrorNotification('Không thể tải đơn hàng.');
         }
-
-        async function fetchDistrictName(districtId) {
-            const apiUrl = `http://localhost:5215/odata/Districts?$filter=id eq ${districtId}`;
+    }
+    $(document).ready(function () {
+        // Sử dụng sự kiện 'click' với jQuery để xác nhận hoàn trả
         const token = sessionStorage.getItem('token');
+        $(document).on('click', '.btnRefund', async function () {
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
+                // Lấy thông tin orderId từ thuộc tính data-order-id của button
+                const orderId = $(this).data('order-id');
+                // Gọi AJAX để xác nhận hoàn trả
+                $.ajax({
+                    url: `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`,
+                    type: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                const district = data.value ? data.value[0] : data.$values[0];
-                return district ? district.name : 'Không tìm thấy';
-            } catch (error) {
-                console.error('Error fetching district name:', error);
-                return 'Không tìm thấy';
-            }
-        }
-
-        async function fetchWardName(wardId) {
-            const apiUrl = `http://localhost:5215/odata/Wards?$filter=id eq ${wardId}`;
-            try {
-            const token = sessionStorage.getItem('token');
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                const ward = data.value ? data.value[0] : data.$values[0];
-                return ward ? ward.name : 'Không tìm thấy';
-            } catch (error) {
-                console.error('Error fetching ward name:', error);
-                return 'Không tìm thấy';
-            }
-        }
-
-        function showCreate() {
-            const createModal = new bootstrap.Modal(document.getElementById('createOrderModal'));
-            createModal.show();
-        }
-
-        function showUpdate(order) {            
-            document.getElementById('updateId').value = order.id;
-            document.getElementById('updateBuyerId').value = order.buyerId;
-            document.getElementById('updateAddressId').value = order.addressId;
-            document.getElementById('updateTotalAmount').value = order.totalAmount;
-            document.getElementById('updateOrderStatusId').value = order.orderStatusId;
-            const updateModal = new bootstrap.Modal(document.getElementById('updateOrderModal'));
-            updateModal.show();
-
-            document.getElementById('btnUpdateOrder').addEventListener('click', updateOrder);
-        }
-
-        async function updateOrder() {
-            const id = document.getElementById('updateId').value;
-            const buyerId = document.getElementById('updateBuyerId').value;
-            const addressId = document.getElementById('updateAddressId').value;
-            const totalAmount = document.getElementById('updateTotalAmount').value;
-            const orderStatusId = document.getElementById('updateOrderStatusId').value;
-
-            try {
-                const response = await fetch(`http://localhost:5215/odata/Order/${id}?key=${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`  // Thêm header Authorization nếu cần
                     },
-                    body: JSON.stringify({
-                        id,
-                        buyerId,
-                        addressId,
-                        totalAmount,
-                        orderStatusId
-                    })
+                    success: function (result) {
+                        console.log('Confirmed refund successfully:', result);
+                        showSuccessNotification('Thành công hoàn trả');
+                        // Cập nhật giao diện hoặc xử lý dữ liệu sau khi thành công
+                        getOrders(); // Ví dụ cập nhật lại danh sách đơn hàng
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to confirm refund:', error);
+                        // Xử lý lỗi nếu cần
+                        showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
+                    }
                 });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }                
-                const updateModal = bootstrap.Modal.getInstance(document.getElementById('updateOrderModal'));
-                updateModal.hide();
-
-                showSuccessNotification('Cập nhật đơn hàng thành công.');
-                getOrders();
             } catch (error) {
-                console.error('Failed to update order:', error);
-                showErrorNotification('Không thể cập nhật đơn hàng.');
+                console.error('Failed to confirm refund:', error);
+                // Xử lý lỗi nếu cần
+                showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
             }
+        });
+    });
+    async function getOrderAddress(addressId) {
+        try {
+            const token = sessionStorage.getItem('token');
+            let response = await fetch(`http://localhost:5215/odata/Address?$filter=id eq ${addressId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            let data = await response.json();
+            const address = data.value ? data.value[0] : data.$values[0];
+            const districtName = await fetchDistrictName(address.districtId);
+            const wardName = await fetchWardName(address.wardId);
+            return `${address.houseNumber} ${address.street}, ${wardName}, ${districtName}`;
+        } catch (error) {
+            console.error('Error fetching address:', error);
+            return 'Không tìm thấy địa chỉ';
         }
-
-        function showErrorNotification(message) {
-            document.getElementById('notificationMessage').textContent = message;
-            const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
-            notificationModal.show();
+    }
+    async function getOrderStatus(orderStatusId) {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await fetch(`http://localhost:5215/odata/Order/OrderStatus?$filter=id eq ${orderStatusId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to fetch status: ${response.status} - ${response.statusText}`);
+            }
+            const data = await response.json();
+            if (data.$values && data.$values.length > 0) {
+                return data.$values[0].name;
+            } else {
+                throw new Error('Empty response or invalid data format');
+            }
+        } catch (error) {
+            console.error('Error fetching status:', error);
+            throw error;
         }
-
-        function showSuccessNotification(message) {
-            document.getElementById('notificationMessage').textContent = message;
-            const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
-            notificationModal.show();
+    }
+    async function fetchDistrictName(districtId) {
+        const apiUrl = `http://localhost:5215/odata/Districts?$filter=id eq ${districtId}`;
+        const token = sessionStorage.getItem('token');
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            const district = data.value ? data.value[0] : data.$values[0];
+            return district ? district.name : 'Không tìm thấy';
+        } catch (error) {
+            console.error('Error fetching district name:', error);
+            return 'Không tìm thấy';
         }
+    }
+    async function fetchWardName(wardId) {
+        const apiUrl = `http://localhost:5215/odata/Wards?$filter=id eq ${wardId}`;
+        const token = sessionStorage.getItem('token');
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            const ward = data.value ? data.value[0] : data.$values[0];
+            return ward ? ward.name : 'Không tìm thấy';
+        } catch (error) {
+            console.error('Error fetching ward name:', error);
+            return 'Không tìm thấy';
+        }
+    }
+    async function showCreate() {
+        const createModal = new bootstrap.Modal(document.getElementById('createOrderModal'));
+        createModal.show();
+        const userSelect = document.getElementById('createUserId');
+        const addressSelect = document.getElementById('createAddressId');
+        const statusSelect = document.getElementById('createOrderStatusId');
 
-    </script>
+        // Add event listener for save button
+        document.getElementById('createOrderForm').addEventListener('submit', createOrder);
+    }
+    async function createOrder(event) {
+        event.preventDefault();
+        const token = sessionStorage.getItem('token');
+        const userId = document.getElementById('createUserId').value;
+        const addressId = document.getElementById('createAddressId').value;
+        const totalAmount = document.getElementById('createTotalAmount').value;
+        const orderStatusId = document.getElementById('createOrderStatusId').value;
+        try {
+            const response = await fetch('http://localhost:5215/odata/Order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    buyerId: userId,
+                    addressId: addressId,
+                    totalAmount: totalAmount,
+                    orderStatusId: orderStatusId
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const createModal = bootstrap.Modal.getInstance(document.getElementById('createOrderModal'));
+            createModal.hide();
+            showSuccessNotification('Tạo đơn hàng thành công.');
+            getOrders();
+        } catch (error) {
+            console.error('Failed to create order:', error);
+            showErrorNotification('Không thể tạo đơn hàng.');
+        }
+    }
+    async function showUpdate(order) {
+        const updateModal = new bootstrap.Modal(document.getElementById('updateOrderModal'));
+        updateModal.show();
+        document.getElementById('updateOrderId').value = order.id;
+        document.getElementById('updateTotalAmount').value = order.totalAmount;
+        const userSelect = document.getElementById('updateUserId');
+        const addressSelect = document.getElementById('updateAddressId');
+        const statusSelect = document.getElementById('updateOrderStatusId');
+        // Fetch and populate users
+        const users = await fetchUsers();
+        userSelect.innerHTML = '<option value="">Chọn người mua</option>';
+        users.forEach(user => {
+            userSelect.innerHTML += `<option value="${user.id}"${user.id === order.buyerId ? ' selected' : ''}>${user.username}</option>`;
+        });
+        // Fetch and populate order statuses
+        const statuses = await fetchOrderStatuses();
+        statusSelect.innerHTML = '<option value="">Chọn trạng thái</option>';
+        statuses.forEach(status => {
+            statusSelect.innerHTML += `<option value="${status.id}"${status.id === order.orderStatusId ? ' selected' : ''}>${status.name}</option>`;
+        });
+        // Fetch and populate addresses
+        if (order.buyerId) {
+            const addresses = await fetchUserAddresses(order.buyerId);
+            addressSelect.innerHTML = '<option value="">Chọn địa chỉ</option>';
+            addresses.forEach(address => {
+                const addressText = `${address.houseNumber} ${address.street}, ${address.Ward.name}, ${address.District.name}`;
+                addressSelect.innerHTML += `<option value="${address.id}"${address.id === order.addressId ? ' selected' : ''}>${addressText}</option>`;
+            });
+        } else {
+            addressSelect.innerHTML = '<option value="">Chọn địa chỉ</option>';
+        }
+        // Add event listener for save button
+        document.getElementById('updateOrderForm').addEventListener('submit', updateOrder);
+    }
+    async function updateOrder(event) {
+        event.preventDefault();
+        const token = sessionStorage.getItem('token');
+        const orderId = document.getElementById('updateOrderId').value;
+        const userId = document.getElementById('updateUserId').value;
+        const addressId = document.getElementById('updateAddressId').value;
+        const totalAmount = document.getElementById('updateTotalAmount').value;
+        const orderStatusId = document.getElementById('updateOrderStatusId').value;
+        const order = {
+            id: orderId,
+            buyerId: userId,
+            addressId: addressId,
+            totalAmount: totalAmount,
+            orderStatusId: orderStatusId
+        };
+        try {
+            const response = await fetch(`http://localhost:5215/odata/Order/${orderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(order)
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            showSuccessNotification('Đơn hàng được cập nhật thành công.');
+            const updateModal = bootstrap.Modal.getInstance(document.getElementById('updateOrderModal'));
+            updateModal.hide();
+            getOrders();
+        } catch (error) {
+            console.error('Failed to update order:', error);
+            showErrorNotification('Không thể cập nhật đơn hàng.');
+        }
+    }
+    async function fetchUsers() {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await fetch('http://localhost:5215/odata/AppUsers', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data.value || data.$values;
+        } catch (error) {
+            console.error('Failed to fetch users:', error);
+            showErrorNotification('Không thể tải danh sách người dùng.');
+        }
+    }
+    async function fetchUserAddresses(userId) {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await fetch(`http://localhost:5215/odata/Address?$filter=AppUserId eq ${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data.value || data.$values;
+        } catch (error) {
+            console.error('Failed to fetch addresses:', error);
+            showErrorNotification('Không thể tải danh sách địa chỉ.');
+        }
+    }
+    async function fetchOrderStatuses() {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await fetch('http://localhost:5215/odata/OrderStatus', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data.value || data.$values;
+        } catch (error) {
+            console.error('Failed to fetch order statuses:', error);
+            showErrorNotification('Không thể tải trạng thái đơn hàng.');
+        }
+    }
+    function showErrorNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.classList.remove('alert-success');
+        notification.classList.add('alert-danger');
+        notification.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+    function showSuccessNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.classList.remove('alert-danger');
+        notification.classList.add('alert-success');
+        notification.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+    async function getUsers() {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await fetch('http://localhost:5215/odata/User/UserAdmin', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (Array.isArray(data.value)) {
+                populateUserOptions(data.value, 'createUserId');
+                populateUserOptions(data.value, 'updateUserId');
+            } else if (Array.isArray(data.$values)) {
+                populateUserOptions(data.$values, 'createUserId');
+                populateUserOptions(data.$values, 'updateUserId');
+            } else {
+                throw new Error('Invalid data format');
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    }
+    function populateUserOptions(users, selectId) {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Chọn người dùng</option>';
+        users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = user.userName;
+            select.appendChild(option);
+        });
+    }
+    async function getAddresses(userId, addressElementId) {
+        try {
+            const token = sessionStorage.getItem('token');
+            const userId = document.getElementById('createUserId').value;
+            const response = await fetch(`http://localhost:5215/odata/Address/user/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (Array.isArray(data.value)) {
+                populateAddressOptions(data.value, addressElementId);
+            } else if (Array.isArray(data.$values)) {
+                populateAddressOptions(data.$values, addressElementId);
+            } else {
+                throw new Error('Invalid data format');
+            }
+        } catch (error) {
+            console.error('Error fetching addresses:', error);
+        }
+    }
+    function populateAddressOptions(addresses, selectId) {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Chọn địa chỉ</option>';
+        addresses.forEach(address => {
+            const option = document.createElement('option');
+            option.value = address.id;
+            option.textContent = `${address.houseNumber} ${address.street}`;
+            select.appendChild(option);
+        });
+    }
+    async function getOrderStatusModal() {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await fetch('http://localhost:5215/odata/Order/OrderStatus', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (Array.isArray(data.value)) {
+                populateOrderStatusOptions(data.value, 'createOrderStatusId');
+                populateOrderStatusOptions(data.value, 'updateOrderStatusId');
+            } else if (Array.isArray(data.$values)) {
+                populateOrderStatusOptions(data.$values, 'createOrderStatusId');
+                populateOrderStatusOptions(data.$values, 'updateOrderStatusId');
+            } else {
+                throw new Error('Invalid data format');
+            }
+        } catch (error) {
+            console.error('Error fetching orderStatus:', error);
+        }
+    }
+    function populateOrderStatusOptions(orderStatus, selectId) {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Chọn trạng thái</option>';
+        orderStatus.forEach(order => {
+            const option = document.createElement('option');
+            option.value = order.id;
+            option.textContent = order.name;
+            select.appendChild(option);
+        });
+    }
+    async function confirmRefund(orderId) {
+        try {
+            const token = sessionStorage.getItem('token'); // Lấy token từ sessionStorage
+            const url = `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log('Confirm refund result:', data); // Log kết quả trả về từ API (nếu cần)
+            // Xử lý kết quả thành công nếu cần
+            return data; // Trả về dữ liệu từ API nếu cần sử dụng tiếp sau này
+        } catch (error) {
+            console.error('Error confirming refund:', error);
+            // Xử lý lỗi nếu cần
+            throw error; // Ném lỗi ra ngoài để xử lý tiếp
+        }
+    }
+</script>
+
 }
