@@ -111,7 +111,7 @@
     </div>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         getOrders();
@@ -127,7 +127,37 @@
         });
         document.getElementById('createOrderForm').addEventListener('submit', createOrder);
         document.getElementById('updateOrderForm').addEventListener('submit', updateOrder);
+
+        const refundButtons = document.querySelectorAll('#btnRefund');
+
+        // Duyệt qua từng button và thêm sự kiện click
+        refundButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                try {
+                    // Lấy thông tin đơn hàng từ thuộc tính data-order của button
+                    const orderId = JSON.parse(button.getAttribute('data-order-id'));
+                    
+
+                    // Gọi hàm confirmRefund để xác nhận hoàn trả
+                    const result = await confirmRefund(orderId);
+
+                    // Xử lý kết quả nếu cần
+                    console.log('Confirmed refund successfully:', result);
+                    showSuccessNotification('Thành công hoàn trả');
+
+                } catch (error) {
+                    console.error('Failed to confirm refund:', error);
+                    // Xử lý lỗi nếu cần
+                    // Ví dụ: hiển thị thông báo lỗi cho người dùng, ghi log, ...
+
+                    // Hiển thị thông báo lỗi cho người dùng
+                    showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
+                }
+            });
+        });
     });
+
+    
 
     async function getOrders() {
         try {
@@ -144,7 +174,7 @@
             }
 
             const data = await response.json();
-
+            console.log('Order Respone: ', data);
             const orders = data.value || data.$values;
             const orderList = document.getElementById('orderList');
 
@@ -168,7 +198,7 @@
                                         <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
                                     </td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm btnRefund" data-order='${JSON.stringify(order)}'>Xác nhận hoàn trả</button>
+                                        <button class="btn btn-primary btn-sm btnRefund" id="btnRefund" data-order-id='${order.id}'>Xác nhận hoàn trả</button>
                                     </td>`;
                 orderList.appendChild(tr);
                 sequenceNumber++;
@@ -186,6 +216,42 @@
             showErrorNotification('Không thể tải đơn hàng.');
         }
     }
+
+    $(document).ready(function () {
+        // Sử dụng sự kiện 'click' với jQuery để xác nhận hoàn trả
+        const token = sessionStorage.getItem('token');
+        $(document).on('click', '.btnRefund', async function () {
+            try {
+                // Lấy thông tin orderId từ thuộc tính data-order-id của button
+                const orderId = $(this).data('order-id');
+
+                // Gọi AJAX để xác nhận hoàn trả
+                $.ajax({
+                    url: `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`,
+                    type: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`  // Thêm header Authorization nếu cần
+                    },
+                    success: function (result) {
+                        console.log('Confirmed refund successfully:', result);
+                        showSuccessNotification('Thành công hoàn trả');
+                        // Cập nhật giao diện hoặc xử lý dữ liệu sau khi thành công
+                        getOrders(); // Ví dụ cập nhật lại danh sách đơn hàng
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to confirm refund:', error);
+                        // Xử lý lỗi nếu cần
+                        showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
+                    }
+                });
+
+            } catch (error) {
+                console.error('Failed to confirm refund:', error);
+                // Xử lý lỗi nếu cần
+                showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
+            }
+        });
+    });
 
     async function getOrderAddress(addressId) {
         try {
@@ -607,6 +673,33 @@
             option.textContent = order.name;
             select.appendChild(option);
         });
+    }
+    async function confirmRefund(orderId) {
+        try {
+            const token = sessionStorage.getItem('token'); // Lấy token từ sessionStorage
+            const url = `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`;
+
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Confirm refund result:', data); // Log kết quả trả về từ API (nếu cần)
+
+            // Xử lý kết quả thành công nếu cần
+            return data; // Trả về dữ liệu từ API nếu cần sử dụng tiếp sau này
+        } catch (error) {
+            console.error('Error confirming refund:', error);
+            // Xử lý lỗi nếu cần
+            throw error; // Ném lỗi ra ngoài để xử lý tiếp
+        }
     }
 </script>
 
