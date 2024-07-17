@@ -275,7 +275,16 @@ namespace DataAccess.DAO
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .FirstOrDefaultAsync();
-                order.OrderStatusId = 4;
+                if(order.OrderStatusId == 3)
+                {
+                    order.OrderStatusId = 4;
+                } else if (order.OrderStatusId == 6)
+                {
+                    order.OrderStatusId= 7;
+                } else
+                {
+                    throw new Exception("Invalid order");
+                }
                 return await _context.SaveChangesAsync() > 0;
             }
             catch (Exception ex)
