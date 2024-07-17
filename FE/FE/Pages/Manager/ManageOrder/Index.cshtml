@@ -70,7 +70,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal Chỉnh Sửa Đơn Hàng -->
 <div class="modal fade" id="updateOrderModal" tabindex="-1" aria-labelledby="updateOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -111,13 +110,13 @@
     </div>
 </div>
 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         getOrders();
         getUsers();
         getOrderStatusModal();
-
         document.getElementById('btnCreateOrder').addEventListener('click', showCreate);
         document.getElementById('createUserId').addEventListener('change', function () {
             getAddresses(this.value, 'createAddressId');
@@ -127,37 +126,29 @@
         });
         document.getElementById('createOrderForm').addEventListener('submit', createOrder);
         document.getElementById('updateOrderForm').addEventListener('submit', updateOrder);
-
         const refundButtons = document.querySelectorAll('#btnRefund');
-
         // Duyệt qua từng button và thêm sự kiện click
         refundButtons.forEach(button => {
             button.addEventListener('click', async () => {
                 try {
                     // Lấy thông tin đơn hàng từ thuộc tính data-order của button
                     const orderId = JSON.parse(button.getAttribute('data-order-id'));
-                    
 
                     // Gọi hàm confirmRefund để xác nhận hoàn trả
                     const result = await confirmRefund(orderId);
-
                     // Xử lý kết quả nếu cần
                     console.log('Confirmed refund successfully:', result);
                     showSuccessNotification('Thành công hoàn trả');
-
                 } catch (error) {
                     console.error('Failed to confirm refund:', error);
                     // Xử lý lỗi nếu cần
                     // Ví dụ: hiển thị thông báo lỗi cho người dùng, ghi log, ...
-
                     // Hiển thị thông báo lỗi cho người dùng
                     showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
                 }
             });
         });
     });
-
-    
 
     async function getOrders() {
         try {
@@ -168,18 +159,14 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             const data = await response.json();
             console.log('Order Respone: ', data);
             const orders = data.value || data.$values;
             const orderList = document.getElementById('orderList');
-
             orderList.innerHTML = '';
-
             let sequenceNumber = 1;
             for (const order of orders) {
                 const createAt = new Date(order.createAt).toLocaleDateString('vi-VN');
@@ -188,22 +175,22 @@
                 const statusName = await getOrderStatus(order.orderStatusId);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td>${sequenceNumber}</td>
-                                    <td>${createAt}</td>
-                                    <td>${updateAt}</td>
-                                    <td>${order.totalAmount}</td>
-                                    <td>${order.buyerId}</td>
-                                    <td>${address}</td>
-                                    <td>${statusName}</td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm btnRefund" id="btnRefund" data-order-id='${order.id}'>Xác nhận hoàn trả</button>
-                                    </td>`;
+                                        <td>${createAt}</td>
+                                        <td>${updateAt}</td>
+                                        <td>${order.totalAmount}</td>
+                                        <td>${order.buyerId}</td>
+                                        <td>${address}</td>
+                                        <td>${statusName}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm btnRefund" data-order='${JSON.stringify(order)}'>Xác nhận hoàn trả</button>
+                                            <button class="btn btn-primary btn-sm btnRefund" id="btnRefund" data-order-id='${order.id}'>Xác nhận hoàn trả</button>
+                                        </td>`;
                 orderList.appendChild(tr);
                 sequenceNumber++;
             }
-
             const editButtons = document.querySelectorAll('.btnEdit');
             editButtons.forEach(button => {
                 button.addEventListener('click', (event) => {
@@ -216,7 +203,6 @@
             showErrorNotification('Không thể tải đơn hàng.');
         }
     }
-
     $(document).ready(function () {
         // Sử dụng sự kiện 'click' với jQuery để xác nhận hoàn trả
         const token = sessionStorage.getItem('token');
@@ -224,7 +210,6 @@
             try {
                 // Lấy thông tin orderId từ thuộc tính data-order-id của button
                 const orderId = $(this).data('order-id');
-
                 // Gọi AJAX để xác nhận hoàn trả
                 $.ajax({
                     url: `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`,
@@ -244,7 +229,6 @@
                         showErrorNotification('Xác nhận hoàn trả không thành công. Vui lòng thử lại sau.');
                     }
                 });
-
             } catch (error) {
                 console.error('Failed to confirm refund:', error);
                 // Xử lý lỗi nếu cần
@@ -252,7 +236,6 @@
             }
         });
     });
-
     async function getOrderAddress(addressId) {
         try {
             const token = sessionStorage.getItem('token');
@@ -262,11 +245,9 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             let data = await response.json();
             const address = data.value ? data.value[0] : data.$values[0];
             const districtName = await fetchDistrictName(address.districtId);
@@ -277,7 +258,6 @@
             return 'Không tìm thấy địa chỉ';
         }
     }
-
     async function getOrderStatus(orderStatusId) {
         try {
             const token = sessionStorage.getItem('token');
@@ -287,13 +267,10 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error(`Failed to fetch status: ${response.status} - ${response.statusText}`);
             }
-
             const data = await response.json();
-
             if (data.$values && data.$values.length > 0) {
                 return data.$values[0].name;
             } else {
@@ -304,7 +281,6 @@
             throw error;
         }
     }
-
     async function fetchDistrictName(districtId) {
         const apiUrl = `http://localhost:5215/odata/Districts?$filter=id eq ${districtId}`;
         const token = sessionStorage.getItem('token');
@@ -326,7 +302,6 @@
             return 'Không tìm thấy';
         }
     }
-
     async function fetchWardName(wardId) {
         const apiUrl = `http://localhost:5215/odata/Wards?$filter=id eq ${wardId}`;
         const token = sessionStorage.getItem('token');
@@ -348,21 +323,16 @@
             return 'Không tìm thấy';
         }
     }
-
     async function showCreate() {
         const createModal = new bootstrap.Modal(document.getElementById('createOrderModal'));
         createModal.show();
-
         const userSelect = document.getElementById('createUserId');
         const addressSelect = document.getElementById('createAddressId');
         const statusSelect = document.getElementById('createOrderStatusId');
 
-        
-
         // Add event listener for save button
         document.getElementById('createOrderForm').addEventListener('submit', createOrder);
     }
-
     async function createOrder(event) {
         event.preventDefault();
         const token = sessionStorage.getItem('token');
@@ -370,7 +340,6 @@
         const addressId = document.getElementById('createAddressId').value;
         const totalAmount = document.getElementById('createTotalAmount').value;
         const orderStatusId = document.getElementById('createOrderStatusId').value;
-
         try {
             const response = await fetch('http://localhost:5215/odata/Order', {
                 method: 'POST',
@@ -385,11 +354,9 @@
                     orderStatusId: orderStatusId
                 })
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             const createModal = bootstrap.Modal.getInstance(document.getElementById('createOrderModal'));
             createModal.hide();
             showSuccessNotification('Tạo đơn hàng thành công.');
@@ -399,33 +366,26 @@
             showErrorNotification('Không thể tạo đơn hàng.');
         }
     }
-
-
     async function showUpdate(order) {
         const updateModal = new bootstrap.Modal(document.getElementById('updateOrderModal'));
         updateModal.show();
-
         document.getElementById('updateOrderId').value = order.id;
         document.getElementById('updateTotalAmount').value = order.totalAmount;
-
         const userSelect = document.getElementById('updateUserId');
         const addressSelect = document.getElementById('updateAddressId');
         const statusSelect = document.getElementById('updateOrderStatusId');
-
         // Fetch and populate users
         const users = await fetchUsers();
         userSelect.innerHTML = '<option value="">Chọn người mua</option>';
         users.forEach(user => {
             userSelect.innerHTML += `<option value="${user.id}"${user.id === order.buyerId ? ' selected' : ''}>${user.username}</option>`;
         });
-
         // Fetch and populate order statuses
         const statuses = await fetchOrderStatuses();
         statusSelect.innerHTML = '<option value="">Chọn trạng thái</option>';
         statuses.forEach(status => {
             statusSelect.innerHTML += `<option value="${status.id}"${status.id === order.orderStatusId ? ' selected' : ''}>${status.name}</option>`;
         });
-
         // Fetch and populate addresses
         if (order.buyerId) {
             const addresses = await fetchUserAddresses(order.buyerId);
@@ -437,11 +397,9 @@
         } else {
             addressSelect.innerHTML = '<option value="">Chọn địa chỉ</option>';
         }
-
         // Add event listener for save button
         document.getElementById('updateOrderForm').addEventListener('submit', updateOrder);
     }
-
     async function updateOrder(event) {
         event.preventDefault();
         const token = sessionStorage.getItem('token');
@@ -450,7 +408,6 @@
         const addressId = document.getElementById('updateAddressId').value;
         const totalAmount = document.getElementById('updateTotalAmount').value;
         const orderStatusId = document.getElementById('updateOrderStatusId').value;
-
         const order = {
             id: orderId,
             buyerId: userId,
@@ -458,7 +415,6 @@
             totalAmount: totalAmount,
             orderStatusId: orderStatusId
         };
-
         try {
             const response = await fetch(`http://localhost:5215/odata/Order/${orderId}`, {
                 method: 'PUT',
@@ -468,11 +424,9 @@
                 },
                 body: JSON.stringify(order)
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             showSuccessNotification('Đơn hàng được cập nhật thành công.');
             const updateModal = bootstrap.Modal.getInstance(document.getElementById('updateOrderModal'));
             updateModal.hide();
@@ -482,7 +436,6 @@
             showErrorNotification('Không thể cập nhật đơn hàng.');
         }
     }
-
     async function fetchUsers() {
         try {
             const token = sessionStorage.getItem('token');
@@ -492,11 +445,9 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             const data = await response.json();
             return data.value || data.$values;
         } catch (error) {
@@ -504,7 +455,6 @@
             showErrorNotification('Không thể tải danh sách người dùng.');
         }
     }
-
     async function fetchUserAddresses(userId) {
         try {
             const token = sessionStorage.getItem('token');
@@ -514,11 +464,9 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             const data = await response.json();
             return data.value || data.$values;
         } catch (error) {
@@ -526,7 +474,6 @@
             showErrorNotification('Không thể tải danh sách địa chỉ.');
         }
     }
-
     async function fetchOrderStatuses() {
         try {
             const token = sessionStorage.getItem('token');
@@ -536,11 +483,9 @@
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
             const data = await response.json();
             return data.value || data.$values;
         } catch (error) {
@@ -548,7 +493,6 @@
             showErrorNotification('Không thể tải trạng thái đơn hàng.');
         }
     }
-
     function showErrorNotification(message) {
         const notification = document.getElementById('notification');
         notification.classList.remove('alert-success');
@@ -559,7 +503,6 @@
             notification.style.display = 'none';
         }, 3000);
     }
-
     function showSuccessNotification(message) {
         const notification = document.getElementById('notification');
         notification.classList.remove('alert-danger');
@@ -570,7 +513,6 @@
             notification.style.display = 'none';
         }, 3000);
     }
-
     async function getUsers() {
         try {
             const token = sessionStorage.getItem('token');
@@ -594,7 +536,6 @@
             console.error('Error fetching users:', error);
         }
     }
-
     function populateUserOptions(users, selectId) {
         const select = document.getElementById(selectId);
         select.innerHTML = '<option value="">Chọn người dùng</option>';
@@ -605,7 +546,6 @@
             select.appendChild(option);
         });
     }
-
     async function getAddresses(userId, addressElementId) {
         try {
             const token = sessionStorage.getItem('token');
@@ -628,7 +568,6 @@
             console.error('Error fetching addresses:', error);
         }
     }
-
     function populateAddressOptions(addresses, selectId) {
         const select = document.getElementById(selectId);
         select.innerHTML = '<option value="">Chọn địa chỉ</option>';
@@ -639,7 +578,6 @@
             select.appendChild(option);
         });
     }
-
     async function getOrderStatusModal() {
         try {
             const token = sessionStorage.getItem('token');
@@ -663,7 +601,6 @@
             console.error('Error fetching orderStatus:', error);
         }
     }
-
     function populateOrderStatusOptions(orderStatus, selectId) {
         const select = document.getElementById(selectId);
         select.innerHTML = '<option value="">Chọn trạng thái</option>';
@@ -678,21 +615,17 @@
         try {
             const token = sessionStorage.getItem('token'); // Lấy token từ sessionStorage
             const url = `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`;
-
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             const data = await response.json();
             console.log('Confirm refund result:', data); // Log kết quả trả về từ API (nếu cần)
-
             // Xử lý kết quả thành công nếu cần
             return data; // Trả về dữ liệu từ API nếu cần sử dụng tiếp sau này
         } catch (error) {
