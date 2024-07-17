@@ -73,13 +73,22 @@ namespace DataAccess.DAO
 
         public async Task UpdateMilkAsync(Milk milk)
         {
-            _context.Milks.Update(milk);
+            var existed = await _context.Milks.FirstOrDefaultAsync(x => x.Id == milk.Id);
+            existed.Name = milk.Name;
+            existed.SupplierId = milk.SupplierId;
+            existed.UserManual = milk.UserManual;
+            existed.CategoryId = milk.CategoryId;
+            existed.BrandId = milk.BrandId;
+            existed.PreserveInstructions = milk.PreserveInstructions;
+            existed.Price = milk.Price;
+            existed.Description = milk.Description;
+            existed.MilkAgeId = milk.MilkAgeId;
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteMilkAsync(int milkId)
         {
-            var milk = await _context.Milks.FindAsync(milkId);
+            var milk = await _context.Milks.FirstOrDefaultAsync(x => x.Id == milkId);
             if (milk != null)
             {
                 _context.Milks.Remove(milk);

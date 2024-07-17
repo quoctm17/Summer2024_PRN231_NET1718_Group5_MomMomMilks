@@ -20,14 +20,17 @@ namespace FE.Pages.Shipper
 
         [BindProperty]
         public ShipperOrderDetail Order{ get; set; }
+        [BindProperty]
+        public int OrderId { get; set; }
         public async Task OnGet(int orderId)
         {
             Order = await _orderService.GetShipperOrder(orderId);
+            OrderId = orderId;
         }
 
         public async Task<IActionResult> OnPostConfirmShipped()
         {
-            var orderId = Order.Id;
+            var orderId = 26;
             var result = await _orderService.ConfirmShippedShipperOrder(orderId);
             if(!result)
             {
@@ -43,6 +46,8 @@ namespace FE.Pages.Shipper
         public async Task<IActionResult> OnPostConfirmCancelled()
         {
             var orderId = Order.Id;
+
+
             var result = await _orderService.ConfirmCancelledShipperOrder(orderId);
             if (!result)
             {
