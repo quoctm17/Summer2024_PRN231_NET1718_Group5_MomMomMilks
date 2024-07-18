@@ -1,0 +1,88 @@
+﻿@page
+@model FE.Pages.Manager.TransactionManagement.IndexModel
+@{
+    ViewData["Title"] = "Transaction"; 
+}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Quản lý giao dịch
+    </div>
+    <div class="card-body">
+        <table class="table" id="transactionTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Đơn số</th>
+                    <th>Ngày tạo</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Mã Đơn Hàng</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="transactionList" class="font-weight-light">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    @using Helpers;
+    @using Models;
+
+        var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+        string token = null;
+        if (user != null)
+        {
+            token = user.Token;
+        }
+    }
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            getTransaction();
+        });
+
+        async function getTransaction() {
+            try {
+                const response = await fetch(`http://localhost:5215/odata/Transaction`, {
+                    headers: {
+                        'Authorization': 'Bearer @token'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('API response:', data);
+
+                const transactions = data.value || data.$values;
+                const transactionList = document.getElementById('transactionList');
+
+                for (const transaction of transactions) {
+                    const tr = document.createElement('tr');
+                    const orderCode = transaction.paymentOrderCode || "Không";
+                    tr.innerHTML = `<td>${transaction.id}</td>
+                                        <td>${transaction.orderId}</td>
+                                        <td>${transaction.createdAt}</td>
+                                        <td>${transaction.order.totalAmount}</td>
+                                        <td>${transaction.status}</td>
+                                        <td>${orderCode}</td>
+                                        <td>
+                                        </td>`;
+                    transactionList.appendChild(tr);
+                }
+
+                // Initialize DataTable after populating the table
+                $(document).ready(function () {
+                    $('#transactionTable').DataTable();
+                });
+            } catch (error) {
+                console.error('Error fetching transaction data:', error);
+            }
+        }
+</script>
+}

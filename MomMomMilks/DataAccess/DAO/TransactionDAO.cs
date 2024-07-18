@@ -36,6 +36,7 @@ namespace DataAccess.DAO
                     CreatedAt = t.CreatedAt,
                     OrderId = t.OrderId,
                     GrossAmount = t.GrossAmount,
+                    Description = t.Description ?? string.Empty,
                     PaymentOrderCode = t.PaymentOrderCode ?? string.Empty, // Handle NULL here
                     Order = t.Order
                 })
