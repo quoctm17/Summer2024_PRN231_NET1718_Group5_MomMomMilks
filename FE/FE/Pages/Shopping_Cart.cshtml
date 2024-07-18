@@ -185,10 +185,19 @@
                         }));
 
                         if (!areCartsEqual(currentCart, dbCartFormatted)) {
-                            if (confirm("Giỏ hàng hiện tại của bạn đã thay đổi so với dữ liệu bạn đã lưu. Hành động này sẽ lưu giỏ hàng hiện tại và thay thế giỏ hàng đã lưu trước đó. Bạn vẫn muốn tiếp tục?")) {
-                                await saveCart();
-                                window.location.href = '/checkout';
-                            }
+                            Swal.fire({
+                                title: 'Giỏ hàng đã thay đổi',
+                                text: 'Giỏ hàng hiện tại của bạn đã thay đổi so với dữ liệu bạn đã lưu. Hành động này sẽ lưu giỏ hàng hiện tại và thay thế giỏ hàng đã lưu trước đó. Bạn vẫn muốn tiếp tục?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Có',
+                                cancelButtonText: 'Không'
+                            }).then(async (result) => {
+                                if (result.isConfirmed) {
+                                    await saveCart();
+                                    window.location.href = '/checkout';
+                                }
+                            });
                         } else {
                             window.location.href = '/checkout';
                         }

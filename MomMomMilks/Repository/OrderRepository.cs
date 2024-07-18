@@ -20,17 +20,25 @@ namespace Repository
             {
                 Console.WriteLine("Start AddOrderAsync in OrderRepository");
 
+                // Tạo danh sách mới để chứa các OrderDetail đã xử lý
+                var processedOrderDetails = new List<OrderDetail>();
+
                 // Kiểm tra số lượng hàng tồn kho trước
                 foreach (var detail in orderDetails)
                 {
-                    await HandleBatchQuantity(detail);
+                    var newDetails = await HandleBatchQuantity(detail);
+                    processedOrderDetails.AddRange(newDetails);
                 }
 
-                // Sau khi đã kiểm tra và đủ số lượng, tiến hành tạo đơn hàng và chi tiết đơn hàng
+                // Loại bỏ tất cả các OrderDetail từ đơn hàng ban đầu
+                order.OrderDetails.Clear();
+
+                // Sau khi đã kiểm tra và đủ số lượng, tiến hành tạo đơn hàng
                 await OrderDAO.Instance.AddOrderAsync(order);
                 Console.WriteLine("Order added in OrderRepository");
 
-                foreach (var detail in orderDetails)
+                // Thêm các OrderDetail đã xử lý vào đơn hàng và lưu chúng
+                foreach (var detail in processedOrderDetails)
                 {
                     detail.OrderId = order.Id;
                     await OrderDetailsDAO.Instance.AddOrderDetailAsync(detail);
@@ -60,7 +68,7 @@ namespace Repository
             }
         }
 
-        private async Task HandleBatchQuantity(OrderDetail detail)
+        private async Task<List<OrderDetail>> HandleBatchQuantity(OrderDetail detail)
         {
             var remainingQuantity = detail.Quantity;
             var batches = await BatchDAO.Instance.GetBatchesByMilkId(detail.MilkId);
@@ -74,6 +82,8 @@ namespace Repository
                 throw new OutOfStockException("Not enough stock available to fulfill the order.");
             }
 
+            var newOrderDetails = new List<OrderDetail>();
+
             // Trừ đi số lượng hàng tồn kho từng lô
             foreach (var batch in batches)
             {
@@ -86,11 +96,28 @@ namespace Repository
                 batch.Quantity -= batchQuantityToDeduct;
                 remainingQuantity -= batchQuantityToDeduct;
 
+                // Tạo OrderDetail mới cho mỗi batch
+                var orderDetail = new OrderDetail
+                {
+                    MilkId = detail.MilkId,
+                    Discount = detail.Discount,
+                    Price = detail.Price,
+                    Quantity = batchQuantityToDeduct,
+                    Total = (int)(batchQuantityToDeduct * detail.Price),
+                    BatchId = batch.Id,
+                    Status = "Normal",
+                    CreateAt = DateTime.Now,
+                    UpdateAt = DateTime.Now
+                };
+
+                newOrderDetails.Add(orderDetail);
+
                 await BatchDAO.Instance.UpdateBatch(batch);
+                Console.WriteLine($"Batch updated: {batch.Id}, Remaining Quantity: {batch.Quantity}");
             }
+
+            return newOrderDetails;
         }
-
-
 
 
         public async Task<Order> GetOrderByIdAsync(int orderId)

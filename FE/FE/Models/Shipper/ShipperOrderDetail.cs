@@ -14,5 +14,21 @@
         public string ScheduleTimeSlot { get; set; }
         public ShipperAddress Address { get; set; }
         public ICollection<ShipperOrderDetailItem> OrderDetails { get; set; }
+        public List<UniqueProductOrderDetails> GetUniqueProductOrderDetails()
+        {
+            return OrderDetails
+                .GroupBy(od => od.MilkName)
+                .Select(g => new UniqueProductOrderDetails
+                {
+                    MilkName = g.First().MilkName, // Assuming you have a ProductName property
+                    AssociatedDetails = g.ToList()
+                })
+                .ToList();
+        }
+    }
+    public class UniqueProductOrderDetails
+    {
+        public string MilkName { get; set; } // Assuming you have a ProductName property
+        public List<ShipperOrderDetailItem> AssociatedDetails { get; set; }
     }
 }

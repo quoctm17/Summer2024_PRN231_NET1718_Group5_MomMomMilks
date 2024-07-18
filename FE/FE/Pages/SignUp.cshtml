@@ -99,6 +99,37 @@
     <script src="vendor/daterangepicker/daterangepicker.js"></script>
     <script src="vendor/countdowntime/countdowntime.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to check input fields and add filled class if needed
+            function checkInputs() {
+                var inputs = document.querySelectorAll('.input100');
+
+                inputs.forEach(function (input) {
+                    if (input.value.trim() !== "") {
+                        input.classList.add('has-val');
+                    } else {
+                        input.classList.remove('has-val');
+                    }
+                });
+            }
+
+            // Check inputs on page load
+            checkInputs();
+
+            // Add event listener to update class on input change
+            var inputs = document.querySelectorAll('.input100');
+            inputs.forEach(function (input) {
+                input.addEventListener('blur', function () {
+                    if (input.value.trim() !== "") {
+                        input.classList.add('has-val');
+                    } else {
+                        input.classList.remove('has-val');
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>

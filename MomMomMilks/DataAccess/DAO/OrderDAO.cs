@@ -111,13 +111,6 @@ namespace DataAccess.DAO
             {
                 Console.WriteLine("Start AddOrderAsync");
 
-                foreach (var od in order.OrderDetails)
-                {
-                    var batch = await _context.Batches.Where(b => b.Status == 1).Where(b => b.MilkId == od.MilkId).FirstOrDefaultAsync();
-                    od.BatchId = batch.Id;
-                    od.Status = "Normal";
-                }
-
                 await _context.Orders.AddAsync(order);
                 await _context.SaveChangesAsync();
                 Console.WriteLine("Order added successfully");
@@ -304,6 +297,16 @@ namespace DataAccess.DAO
                 }
                 var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
                     .FirstOrDefaultAsync();
+                var od = await _context.OrderDetails.Where(x => x.OrderId == order.Id).ToListAsync();
+                if (od.Count > 0)
+                {
+                    foreach(var d in od)
+                    {
+                        var batch = await _context.Batches.FirstOrDefaultAsync(x => x.Id == d.BatchId);
+                        batch.Quantity += d.Quantity;
+                        await _context.SaveChangesAsync();
+                    }
+                }
                 order.OrderStatusId = 5;
                 return await _context.SaveChangesAsync() > 0;
             }
@@ -440,6 +443,7 @@ namespace DataAccess.DAO
             {
                 var existedOrder = await _context.Orders.FindAsync(orderId);
                 existedOrder.ShipperId = shipperId;
+                existedOrder.OrderStatusId = 3;
                 return await _context.SaveChangesAsync() > 0;
             }
             catch (Exception ex)
@@ -598,7 +602,7 @@ namespace DataAccess.DAO
                             Price = order.Price,
                             Quantity = order.Quantity,
                             Total = order.Total,
-                            BatchId = order.BatchId,
+                            BatchId = order.BatchId ?? 0,
                             Note = refund.note,
                             Status = "Refunding"
                         };
