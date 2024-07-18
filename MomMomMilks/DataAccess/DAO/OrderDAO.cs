@@ -111,13 +111,6 @@ namespace DataAccess.DAO
             {
                 Console.WriteLine("Start AddOrderAsync");
 
-                foreach (var od in order.OrderDetails)
-                {
-                    var batch = await _context.Batches.Where(b => b.Status == 1).Where(b => b.MilkId == od.MilkId).FirstOrDefaultAsync();
-                    od.BatchId = batch.Id;
-                    od.Status = "Normal";
-                }
-
                 await _context.Orders.AddAsync(order);
                 await _context.SaveChangesAsync();
                 Console.WriteLine("Order added successfully");
@@ -609,7 +602,7 @@ namespace DataAccess.DAO
                             Price = order.Price,
                             Quantity = order.Quantity,
                             Total = order.Total,
-                            BatchId = order.BatchId,
+                            BatchId = order.BatchId ?? 0,
                             Note = refund.note,
                             Status = "Refunding"
                         };

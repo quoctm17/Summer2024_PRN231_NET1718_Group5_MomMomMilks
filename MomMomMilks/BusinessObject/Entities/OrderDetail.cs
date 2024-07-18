@@ -17,7 +17,7 @@ namespace BusinessObject.Entities
         public float Price { get; set; }
         public int Quantity { get; set; }
         public int Total { get; set; }
-        public int BatchId { get; set; }
+        public int? BatchId { get; set; }
         public string? Note {  get; set; }
         public string Status { get; set; }
         public Batch Batch { get; set; }

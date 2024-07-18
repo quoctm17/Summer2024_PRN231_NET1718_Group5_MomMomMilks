@@ -20,17 +20,20 @@ namespace Repository
             {
                 Console.WriteLine("Start AddOrderAsync in OrderRepository");
 
-                // Kiểm tra số lượng hàng tồn kho trước
+                List<OrderDetail> updatedOrderDetails = new List<OrderDetail>();
+
+                // Kiểm tra số lượng hàng tồn kho trước và xử lý các chi tiết đơn hàng theo batch
                 foreach (var detail in orderDetails)
                 {
-                    await HandleBatchQuantity(detail);
+                    var batchOrderDetails = await HandleBatchQuantity(detail);
+                    updatedOrderDetails.AddRange(batchOrderDetails);
                 }
 
                 // Sau khi đã kiểm tra và đủ số lượng, tiến hành tạo đơn hàng và chi tiết đơn hàng
                 await OrderDAO.Instance.AddOrderAsync(order);
                 Console.WriteLine("Order added in OrderRepository");
 
-                foreach (var detail in orderDetails)
+                foreach (var detail in updatedOrderDetails)
                 {
                     detail.OrderId = order.Id;
                     await OrderDetailsDAO.Instance.AddOrderDetailAsync(detail);
@@ -60,10 +63,11 @@ namespace Repository
             }
         }
 
-        private async Task HandleBatchQuantity(OrderDetail detail)
+        private async Task<List<OrderDetail>> HandleBatchQuantity(OrderDetail detail)
         {
             var remainingQuantity = detail.Quantity;
             var batches = await BatchDAO.Instance.GetBatchesByMilkId(detail.MilkId);
+            List<OrderDetail> batchOrderDetails = new List<OrderDetail>();
 
             // Tính tổng số lượng hàng tồn kho
             var totalAvailableQuantity = batches.Sum(b => b.Quantity);
@@ -86,10 +90,27 @@ namespace Repository
                 batch.Quantity -= batchQuantityToDeduct;
                 remainingQuantity -= batchQuantityToDeduct;
 
-                await BatchDAO.Instance.UpdateBatch(batch);
-            }
-        }
+                // Tạo chi tiết đơn hàng mới với BatchId
+                var batchOrderDetail = new OrderDetail
+                {
+                    MilkId = detail.MilkId,
+                    Discount = detail.Discount,
+                    Price = detail.Price,
+                    Quantity = batchQuantityToDeduct,
+                    Total = (int)(batchQuantityToDeduct * detail.Price),
+                    BatchId = batch.Id,
+                    Status = "Normal",
+                    CreateAt = DateTime.Now,
+                    UpdateAt = DateTime.Now
+                };
 
+                batchOrderDetails.Add(batchOrderDetail);
+                await BatchDAO.Instance.UpdateBatch(batch);
+                Console.WriteLine($"Batch updated: {batch.Id}, Remaining Quantity: {batch.Quantity}");
+            }
+
+            return batchOrderDetails;
+        }
 
 
 
