@@ -66,6 +66,12 @@ namespace DataAccess.DAO
             }
         }
 
+
+        public async Task<Batch> GetBatchById(int batchId)
+        {
+            return await _context.Batches.FindAsync(batchId);
+        }
+
         public async Task<List<Batch>> GetBatchesByMilkId(int milkId)
         {
             return await _context.Batches
