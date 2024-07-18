@@ -12,8 +12,9 @@ namespace BusinessObject.Entities
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public int OrderId { get; set; }
+        public string Description { get; set; }
         public double GrossAmount { get; set;}
-        public string PaymentOrderCode { get; set; } // Nullable PaymentOrderCode
+        public string PaymentOrderCode { get; set; } 
         public Order Order { get; set; }
     }
 }

@@ -34,6 +34,7 @@ namespace Service.Interfaces
         Task<List<TopProduct>> GetTopProducts(int topN);
         Task<bool> RefundOrder(List<RefundDTO> refundDTOs);
         Task<bool> IsCompletedOrder(int orderId);
+        Task CancelOrder(int orderId);
         Task<bool> ConfirmRefund(int orderId);
         Task IsLateForShippingToNotifyShipper(string timeslot);
     }

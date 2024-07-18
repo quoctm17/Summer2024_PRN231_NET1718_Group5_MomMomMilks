@@ -1,4 +1,4 @@
-using FE.Helpers;
+﻿using FE.Helpers;
 using FE.Models;
 using FE.Models.Shipper;
 using FE.Services;
@@ -17,6 +17,8 @@ namespace FE.Pages.Shipper
         }
 
         public List<ShipperOrder> ShipperOrders { get; set; }
+        [BindProperty]
+        public int OrderId { get; set; }
         public async Task<IActionResult> OnGet()
         {
             var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
@@ -28,6 +30,28 @@ namespace FE.Pages.Shipper
             }
             return RedirectToPage("/login");
             
+        }
+        public async Task<IActionResult> OnPostConfirmShipped()
+        {
+            var orderId = 26;
+            var result = await _orderService.ConfirmShippedShipperOrder(orderId);
+            if (!result)
+            {
+                ModelState.AddModelError("Lỗi", "Lỗi khi xác nhận");
+            }
+            return Page();
+        }
+        public async Task<IActionResult> OnPostConfirmCancelled()
+        {
+            var orderId = 26;
+
+
+            var result = await _orderService.ConfirmCancelledShipperOrder(orderId);
+            if (!result)
+            {
+                ModelState.AddModelError("Lỗi", "Lỗi khi xác nhận");
+            }
+            return Page();
         }
     }
 }

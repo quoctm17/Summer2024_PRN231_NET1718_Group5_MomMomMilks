@@ -74,7 +74,7 @@ namespace MomMomMilks.Controllers
             {
                 Console.WriteLine("Start PostSimpleOrder");
                 await _orderService.CreateOrderAsync(order, order.OrderDetails.ToList());
-                await _couponService.AddOrderCouponAsync(orderDto.Code, order.Id);
+                //await _couponService.AddOrderCouponAsync(orderDto.Code, order.Id);
                 Console.WriteLine("Order created successfully");
                 return CreatedAtAction(nameof(Get), new { key = order.Id }, order);
             }
@@ -220,7 +220,6 @@ namespace MomMomMilks.Controllers
             return Ok(result);
         }
         [HttpPut("ManagerOrders/Assign/{shipperId}/{orderId}")]
-        [Authorize(Policy = "RequireManagerRole")]
         public async Task<IActionResult> ManagerAssignOrder([FromODataUri] int orderId, [FromODataUri] int shipperId)
         {
             var result = await _orderService.ManagerAssignOrder(orderId, shipperId);
@@ -264,10 +263,18 @@ namespace MomMomMilks.Controllers
             }
         }
 
+        [HttpPut("cancel-order")]
+        [Authorize]
+        public async Task<IActionResult> CancelOrder([FromQuery] int orderId)
+        {
+            await _orderService.CancelOrder(orderId);
+            return Ok("Cancel Order Successfully");
+        }
 
         [HttpPut("confirm-refund")]
         [Authorize/*(Policy = "RequireManagerRole")*/]
         public async Task<IActionResult> ConfirmRefund([FromQuery] int orderId)
+
         {
             var result = await _orderService.ConfirmRefund(orderId);
             return Ok(result);

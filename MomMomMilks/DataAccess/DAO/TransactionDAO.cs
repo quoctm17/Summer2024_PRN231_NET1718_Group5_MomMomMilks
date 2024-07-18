@@ -27,8 +27,24 @@ namespace DataAccess.DAO
 
         public async Task<List<Transaction>> GetAllTransactions()
         {
-            return await _context.Transactions.Include(t => t.Order).ToListAsync();
+            var transactions = await _context.Transactions
+                .Include(t => t.Order)
+                .Select(t => new Transaction
+                {
+                    Id = t.Id,
+                    Status = t.Status,
+                    CreatedAt = t.CreatedAt,
+                    OrderId = t.OrderId,
+                    GrossAmount = t.GrossAmount,
+                    Description = t.Description ?? string.Empty,
+                    PaymentOrderCode = t.PaymentOrderCode ?? string.Empty, // Handle NULL here
+                    Order = t.Order
+                })
+                .ToListAsync();
+
+            return transactions;
         }
+
 
         public async Task<Transaction> GetTransactionById(int id)
         {

@@ -89,6 +89,7 @@ namespace MomMomMilks.Controllers
                 if (transaction != null)
                 {
                     transaction.PaymentOrderCode = orderCode.ToString();
+                    transaction.Description = paymentData.description;
                     await _transactionService.UpdateTransactionAsync(transaction);
                 }
 
@@ -157,7 +158,7 @@ namespace MomMomMilks.Controllers
                 // Update order status based on current status
                 if (order.OrderStatusId == 1) // Assuming 1 is 'Paying'
                 {
-                    order.OrderStatusId = 5; // Assuming 5 represents 'Cancelled'
+                    await _orderService.CancelOrder(order.Id);
                 }
                 else if (order.OrderStatusId == 2) // Assuming 2 is 'Assigning'
                 {
@@ -172,6 +173,7 @@ namespace MomMomMilks.Controllers
                     Status = "Refunding",
                     CreatedAt = DateTime.Now,
                     GrossAmount = order.TotalAmount,
+                    Description = null,
                     PaymentOrderCode = null // Refund doesn't need a PaymentOrderCode
                 };
                 await _transactionService.AddTransactionAsync(refundTransaction);

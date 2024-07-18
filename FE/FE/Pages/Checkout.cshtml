@@ -182,10 +182,21 @@
             loadPaymentTypes();
             loadCoupons();
 
-            document.getElementById('placeOrderButton').addEventListener('click', validateOrderAmount);
-            //debugger;
+            const orderDateInput = document.getElementById('orderDate');
+            const placeOrderButton = document.getElementById('placeOrderButton');
 
-            //document.querySelector('.shoping__discount form').addEventListener('click', applyCoupon);
+            placeOrderButton.addEventListener('click', validateOrderAmount);
+
+            const currentDate = new Date();
+            const maxDate = new Date();
+            maxDate.setDate(currentDate.getDate() + 7);
+
+            orderDateInput.setAttribute('min', currentDate.toISOString().split('T')[0]);
+            orderDateInput.setAttribute('max', maxDate.toISOString().split('T')[0]);
+
+            // Validate on input change
+            orderDateInput.addEventListener('change', validateDateInput);
+            orderDateInput.addEventListener('input', validateDateInput);
 
             // Check if orderCode is present in URL and call confirmPayment
             const urlParams = new URLSearchParams(window.location.search);
@@ -209,6 +220,22 @@
             }
         }
 
+        function validateDateInput(event) {
+            const inputDate = new Date(event.target.value);
+            const currentDate = new Date();
+            const maxDate = new Date();
+            maxDate.setDate(currentDate.getDate() + 7);
+
+            if (inputDate < currentDate || inputDate > maxDate) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Ngày không hợp lệ',
+                    text: `Vui lòng chọn ngày trong khoảng từ hôm nay đến ${maxDate.toISOString().split('T')[0]}`
+                });
+                event.target.value = '';
+            }
+        }
+
         async function loadOrderSummary() {
             const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
             if (cart.length === 0) {
@@ -222,12 +249,12 @@
             }
 
             let orderItemsHtml = cart.map(item => `
-            <li class="checkout__order__item row" data-milk-id="${item.id}" data-quantity="${item.quantity}" data-price="${item.price}" data-total="${item.price * item.quantity}">
-                <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
-                <div class="col-lg-2 quantity">${item.quantity}</div>
-                <div class="col-lg-4 text-right item-price">${formatCurrency(item.price)} đ</div>
-            </li>
-        `).join('');
+                <li class="checkout__order__item row" data-milk-id="${item.id}" data-quantity="${item.quantity}" data-price="${item.price}" data-total="${item.price * item.quantity}">
+                    <div class="col-lg-6 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</div>
+                    <div class="col-lg-2 quantity">${item.quantity}</div>
+                    <div class="col-lg-4 text-right item-price">${formatCurrency(item.price)} đ</div>
+                </li>
+            `).join('');
             document.getElementById('order-items').innerHTML = orderItemsHtml;
             updateOrderTotal(cart);
         }

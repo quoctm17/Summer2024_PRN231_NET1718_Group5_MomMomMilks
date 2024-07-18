@@ -165,9 +165,9 @@
                                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                     Quản lý đơn hàng
                                 </a>
-                                <a class="nav-link" href="/Manager/ManagerOrder/index">
+                                <a class="nav-link" href="/Manager/TransactionManagement/index">
                                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                    Phân công giao hàng
+                                    Quản lý giao dịch
                                 </a>
                             }
 
@@ -263,7 +263,8 @@ else
                                             <i class="fa fa-user"></i> Xin chào, @account.UserName
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a href="/Customer/UserInformation?userId=@account?.Id" class="dropdown-item">Thông Tin</a></li>
+
+                                            <li><a class="dropdown-item" href="/Customer/UserInformation?userId=@account?.Id">Thông Tin</a></li>
                                             <li><a href="/Customer/OrderHistory?userId=@account?.Id" class="dropdown-item">Đơn Hàng</a></li>
                                             <li><a class="dropdown-item" href="javascript:void(0)" onclick="logout()">Đăng Xuất</a></li>
 

@@ -55,6 +55,10 @@ namespace MomMomMilks.Controllers
             var user = await _userManager.Users
                 .SingleOrDefaultAsync(x => x.Email.Equals(loginDto.Email));
             if (user == null) return Unauthorized("Invalid Email");
+            if(user.Status == 0)
+            {
+                return BadRequest("User is unavailable!");
+            }
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!result) return Unauthorized("Invalid username or password");
             var role = await _userManager.GetRolesAsync(user);

@@ -263,7 +263,7 @@ namespace MomMomMilks.Controllers
                 }
                 if (order.OrderStatusId == 2)
                 {
-                    order.OrderStatusId = 5;
+                    
                 }
                 await _orderService.UpdateOrder(order);
                 return Ok("Cancel order successfully");

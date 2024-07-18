@@ -16,18 +16,21 @@ namespace FE.Pages.Shipper
         }
 
         [BindProperty]
-        public Dictionary<int, MilkCheckedModel> MilkChecked { get; set; }
+        public Dictionary<string, MilkCheckedModel> MilkChecked { get; set; }
 
         [BindProperty]
         public ShipperOrderDetail Order{ get; set; }
+        [BindProperty]
+        public int OrderId { get; set; }
         public async Task OnGet(int orderId)
         {
             Order = await _orderService.GetShipperOrder(orderId);
+            OrderId = orderId;
         }
 
         public async Task<IActionResult> OnPostConfirmShipped()
         {
-            var orderId = Order.Id;
+            var orderId = 26;
             var result = await _orderService.ConfirmShippedShipperOrder(orderId);
             if(!result)
             {
@@ -42,7 +45,9 @@ namespace FE.Pages.Shipper
         }
         public async Task<IActionResult> OnPostConfirmCancelled()
         {
-            var orderId = Order.Id;
+            var orderId = 26;
+
+
             var result = await _orderService.ConfirmCancelledShipperOrder(orderId);
             if (!result)
             {
@@ -57,22 +62,29 @@ namespace FE.Pages.Shipper
         }
         public async Task<IActionResult> OnPostRefund()
         {
-
+            var order = await _orderService.GetShipperOrder(Order.Id);
             var checkedItems = MilkChecked.Where(x => x.Value.IsChecked).ToList();
             List<Refund> refunds = new List<Refund>();
             foreach (var item in checkedItems)
             {
-                int orderDetailId = item.Key;
+                string milkName = item.Key;
                 string reason = item.Value.Reason;
 
-                refunds.Add(new Refund
-                {
-                    OrderDetailId = orderDetailId,
-                    Note = reason
-                });
+                var uniqueOrder = order.GetUniqueProductOrderDetails();
 
-                // Do something with the milkId and reason
-                Console.WriteLine($"Order detail ID: {orderDetailId}, Reason: {reason}");
+                var assoiatedOrders = uniqueOrder.FirstOrDefault(x => x.MilkName == milkName);
+                if (assoiatedOrders != null)
+                {
+                    foreach(var od in assoiatedOrders.AssociatedDetails)
+                    {
+                        refunds.Add(new Refund
+                        {
+                            OrderDetailId = od.Id,
+                            Note = reason
+                        });
+                        Console.WriteLine($"Order detail ID: {od.Id}, Reason: {reason}");
+                    }
+                }
             }
 
             if(refunds.Count > 0)
@@ -80,7 +92,6 @@ namespace FE.Pages.Shipper
                 await _orderService.Refund(refunds);
             }
 
-            // Return a result (e.g., redirect to another page, return a view, etc.)
             return RedirectToPage("/shipper/index");
         }
     }
@@ -88,5 +99,6 @@ namespace FE.Pages.Shipper
     {
         public bool IsChecked { get; set; }
         public string Reason { get; set; }
+        public string MilkName{ get; set; }
     }
 }

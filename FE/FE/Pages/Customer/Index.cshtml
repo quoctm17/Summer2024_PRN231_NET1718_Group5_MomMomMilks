@@ -382,7 +382,7 @@
     async function cancelOrderInCash(orderId) {
         showConfirmation('Bạn có chắc chắn hủy đơn hàng này', async function () {
             try {
-                const response = await fetch(`http://localhost:5215/odata/User/cancel/${orderId}`, {
+                const response = await fetch(`http://localhost:5215/odata/Order/cancel-order?orderId=${orderId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -402,6 +402,7 @@
             }
         });
     }
+
 
     function getUserIdFromToken() {
         const token = sessionStorage.getItem('token');
