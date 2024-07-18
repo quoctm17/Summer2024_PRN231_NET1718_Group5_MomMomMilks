@@ -111,7 +111,22 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+@section Scripts {
+    @{
+    @using Helpers;
+    @using Models;
+
+        var user = SessionHelper.GetObjectFromJson<User>(HttpContext.Session, "user");
+        string token = null;
+        if (user != null)
+        {
+            token = user.Token;
+        }
+    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         getOrders();
@@ -183,9 +198,14 @@
                                         <td>
                                             <button class="btn btn-primary btn-sm btnEdit" data-order='${JSON.stringify(order)}'>Sửa</button>
                                         </td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm btnRefund" id="btnRefund" data-order-id='${order.id}'>Xác nhận hoàn trả</button>
-                                        </td>`;
+                                        `;
+                    if (order.orderStatusId == 6) {
+                        const refundButton = document.createElement('td');
+                        refundButton.innerHTML = `<button class="btn btn-primary btn-sm btnRefund" id="btnRefund" data-order-id='${order.id}'>Xác nhận hoàn trả</button>`;
+                        tr.appendChild(refundButton);
+                    } else {
+                        tr.appendChild(document.createElement('td'));
+                    }
                 orderList.appendChild(tr);
                 sequenceNumber++;
             }
@@ -213,7 +233,7 @@
                     url: `http://localhost:5215/odata/Order/confirm-refund?orderId=${orderId}`,
                     type: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token}`  // Thêm header Authorization nếu cần
+                        'Authorization': `Bearer @token`  // Thêm header Authorization nếu cần
                     },
                     success: function (result) {
                         console.log('Confirmed refund successfully:', result);
