@@ -35,5 +35,6 @@ namespace Service.Interfaces
         Task<bool> RefundOrder(List<RefundDTO> refundDTOs);
         Task<bool> IsCompletedOrder(int orderId);
         Task<bool> ConfirmRefund(int orderId);
+        Task IsLateForShippingToNotifyShipper(string timeslot);
     }
 }

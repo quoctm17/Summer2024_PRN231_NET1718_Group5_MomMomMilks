@@ -35,5 +35,6 @@ namespace Repository.Interface
         Task<bool> RefundOrder(List<RefundDTO> refundDTOs);
         Task<bool> IsConpletedOrder(int orderId);
         Task<bool> ConfirmRefund(int orderId);
+        Task IsLateForShippingToNotifyShipper(string timeslot);
     }
 }

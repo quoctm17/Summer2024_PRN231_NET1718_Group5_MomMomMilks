@@ -135,5 +135,9 @@ namespace Service.Services
         {
             return await _orderRepository.ConfirmRefund(orderId);
         }
+        public async Task IsLateForShippingToNotifyShipper(string timeslot)
+        {
+            await _orderRepository.IsLateForShippingToNotifyShipper(timeslot);
+        }
     }
 }

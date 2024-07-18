@@ -189,5 +189,9 @@ namespace Repository
         {
             return await OrderDAO.Instance.ConfirmRefund(orderId);
         }
+        public async Task IsLateForShippingToNotifyShipper(string timeslot)
+        {
+            await OrderDAO.Instance.IsLateForShippingToNotifyShipper(timeslot);
+        }
     }
 }

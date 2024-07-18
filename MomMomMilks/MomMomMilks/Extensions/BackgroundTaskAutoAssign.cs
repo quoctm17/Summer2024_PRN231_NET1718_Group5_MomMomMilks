@@ -56,25 +56,40 @@ namespace MomMomMilks.Extensions
         {
             var now = DateTime.Now.TimeOfDay;
 
-            if (IsWithinTimeWindow(now, _morningStart, _morningEnd) ||
-                IsWithinTimeWindow(now, _afternoonStart, _afternoonEnd) ||
-                IsWithinTimeWindow(now, _eveningStart, _eveningEnd))
+            if (IsStartTimeWindow(now, _morningStart) ||
+                IsStartTimeWindow(now, _afternoonStart) ||
+                IsStartTimeWindow(now, _eveningStart))
             {
                 await AutoAssignShipper(state);
                 await AutoUpdateOrderStatus(state);
+            } else if (IsEndOfTimeWindow(now, _morningEnd) ||
+                IsEndOfTimeWindow(now, _afternoonEnd) ||
+                IsEndOfTimeWindow(now, _eveningEnd))
+            {
+                await AutoUpdateOverDateShippingOrder(state);
             }
 
-            ScheduleNextRun();
+                ScheduleNextRun();
         }
+
         private bool IsWithinTimeWindow(TimeSpan currentTime, TimeSpan startTime, TimeSpan endTime)
         {
             return currentTime >= startTime && currentTime <= endTime;
+        }
+        private bool IsStartTimeWindow(TimeSpan currentTime, TimeSpan startTime)
+        {
+            return currentTime == startTime;
+        }
+        private bool IsEndOfTimeWindow(TimeSpan currentTime, TimeSpan endTime)
+        {
+            return currentTime == endTime;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
             ScheduleNextRun();
             return Task.CompletedTask;
         }
+        
 
         private async Task AutoAssignShipper(object? state)
         {
@@ -88,6 +103,17 @@ namespace MomMomMilks.Extensions
 
                 // Pass the current date and time slot to AutoAssignOrdersToShippers
                 await orderService.AutoAssignOrdersToShippers(currentDate, currentTimeSlot);
+            }
+        }
+        private async Task AutoUpdateOverDateShippingOrder(object? state)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+
+                string currentTimeSlot = GetCurrentTimeSlot();
+
+                await orderService.IsLateForShippingToNotifyShipper(currentTimeSlot);
             }
         }
 

@@ -670,5 +670,32 @@ namespace DataAccess.DAO
             }
             return false;
         }
+        public async Task IsLateForShippingToNotifyShipper(string timeslot)
+        {
+            var status = "Đang vận chuyển";
+            var orders = await _context.Orders
+                .Where(o => o.OrderStatus.Name == status)
+                .Where(o => o.TimeSlot.Name == timeslot)
+                .ToListAsync();
+            if (orders != null)
+            {
+                foreach (var order in orders)
+                {
+                    if (order.ShipperId != null)
+                    {
+                        //Phần gửi mail sẽ nằm ở đây
+
+                        //
+                        if(order.OrderDate >= order.OrderDate.AddDays(1))
+                        {
+                            order.ShipperId = null;
+                            order.OrderStatusId = 2;
+                            await _context.SaveChangesAsync();
+                        }
+
+                    } else { break; }
+                } 
+            }    
+        }
     }
 }
