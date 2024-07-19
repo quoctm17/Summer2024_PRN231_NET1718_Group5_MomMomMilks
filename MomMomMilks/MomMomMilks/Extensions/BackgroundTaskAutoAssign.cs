@@ -6,12 +6,14 @@ namespace MomMomMilks.Extensions
     {
         private Timer? _timer;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<BackgroundTaskAutoAssign> _logger;
         private readonly TimeSpan _morningStart = new TimeSpan(5, 59, 0);
         private readonly TimeSpan _morningEnd = new TimeSpan(8, 59, 0);
         private readonly TimeSpan _afternoonStart = new TimeSpan(10, 59, 0);
         private readonly TimeSpan _afternoonEnd = new TimeSpan(13, 59, 0);
         private readonly TimeSpan _eveningStart = new TimeSpan(15, 59, 0);
         private readonly TimeSpan _eveningEnd = new TimeSpan(18, 59, 0);
+        private readonly TimeSpan _tolerance = TimeSpan.FromMinutes(1);
         public BackgroundTaskAutoAssign(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -56,15 +58,15 @@ namespace MomMomMilks.Extensions
         {
             var now = DateTime.Now.TimeOfDay;
 
-            if (IsStartTimeWindow(now, _morningStart) ||
-                IsStartTimeWindow(now, _afternoonStart) ||
-                IsStartTimeWindow(now, _eveningStart))
+            if (IsWithinTolerance(now, _morningStart) ||
+                IsWithinTolerance(now, _afternoonStart) ||
+                IsWithinTolerance(now, _eveningStart))
             {
                 await AutoAssignShipper(state);
                 await AutoUpdateOrderStatus(state);
-            } else if (IsEndOfTimeWindow(now, _morningEnd) ||
-                IsEndOfTimeWindow(now, _afternoonEnd) ||
-                IsEndOfTimeWindow(now, _eveningEnd))
+            } else if (IsWithinTolerance(now, _morningEnd) ||
+                IsWithinTolerance(now, _afternoonEnd) ||
+                IsWithinTolerance(now, _eveningEnd))
             {
                 await AutoUpdateOverDateShippingOrder(state);
             }
@@ -76,13 +78,9 @@ namespace MomMomMilks.Extensions
         {
             return currentTime >= startTime && currentTime <= endTime;
         }
-        private bool IsStartTimeWindow(TimeSpan currentTime, TimeSpan startTime)
+        private bool IsWithinTolerance(TimeSpan currentTime, TimeSpan targetTime)
         {
-            return currentTime == startTime;
-        }
-        private bool IsEndOfTimeWindow(TimeSpan currentTime, TimeSpan endTime)
-        {
-            return currentTime == endTime;
+            return Math.Abs((currentTime - targetTime).TotalMinutes) <= _tolerance.TotalMinutes;
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -121,15 +119,15 @@ namespace MomMomMilks.Extensions
         {
             var now = DateTime.Now.TimeOfDay;
 
-            if (IsWithinTimeWindow(now, _morningStart, _morningEnd))
+            if (IsWithinTimeWindow(now, _morningStart, _morningEnd + TimeSpan.FromMinutes(1)))
             {
                 return "Morning";
             }
-            else if (IsWithinTimeWindow(now, _afternoonStart, _afternoonEnd))
+            else if (IsWithinTimeWindow(now, _afternoonStart, _afternoonEnd + TimeSpan.FromMinutes(1)))
             {
                 return "Afternoon";
             }
-            else if (IsWithinTimeWindow(now, _eveningStart, _eveningEnd))
+            else if (IsWithinTimeWindow(now, _eveningStart, _eveningEnd + TimeSpan.FromMinutes(1)))
             {
                 return "Evening";
             }
