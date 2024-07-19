@@ -117,8 +117,8 @@ namespace MomMomMilks.Extensions
                 foreach (var order in orders)
                 {
                     await emailService.SendAsync("autoemail62@gmail.com",
-                    order.ShipperEmail, "Order Status Not Updated",
-                    $"Your order {order.Id}'s status is not yet updated. Please update the status of the order.");
+                    order.ShipperEmail, order.Title,
+                    order.Message);
                 }
             }
         }

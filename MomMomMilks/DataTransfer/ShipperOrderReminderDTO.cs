@@ -10,5 +10,7 @@ namespace DataTransfer
     {
         public int Id { get; set; }
         public string ShipperEmail { get; set; }
+        public string Title { get; set; }
+        public string Message { get; set; }
     }
 }

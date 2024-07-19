@@ -713,6 +713,7 @@ namespace DataAccess.DAO
             var orders = await _context.Orders
                 .Where(o => o.OrderStatus.Name == status)
                 .Where(o => o.TimeSlot.Name == timeslot)
+                .Include(o => o.Shipper)
                 .ToListAsync();
             List<ShipperOrderReminderDTO> result = new List<ShipperOrderReminderDTO>();
             if (orders != null)
@@ -722,16 +723,35 @@ namespace DataAccess.DAO
                     if (order.ShipperId != null)
                     {
                         //Phần gửi mail sẽ nằm ở đây
-
+                        
+                        if (order.OrderDate >= currentTime)
+                        {
+                            //Shipper sẽ nhận thông báo cảnh báo
+                            ShipperOrderReminderDTO reminder = new ShipperOrderReminderDTO()
+                            {
+                                ShipperEmail = order.Shipper.Email,
+                                Title = "Trạng Thái Đơn Hàng Chưa Được Cập Nhật",
+                                Message = $"Trạng thái của đơn hàng có số {order.Id} chưa được cập nhật. Vui lòng cập nhật đơn trạng thái đơn hàng."
+                            };
+                            result.Add(reminder);
+                            
+                        } else
                         //
                         if (order.OrderDate <= currentTime)
                         {
-                            var date = order.OrderDate.AddDays(1);
+                            //ở phần này shipper sẽ nhận thông báo là mình đã bị huỷ đơn vì giao trễ
+                            var date = order.OrderDate.AddDays(1);                            
+                            ShipperOrderReminderDTO reminder = new ShipperOrderReminderDTO()
+                            {
+                                ShipperEmail = order.Shipper.Email,
+                                Title = "Bạn Bị Loại Ra Khỏi Đơn Hàng",
+                                Message = $"Trạng thái của đơn hàng có số {order.Id} không được cập nhật trong khoảng thời gian dài. Vì vậy chúng tôi sẽ loại bạn ra khỏi đơn hàng này."
+                            };
+                            result.Add(reminder);
                             order.OrderDate = date;
                             order.ShipperId = null;
                             order.OrderStatusId = 2;
                             await _context.SaveChangesAsync();
-                            result.Add(_mapper.Map<ShipperOrderReminderDTO>(order));
                         }
 
                     }
