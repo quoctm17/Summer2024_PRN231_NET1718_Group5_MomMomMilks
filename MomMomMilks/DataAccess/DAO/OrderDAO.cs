@@ -378,7 +378,8 @@ namespace DataAccess.DAO
         private void AssignShipperToOrder(Shipper shipper, Order order)
         {
             // Assign shipper to the order
-            order.ShipperId = shipper.Id;
+            order.ShipperId = shipper.AppUserId;
+            order.OrderStatusId = 3;
 
             // Initialize shipped orders count if not already initialized
             if (!_shippedOrdersCounts.ContainsKey(shipper.Id))
