@@ -46,6 +46,7 @@ namespace DataAccess.DAO
 						.Count();
 					var shipperDTO = _mapper.Map<ManagerShipperDTO>(shipper);
 					shipperDTO.MonthlyDeliveries = monthlyDeliveries;
+					shipperDTO.Id = shipper.AppUserId;
 					result.Add(shipperDTO);
 				}
 				return result;

@@ -213,7 +213,7 @@ namespace DataAccess.DAO
                 {
                     throw new Exception("Cannot find Shipper");
                 }
-                var orders = await _context.Orders.Where(x => x.ShipperId == shipper.Id)
+                var orders = await _context.Orders.Where(x => x.ShipperId == shipper.AppUserId)
                     .Include(x => x.Address)
                     .Include(x => x.Buyer)
                     .Include(x => x.PaymentType)
@@ -237,7 +237,7 @@ namespace DataAccess.DAO
                 {
                     throw new Exception("Cannot find Shipper");
                 }
-                var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
+                var order = await _context.Orders.Where(x => x.ShipperId == shipper.AppUserId && x.Id == orderId)
                     .Include(x => x.Address)
                     .ThenInclude(a => a.Ward)
                     .ThenInclude(a => a.District)
@@ -266,7 +266,7 @@ namespace DataAccess.DAO
                 {
                     throw new Exception("Cannot find Shipper");
                 }
-                var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
+                var order = await _context.Orders.Where(x => x.ShipperId == shipper.AppUserId && x.Id == orderId)
                     .FirstOrDefaultAsync();
                 if(order.OrderStatusId == 3)
                 {
@@ -295,7 +295,7 @@ namespace DataAccess.DAO
                 {
                     throw new Exception("Cannot find Shipper");
                 }
-                var order = await _context.Orders.Where(x => x.ShipperId == shipper.Id && x.Id == orderId)
+                var order = await _context.Orders.Where(x => x.ShipperId == shipper.AppUserId && x.Id == orderId)
                     .FirstOrDefaultAsync();
                 var od = await _context.OrderDetails.Where(x => x.OrderId == order.Id).ToListAsync();
                 if (od.Count > 0)
