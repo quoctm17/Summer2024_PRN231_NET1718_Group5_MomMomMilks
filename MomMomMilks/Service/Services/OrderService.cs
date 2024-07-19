@@ -139,9 +139,9 @@ namespace Service.Services
         {
             return await _orderRepository.ConfirmRefund(orderId);
         }
-        public async Task IsLateForShippingToNotifyShipper(string timeslot)
+        public async Task<List<ShipperOrderReminderDTO>> IsLateForShippingToNotifyShipper(string timeslot)
         {
-            await _orderRepository.IsLateForShippingToNotifyShipper(timeslot);
+            return await _orderRepository.IsLateForShippingToNotifyShipper(timeslot);
         }
     }
 }

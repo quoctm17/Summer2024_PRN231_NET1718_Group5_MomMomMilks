@@ -36,6 +36,6 @@ namespace Service.Interfaces
         Task<bool> IsCompletedOrder(int orderId);
         Task CancelOrder(int orderId);
         Task<bool> ConfirmRefund(int orderId);
-        Task IsLateForShippingToNotifyShipper(string timeslot);
+        Task<List<ShipperOrderReminderDTO>> IsLateForShippingToNotifyShipper(string timeslot);
     }
 }

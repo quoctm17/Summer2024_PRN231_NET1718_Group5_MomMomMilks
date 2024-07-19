@@ -1,4 +1,5 @@
-﻿using Service.Interfaces;
+﻿using MomMomMilks.EmailService;
+using Service.Interfaces;
 
 namespace MomMomMilks.Extensions
 {
@@ -110,10 +111,17 @@ namespace MomMomMilks.Extensions
             using (var scope = _serviceProvider.CreateScope())
             {
                 var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+                var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
 
                 string currentTimeSlot = GetCurrentTimeSlot();
 
-                await orderService.IsLateForShippingToNotifyShipper(currentTimeSlot);
+                var orders = await orderService.IsLateForShippingToNotifyShipper(currentTimeSlot);
+                foreach (var order in orders)
+                {
+                    await emailService.SendAsync("autoemail62@gmail.com",
+                    order.ShipperEmail, "Order Status Not Updated",
+                    $"Your order {order.Id}'s status is not yet updated. Please update the status of the order.");
+                }
             }
         }
 
