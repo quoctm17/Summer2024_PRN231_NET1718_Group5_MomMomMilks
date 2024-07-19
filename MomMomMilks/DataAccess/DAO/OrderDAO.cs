@@ -708,6 +708,7 @@ namespace DataAccess.DAO
         }
         public async Task<List<ShipperOrderReminderDTO>> IsLateForShippingToNotifyShipper(string timeslot)
         {
+            var currentTime = DateTime.Now;
             var status = "Đang vận chuyển";
             var orders = await _context.Orders
                 .Where(o => o.OrderStatus.Name == status)
@@ -723,8 +724,10 @@ namespace DataAccess.DAO
                         //Phần gửi mail sẽ nằm ở đây
 
                         //
-                        if (order.OrderDate >= order.OrderDate.AddDays(1))
+                        if (order.OrderDate <= currentTime)
                         {
+                            var date = order.OrderDate.AddDays(1);
+                            order.OrderDate = date;
                             order.ShipperId = null;
                             order.OrderStatusId = 2;
                             await _context.SaveChangesAsync();
