@@ -733,7 +733,7 @@ namespace DataAccess.DAO
                     {
                         //Phần gửi mail sẽ nằm ở đây
                         
-                        if (order.OrderDate >= currentTime)
+                        if (order.OrderDate.Date >= currentTime.Date)
                         {
                             //Shipper sẽ nhận thông báo cảnh báo
                             ShipperOrderReminderDTO reminder = new ShipperOrderReminderDTO()
