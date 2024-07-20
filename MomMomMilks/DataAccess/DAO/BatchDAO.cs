@@ -187,5 +187,38 @@ namespace DataAccess.DAO
             }
         }
 
+        public async Task<bool> DeductBatchQuantity(int batchId, int quantity)
+        {
+            try
+            {
+                var existed = await _context.Batches.FirstOrDefaultAsync(x => x.Id == batchId);
+                if (existed != null)
+                {
+                    existed.Quantity -= quantity;
+                }
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<bool> AddBatchQuantity(int batchId, int quantity)
+        {
+            try
+            {
+                var existed = await _context.Batches.FirstOrDefaultAsync(x => x.Id == batchId);
+                if (existed != null)
+                {
+                    existed.Quantity += quantity;
+                }
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }
