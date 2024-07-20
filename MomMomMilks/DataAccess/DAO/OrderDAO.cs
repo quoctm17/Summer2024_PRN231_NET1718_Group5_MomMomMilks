@@ -302,8 +302,9 @@ namespace DataAccess.DAO
                 {
                     foreach(var d in od)
                     {
-                        var batch = await _context.Batches.FirstOrDefaultAsync(x => x.Id == d.BatchId);
-                        batch.Quantity += d.Quantity;
+                        //var batch = await _context.Batches.FirstOrDefaultAsync(x => x.Id == d.BatchId);
+                        //batch.Quantity += d.Quantity;
+                        await BatchDAO.Instance.AddBatchQuantity(d.BatchId.Value, d.Quantity);
                         await _context.SaveChangesAsync();
                     }
                 }
