@@ -202,10 +202,19 @@
                             window.location.href = '/checkout';
                         }
                     } else if (response.status === 404) {
-                        if (confirm("Giỏ hàng của bạn chưa được lưu. Bạn có muốn lưu giỏ hàng trước khi tiến hành thanh toán không?")) {
-                            await saveCart();
-                            window.location.href = '/checkout';
-                        }
+                        Swal.fire({
+                            title: 'Giỏ hàng chưa được lưu',
+                            text: 'Giỏ hàng của bạn chưa được lưu. Bạn có muốn lưu giỏ hàng trước khi tiến hành thanh toán không?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Có',
+                            cancelButtonText: 'Không'
+                        }).then(async (result) => {
+                            if (result.isConfirmed) {
+                                await saveCart();
+                                window.location.href = '/checkout';
+                            }
+                        });
                     } else {
                         console.error('Failed to fetch cart from database.');
                     }

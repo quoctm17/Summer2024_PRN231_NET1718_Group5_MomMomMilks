@@ -249,7 +249,6 @@ namespace MomMomMilks.Controllers
 
         // Test method to manually trigger auto-assign for testing
         [HttpPost("AutoAssignTest")]
-        //[Authorize(Policy = "RequireManagerRole")]
         public async Task<IActionResult> AutoAssignTest([FromQuery] DateTime orderDate, [FromQuery] string timeSlot)
         {
             try

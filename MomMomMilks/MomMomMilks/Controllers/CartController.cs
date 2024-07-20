@@ -133,7 +133,6 @@ namespace MomMomMilks.Controllers
         }
 
         [HttpPost("ClearCart")]
-        [Authorize]
         public async Task<IActionResult> ClearCart()
         {
             try
@@ -156,7 +155,6 @@ namespace MomMomMilks.Controllers
 
 
         [HttpPost("SaveCart")]
-        [Authorize]
         public async Task<IActionResult> SaveCart([FromBody] List<CartItemDTO> cartItems)
         {
             if (cartItems == null || !cartItems.Any())
