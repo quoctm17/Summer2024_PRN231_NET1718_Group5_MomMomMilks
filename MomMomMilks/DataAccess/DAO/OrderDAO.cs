@@ -365,7 +365,9 @@ namespace DataAccess.DAO
 
         private void AssignShipperToOrder(Shipper shipper, Order order)
         {
-            order.ShipperId = shipper.Id;
+
+            order.ShipperId = shipper.AppUserId;
+            order.OrderStatusId = 3;
 
             if (!_shippedOrdersCounts.ContainsKey(shipper.Id))
             {
@@ -712,7 +714,7 @@ namespace DataAccess.DAO
                     {
                         //Phần gửi mail sẽ nằm ở đây
                         
-                        if (order.OrderDate >= currentTime)
+                        if (order.OrderDate.Date >= currentTime.Date)
                         {
                             //Shipper sẽ nhận thông báo cảnh báo
                             ShipperOrderReminderDTO reminder = new ShipperOrderReminderDTO()
