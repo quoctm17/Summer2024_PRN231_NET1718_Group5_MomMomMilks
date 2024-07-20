@@ -224,5 +224,9 @@ namespace Repository
         {
             return await OrderDAO.Instance.IsLateForShippingToNotifyShipper(timeslot);
         }
+        public async Task<List<OrderDetailWithNoteDTO>> GetAllOrderDetailWithNote(int orderId)
+        {
+            return await OrderDAO.Instance.GetAllOrderDetailWithNote(orderId);
+        }
     }
 }
