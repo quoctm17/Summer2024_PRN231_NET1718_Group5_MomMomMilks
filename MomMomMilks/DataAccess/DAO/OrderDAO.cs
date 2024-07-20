@@ -663,32 +663,39 @@ namespace DataAccess.DAO
 
         public async Task CancelOrder(int orderId)
         {
-            var order = await _context.Orders.FindAsync(orderId);
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                if (order != null)
+                try
                 {
-                    if (order.OrderStatusId == 2 || order.OrderStatusId == 1)
+                    var order = await _context.Orders
+                        .Include(o => o.OrderDetails)
+                        .FirstOrDefaultAsync(o => o.Id == orderId);
+
+                    if (order != null && (order.OrderStatusId == 2 || order.OrderStatusId == 1))
                     {
-                        var od = await _context.OrderDetails.Where(x => x.OrderId == order.Id).ToListAsync();
-                        if (od.Count > 0)
+                        foreach (var detail in order.OrderDetails)
                         {
-                            foreach (var d in od)
+                            var batch = await BatchDAO.Instance.GetBatchById((int)detail.BatchId);
+                            if (batch != null)
                             {
-                                var batch = await _context.Batches.FirstOrDefaultAsync(x => x.Id == d.BatchId);
-                                batch.Quantity += d.Quantity;
-                                await _context.SaveChangesAsync();
+                                batch.Quantity += detail.Quantity;
+                                await BatchDAO.Instance.UpdateBatch(batch);
+                                /*await _context.SaveChangesAsync();*/
                             }
                         }
+
                         order.OrderStatusId = 5;
                         _context.Orders.Update(order);
+
                         await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception("An error occurred while canceling the order: " + ex.Message, ex);
+                }
             }
         }
 
@@ -759,6 +766,15 @@ namespace DataAccess.DAO
                 }
             }
             return result;
+        }
+        public async Task<List<OrderDetailWithNoteDTO>> GetAllOrderDetailWithNote(int orderId)
+        {
+            var orderdetails = await _context.OrderDetails.Where(o => o.OrderId == orderId).ToListAsync();
+            if (orderdetails != null)
+            {
+                return _mapper.Map<List<OrderDetailWithNoteDTO>>(orderdetails);
+            }
+            return null;
         }
     }
 }

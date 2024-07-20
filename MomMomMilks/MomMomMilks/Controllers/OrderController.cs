@@ -280,5 +280,13 @@ namespace MomMomMilks.Controllers
             return Ok(result);
 
         }
+        [EnableQuery]
+        [HttpGet("OrderDetailWithNote")]
+        public async Task<IActionResult> GetOrderDetailWithNote([FromQuery] int orderId)
+        {
+            var orderdetails = await _orderService.GetAllOrderDetailWithNote(orderId);
+            
+            return Ok(orderdetails);
+        }
     }
 }

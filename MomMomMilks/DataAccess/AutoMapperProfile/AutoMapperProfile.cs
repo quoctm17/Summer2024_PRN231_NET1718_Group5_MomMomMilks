@@ -95,6 +95,8 @@ namespace DataAccess.AutoMapperProfile
                 .ReverseMap();
             CreateMap<Order, ShipperOrderReminderDTO>()
                 .ForMember(dest => dest.ShipperEmail, opt => opt.MapFrom(src => src.Shipper.Email));
+            CreateMap<OrderDetail, OrderDetailWithNoteDTO>()                
+                .ReverseMap();
         }
     }
 }

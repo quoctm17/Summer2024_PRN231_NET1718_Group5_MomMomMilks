@@ -236,7 +236,12 @@
             if (refundList.length > 0) {
                 submitRefundList(refundList);
             } else {
-                alert('Không có sản phẩm nào được chọn.');
+                //alert('Không có sản phẩm nào được chọn.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thất bại',
+                    text: 'Không có sản phẩm nào được chọn!'
+                });
             }
         });
 

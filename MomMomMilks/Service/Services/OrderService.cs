@@ -143,5 +143,9 @@ namespace Service.Services
         {
             return await _orderRepository.IsLateForShippingToNotifyShipper(timeslot);
         }
+        public async Task<List<OrderDetailWithNoteDTO>> GetAllOrderDetailWithNote(int orderId)
+        {
+            return await _orderRepository.GetAllOrderDetailWithNote(orderId);
+        }
     }
 }

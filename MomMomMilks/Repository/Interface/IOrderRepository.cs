@@ -37,5 +37,6 @@ namespace Repository.Interface
         Task CancelOrder(int orderId);
         Task<bool> ConfirmRefund(int orderId);
         Task<List<ShipperOrderReminderDTO>> IsLateForShippingToNotifyShipper(string timeslot);
+        Task<List<OrderDetailWithNoteDTO>> GetAllOrderDetailWithNote(int orderId);
     }
 }
