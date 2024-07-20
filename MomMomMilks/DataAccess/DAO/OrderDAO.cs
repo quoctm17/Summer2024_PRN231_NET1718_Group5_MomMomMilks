@@ -319,57 +319,45 @@ namespace DataAccess.DAO
 
         public async Task AutoAssignOrdersToShippers(DateTime orderDate, string timeSlot)
         {
-            // Retrieve orders that need to be assigned
-            List<Order> ordersToAssign = GetOrdersToAssign(orderDate, timeSlot);
+            var ordersToAssign = await GetOrdersToAssign(orderDate, timeSlot);
 
-            foreach (Order order in ordersToAssign)
+            foreach (var order in ordersToAssign)
             {
-                // Get DistrictId of the current order
                 int districtId = GetDistrictIdFromOrderAddress(order);
 
-                // Find all Shippers with the same DistrictId and status "Available"
-                List<Shipper> shippers = GetAvailableShippersByDistrictId(districtId);
+                var shippers = GetAvailableShippersByDistrictId(districtId);
 
-                foreach (Shipper shipper in shippers)
+                foreach (var shipper in shippers)
                 {
-                    // Assign Shipper to the order
                     AssignShipperToOrder(shipper, order);
 
-                    // Check if Shipper has reached the order limit and update status
                     UpdateShipperStatus(shipper, orderDate, timeSlot);
 
-                    // Update TimeSlot and OrderDate if it is Evening
                     UpdateTimeSlotAndOrderDate(ref orderDate, ref timeSlot);
 
-                    // Save changes to the database
-                    await _context.SaveChangesAsync(); // Ensure async save
+                    await _context.SaveChangesAsync();
 
-                    // Exit the loop after assigning Shipper to the order
                     break;
                 }
             }
         }
 
-        // Retrieves orders with matching OrderDate and TimeSlot
-        private List<Order> GetOrdersToAssign(DateTime orderDate, string timeSlot)
+        private async Task<List<Order>> GetOrdersToAssign(DateTime orderDate, string timeSlot)
         {
-            // Retrieve orders with matching OrderDate and TimeSlot
-            return _context.Orders
-                .Include(o => o.TimeSlot) // Include TimeSlot information
-                .Where(o => o.OrderDate == orderDate && o.TimeSlot.Name == timeSlot) // Compare with TimeSlot Name
-                .ToList();
+            return await _context.Orders
+                .Include(o => o.TimeSlot)
+                .Where(o => o.OrderDate.Date == orderDate.Date && o.TimeSlot.Name == timeSlot && o.ShipperId == null)
+                .ToListAsync();
         }
 
         private int GetDistrictIdFromOrderAddress(Order order)
         {
-            // Retrieve DistrictId from the order's Address
-            var address = _context.Addresses.Where(a => a.Id == order.AddressId).Include(c => c.District).FirstOrDefault();
-            return address.District.Id;
+            var address = _context.Addresses.Include(a => a.District).FirstOrDefault(a => a.Id == order.AddressId);
+            return address?.District?.Id ?? 0;
         }
 
         private List<Shipper> GetAvailableShippersByDistrictId(int districtId)
         {
-            // Retrieve shippers with matching DistrictId and status "Available"
             return _context.Shippers
                 .Where(s => s.DistrictId == districtId && s.Status == "Available")
                 .ToList();
@@ -377,44 +365,36 @@ namespace DataAccess.DAO
 
         private void AssignShipperToOrder(Shipper shipper, Order order)
         {
-            // Assign shipper to the order
             order.ShipperId = shipper.Id;
 
-            // Initialize shipped orders count if not already initialized
             if (!_shippedOrdersCounts.ContainsKey(shipper.Id))
             {
                 _shippedOrdersCounts[shipper.Id] = 0;
             }
 
-            // Increment the number of orders assigned to Shipper by 1
             _shippedOrdersCounts[shipper.Id]++;
         }
 
         private void UpdateShipperStatus(Shipper shipper, DateTime orderDate, string timeSlot)
         {
-            // Check if shipper has been assigned all orders in current time slot
             var assignedOrderCount = _shippedOrdersCounts.ContainsKey(shipper.Id) ? _shippedOrdersCounts[shipper.Id] : 0;
 
             if (assignedOrderCount >= 15)
             {
-                // Update shipper status to "Shipping" when order limit is reached
                 shipper.Status = "Shipping";
             }
             else
             {
-                // Check if all orders in the current time slot have been assigned
                 var totalOrdersInTimeSlot = _context.Orders
-                    .Where(o => o.OrderDate == orderDate && o.TimeSlot.Name == timeSlot && o.ShipperId == null)
+                    .Where(o => o.OrderDate.Date == orderDate.Date && o.TimeSlot.Name == timeSlot && o.ShipperId == null)
                     .Count();
 
                 if (totalOrdersInTimeSlot == 0)
                 {
-                    // Update shipper status to "Shipping" if all orders in time slot have been assigned
                     shipper.Status = "Shipping";
                 }
                 else
                 {
-                    // Otherwise, keep shipper status as "Available"
                     shipper.Status = "Available";
                 }
             }
@@ -422,21 +402,21 @@ namespace DataAccess.DAO
 
         private void UpdateTimeSlotAndOrderDate(ref DateTime orderDate, ref string timeSlot)
         {
-            // Update OrderDate and TimeSlot for "Evening" orders
             if (timeSlot == "Evening")
             {
-                orderDate = orderDate.AddDays(1); // Next day
-                timeSlot = "Morning"; // Morning of the next day
+                orderDate = orderDate.AddDays(1);
+                timeSlot = "Morning";
             }
             else if (timeSlot == "Morning")
             {
-                timeSlot = "Afternoon"; // Afternoon for other times
+                timeSlot = "Afternoon";
             }
             else if (timeSlot == "Afternoon")
             {
-                timeSlot = "Evening"; // Evening for other times
+                timeSlot = "Evening";
             }
         }
+
 
         public async Task<bool> ManagerAssignOrder(int orderId, int shipperId)
         {
