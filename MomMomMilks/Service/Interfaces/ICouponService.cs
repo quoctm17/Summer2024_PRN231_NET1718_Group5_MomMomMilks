@@ -19,5 +19,6 @@ namespace Service.Interfaces
         Task DeleteCouponAsync(int couponId);
         Task UpdateCouponExpiryDate();
         Task AddOrderCouponAsync(string code, int orderId);
+        Task<bool> IsUseCoupon(int couponId, int userId);
     }
 }

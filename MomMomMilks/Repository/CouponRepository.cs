@@ -49,5 +49,9 @@ namespace Repository
         {
             await CouponDAO.Instance.UpdateCouponExpiryDate();
         }
+        public async Task<bool> IsUseCoupon(int couponId, int userId)
+        {
+            return await CouponDAO.Instance.IsUseCoupon(couponId, userId);
+        }
     }
 }

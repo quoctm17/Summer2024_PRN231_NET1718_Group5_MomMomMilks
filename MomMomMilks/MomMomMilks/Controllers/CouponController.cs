@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using BusinessObject.Entities;
 using DataTransfer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using MomMomMilks.Extensions;
 using Service.Interfaces;
 using Service.Services;
 
@@ -31,19 +33,9 @@ namespace MomMomMilks.Controllers
             var coupons = await _couponService.GetAllCouponsAsync();
             return Ok(coupons);
         }
-        [EnableQuery]
-        [HttpGet("{key}")]
-        public async Task<IActionResult> Get([FromODataUri] int key)
-        {
-            var category = await _couponService.GetCouponByIdAsync(key);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return Ok(category);
-        }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post([FromBody] CouponDTO create)
         {
             var coupon = _mapper.Map<Coupon>(create);
@@ -55,6 +47,14 @@ namespace MomMomMilks.Controllers
         {
             await _couponService.AddOrderCouponAsync(code, orderId);
             return Ok();
+        }
+        [HttpGet("isUse")]
+        [Authorize]
+        public async Task<IActionResult> Get([FromQuery] int couponId)
+        {
+            var userId = User.GetUserId();
+            var isUse = await _couponService.IsUseCoupon(couponId, userId);
+            return Ok(isUse);
         }
 
         [HttpPut("{key}")]

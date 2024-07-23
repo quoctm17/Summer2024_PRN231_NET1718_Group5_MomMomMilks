@@ -103,6 +103,10 @@ namespace DataAccess.DAO
                         await _context.SaveChangesAsync();
 
                         coupon.NumberOfUse -= 1;
+                        if (coupon.NumberOfUse <= 0)
+                        {
+                            coupon.Status = 0;
+                        }
                         await _context.SaveChangesAsync();
                     }
                 }
