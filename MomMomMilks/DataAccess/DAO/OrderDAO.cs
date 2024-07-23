@@ -95,6 +95,7 @@ namespace DataAccess.DAO
                     .Include(x => x.OrderStatus)
                     .Include(x => x.TimeSlot)
                     .Where(x => x.ShipperId == null)
+                    .Where(x => x.OrderStatusId == 2 || x.OrderStatusId == 6)
                     .ToListAsync();
                 result = _mapper.Map<List<ManagerOrderDTO>>(orders);
             }
@@ -507,6 +508,7 @@ namespace DataAccess.DAO
                 float totalPrice = 0;
                 DateTime createAtOrder = DateTime.Now;
                 int ok = 0;
+                var orderOrigin = new Order();
                 List<RefundDTO> trueRefund = new List<RefundDTO>();
                 foreach (var refund in refundDTOs)
                 {
@@ -517,9 +519,11 @@ namespace DataAccess.DAO
                     transactionId = order.Order.TransactionId;
                     totalPrice = order.Order.TotalAmount;
                     createAtOrder = order.Order.CreateAt;
+                    
 
-                    if (order.Status == "Normal")
+                    if (order.Status == "Normal" || (currentTime - createAtOrder).TotalDays < 7)
                     {
+                        orderOrigin = order.Order;
                         order.UpdateAt = currentTime;
                         order.Status = "Defect";
                         order.Note = refund.note;
@@ -527,6 +531,12 @@ namespace DataAccess.DAO
                         trueRefund.Add(refund);
                         ok = 1;
                     }
+                }
+                if (orderOrigin != null)
+                {
+                    orderOrigin.OrderStatusId = 8;
+                    _context.Orders.Update(orderOrigin);
+                    await _context.SaveChangesAsync();
                 }
 
                 if ((currentTime - createAtOrder).TotalDays < 7 && ok == 1)

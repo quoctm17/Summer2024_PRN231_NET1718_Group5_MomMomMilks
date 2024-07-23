@@ -286,7 +286,7 @@
             });
 
             try {
-                let response = await fetch('http://localhost:5215/odata/Order', {
+                let response = await fetch('http://localhost:5215/odata/Order?filter=OrderStatusId eq 4', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -347,6 +347,7 @@
                         }
                         monthlyAmountsRevenue[month] += order.totalAmount;
                     });
+                updateTotalRevenue(monthlyAmountsRevenue);
 
                     const monthlyOrdersRevenue = {};
                     ordersRevenue.forEach(order => {
@@ -413,7 +414,7 @@
                 $(document).ready(function () {
                     $('#datatablesSimple').DataTable();
                 });
-                updateTotalRevenue(monthlyProfits);
+                //updateTotalRevenue(monthlyProfits);
                 updateChart('area', areaChartContext);
                 updateChart('bar', barChartContext);
             } catch (error) {
