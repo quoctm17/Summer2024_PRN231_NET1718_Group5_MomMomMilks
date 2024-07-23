@@ -180,41 +180,45 @@
     async function loadOrder(userId) {
         try {
             console.log('Starting to load orders...');
-            let response = await fetch(http://localhost:5215/odata/Order/OrderHistory(${userId}), {
+            let response = await fetch(`http://localhost:5215/odata/Order/OrderHistory(${userId})`, {
                 method: 'GET',
                 headers: {
-                'Authorization': Bearer ${ token }
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch orders');
-    }
+            if (!response.ok) {
+                throw new Error('Failed to fetch orders');
+            }
 
-    let data = await response.json();
-    console.log('API response:', data);
-    const orders = data.value || data.$values || [];
+            let data = await response.json();
+            console.log('API response:', data);
+            const orders = data.value || data.$values || [];
 
-    const ordersList = document.getElementById('orderTableBody');
-    ordersList.innerHTML = ''; // Clear existing content
+            if (!Array.isArray(orders)) {
+                throw new Error('Orders data is not an array');
+            }
 
-    if (!Array.isArray(orders) || orders.length === 0) {
-        throw new Error('No orders found');
-    }
+            const ordersList = document.getElementById('orderTableBody');
+            ordersList.innerHTML = ''; // Clear existing content
 
-    let sequenceNumber = 1;
+            if (!Array.isArray(orders) || orders.length === 0) {
+                throw new Error('No orders found');
+            }
 
-    for (const order of orders) {
-        const createDate = new Date(order.createAt).toLocaleDateString('en-GB');
-        const updateDate = new Date(order.updateAt).toLocaleDateString('en-GB');
+            let sequenceNumber = 1;
 
-        // Get status asynchronously and wait for it to resolve
-        const statusNamePromise = getOrderStatus(order.orderStatusId);
-        const statusName = await statusNamePromise;
-        const shipper = order.shipper || 'Chưa có';
+            for (const order of orders) {
+                const createDate = new Date(order.createAt).toLocaleDateString('en-GB');
+                const updateDate = new Date(order.updateAt).toLocaleDateString('en-GB');
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
+                // Get status asynchronously and wait for it to resolve
+                const statusNamePromise = getOrderStatus(order.orderStatusId);
+                const statusName = await statusNamePromise;
+                const shipper = order.shipper || 'Chưa có';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
                     <td>${sequenceNumber}</td>
                     <td>${createDate}</td>
                     <td>${updateDate}</td>
@@ -224,14 +228,14 @@
                     <td>${statusName}</td>
                     <td>${getActionButtons(order)}</td>
                 `;
-        ordersList.appendChild(tr);
-        sequenceNumber++;
-    }
+                ordersList.appendChild(tr);
+                sequenceNumber++;
+            }
         } catch (error) {
-        console.error('Error fetching orders:', error);
-        const ordersList = document.getElementById('orderTableBody');
-        ordersList.innerHTML = <tr><td colspan="8" > Không có đơn nào < /td></tr >;
-    }
+            console.error('Error fetching orders:', error);
+            const ordersList = document.getElementById('orderTableBody');
+            ordersList.innerHTML = <tr><td colspan="8"> Không có đơn nào </td></tr>;
+        }
     }
 
     async function getOrderStatus(orderStatusId) {
