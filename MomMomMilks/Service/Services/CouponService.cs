@@ -60,5 +60,9 @@ namespace Service.Services
         {
             await _couponRepository.UpdateCouponExpiryDate();
         }
+        public async Task<bool> IsUseCoupon(int couponId, int userId)
+        {
+            return await _couponRepository.IsUseCoupon(couponId, userId);
+        }
     }
 }
