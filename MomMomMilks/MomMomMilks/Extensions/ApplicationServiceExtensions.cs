@@ -24,6 +24,7 @@ namespace MomMomMilks.Extensions
 
             //Add HostedService
             services.AddSingleton<IHostedService, BackgroundMomMom>();
+            services.AddSingleton<IHostedService, BackgroundTaskAutoAssign>();
 
             // Repositories
             services.AddScoped<IAddressRepository, AddressRepository>();
